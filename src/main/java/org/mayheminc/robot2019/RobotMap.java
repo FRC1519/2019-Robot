@@ -13,36 +13,27 @@ public class RobotMap {
 	public static final int FRONT_RIGHT_TALON = 3;
 	public static final int BACK_RIGHT_TALON = 4;
 	
-	// Pivot Talon
-	public static final int PIVOT_TALON = 12;
+	// Subsystems
+	public static final int SHOULDER_TALON_A = 20;
+	public static final int SHOULDER_TALON_B = 27;
+	public static final int WRIST_TALON = 21;
+	public static final int INTAKE_ROLLER_TALON = 22;
+	public static final int LIFTER_LEFT_A_TALON = 23;
+	public static final int LIFTER_RIGHT_A_TALON = 24;
+	public static final int LIFTER_LEFT_B_TALON = 25;
+	public static final int LIFTER_RIGHT_B_TALON = 26;
 	
-	// Intake Talons
-	public static final int INTAKE_LEFT_TALON = 7;
-	public static final int INTAKE_RIGHT_TALON = 11;
+	//Solenoids:
+	public static final int SHIFTING_SOLENOID = 0;
+	public static final int HATCH_PANEL_SOLENOID = 1;
 	
-//	public static final int UNUSED_TALON = 8
-	public static final int CLIMBER_TALON = 10;
+	// Analog Inputs
 	
-	// Elevator Talons
-	public static final int ELEVATOR_TALON = 9;
-	public static final int ELEVATOR_ARM_MOTOR = 6;
-	public static final int TURRET_TALON = 5;
-
 	// Joysticks
 	public static final int DRIVER_GAMEPAD = 0;
 	public static final int DRIVER_JOYSTICK = 1;
 	public static final int OPERATOR_GAMEPAD = 2;
 	public static final int OPERATOR_JOYSTICK = 3;
-	
-	//Solenoids:
-	public static final int INTAKE_FINGERS_SOLENOID = 0;
-	public static final int ELEVATOR_ARM_SOLENOID = 2;
-	public static final int SHIFTING_SOLENOID = 4;
-	
-	// Analog Inputs
-	public static final int LEFT_IR = 1;
-	public static final int CENTER_IR = 2;
-	public static final int RIGHT_IR = 3;
 	
 	// PDP Channels = 
 	public static final int DRIVE_FRONT_LEFT_PDP = 15;
