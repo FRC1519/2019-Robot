@@ -1,0 +1,36 @@
+import java.io.*;
+import java.net.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
+
+class TCPClient extends Thread {
+
+    public static void main(String argv[]) throws Exception {
+        new TCPClient().start();
+
+    }
+
+    public void run() {
+        try {
+            String sentence;
+            String modifiedSentence;
+            System.out.println("start");
+
+            Socket clientSocket = new Socket("localhost", 6789);
+            System.out.println("open socket");
+
+            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            System.out.println("opened buffer");
+
+            while (true) {
+                System.out.println("waiting...");
+
+                modifiedSentence = inFromServer.readLine();
+                System.out.println("FROM SERVER: " + modifiedSentence);
+                new PlaySound(modifiedSentence).start();
+            }
+        } catch (Exception ex) {
+        }
+    }
+}

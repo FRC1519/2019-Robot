@@ -42,6 +42,11 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static Targeting targeting = new Targeting();
 	public static BlackBox blackbox = new BlackBox();
 	public static Shifter shifter = new Shifter();
+	public static Shoulder shoulder = new Shoulder();
+	public static Wrist wrist = new Wrist();
+	public static CargoIntake cargoIntake = new CargoIntake();
+	public static HatchPanelPickUp hatchPanelPickUp = new HatchPanelPickUp();
+	public static Lifter lifter = new Lifter();
 
 	// allocate the "virtual" subsystems; wait to construct these until robotInit()
 	public static Autonomous autonomous;
@@ -261,6 +266,10 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static double autonomousTimeRemaining() {
 		double autonomousTimeElapsed = (double) (System.currentTimeMillis() - autonomousStartTime) / 1000.0;
 		return (15.0 - autonomousTimeElapsed);
+	}
+
+	public static double getMatchStartTime() {
+		return autonomousStartTime / 1000.0;
 	}
 
 	/**

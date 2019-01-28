@@ -1,4 +1,5 @@
 package org.mayheminc.robot2019;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -12,7 +13,7 @@ public class RobotMap {
 	public static final int BACK_LEFT_TALON = 2;
 	public static final int FRONT_RIGHT_TALON = 3;
 	public static final int BACK_RIGHT_TALON = 4;
-	
+
 	// Subsystems
 	public static final int SHOULDER_TALON_A = 20;
 	public static final int SHOULDER_TALON_B = 27;
@@ -20,24 +21,24 @@ public class RobotMap {
 	public static final int INTAKE_ROLLER_TALON = 22;
 	public static final int LIFTER_LEFT_A_TALON = 23;
 	public static final int LIFTER_RIGHT_A_TALON = 24;
-	public static final int LIFTER_LEFT_B_TALON = 25;
-	public static final int LIFTER_RIGHT_B_TALON = 26;
-	
-	//Solenoids:
+	// public static final int LIFTER_LEFT_B_TALON = 25;
+	// public static final int LIFTER_RIGHT_B_TALON = 26;
+
+	// Solenoids:
 	public static final int SHIFTING_SOLENOID = 0;
 	public static final int HATCH_PANEL_SOLENOID = 1;
-	
+
 	// Analog Inputs
-	
+
 	// Joysticks
 	public static final int DRIVER_GAMEPAD = 0;
 	public static final int DRIVER_JOYSTICK = 1;
 	public static final int OPERATOR_GAMEPAD = 2;
 	public static final int OPERATOR_JOYSTICK = 3;
-	
-	// PDP Channels = 
+
+	// PDP Channels =
 	public static final int DRIVE_FRONT_LEFT_PDP = 15;
 	public static final int DRIVE_BACK_LEFT_PDP = 14;
 	public static final int DRIVE_FRONT_RIGHT_PDP = 0;
-	public static final int DRIVE_BACK_RIGHT_PDP = 1;	
+	public static final int DRIVE_BACK_RIGHT_PDP = 1;
 }

@@ -7,27 +7,44 @@ import java.io.File;
     import javax.sound.sampled.LineUnavailableException;
     import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class PlaySound
+public class PlaySound extends Thread
 {
+	String m_file;
+
+	public PlaySound(String file)
+	{
+		m_file = file;
+	}
+	
 	public static void main(String args[])
 	{
 		System.out.println("Hello, World"); 
-		play("bugs_answer.wav");
+		new PlaySound("bugs_answer.wav").start();
+		new PlaySound("ltef_002.wav").start();
 		System.out.println("Hello, World"); 
 	}
 
-	public static void play(String filename)
+	public void run()
 	{
 		try
 		{
 			Clip clip = AudioSystem.getClip();
-			clip.open(AudioSystem.getAudioInputStream(new File(filename)));
+			clip.open(AudioSystem.getAudioInputStream(new File(this.m_file)));
 			clip.start();
-			while(!clip.isRunning());
+			if( !clip.isRunning())
+			{
+				while(!clip.isRunning())
+				{
+					Thread.sleep(500);
+					System.out.println("not playing "+this.m_file);
+				}
+			}
 			while(clip.isRunning())
 			{
-			Thread.sleep(10);
+				Thread.sleep(500);
+				System.out.println("playing "+this.m_file);
 			}
+			System.out.println("end of "+this.m_file); 
 		}
 		catch (Exception exc)
 		{
