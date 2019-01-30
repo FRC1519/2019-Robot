@@ -14,5 +14,21 @@ class EventServer extends Thread {
 
     public void run() {
         tcpServer.start();
+
+        while (true) {
+            Thread.sleep(100); // sleep 100ms.
+
+            // loop through the events...
+            for (Event e : EventList) {
+                // execute the event
+                String str = e.Execute();
+
+                // if the event did anything...
+                if (str != "") {
+                    // send it to the TCP Server
+                    tcpServer.add(str);
+                }
+            }
+        }
     }
 }

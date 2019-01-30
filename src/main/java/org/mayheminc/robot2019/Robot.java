@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.*;
 import org.mayheminc.robot2019.commands.RunAutonomous;
 import org.mayheminc.robot2019.subsystems.*;
 import org.mayheminc.util.Utils;
+import org.mayheminc.util.EventServer.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	// allocate the "virtual" subsystems; wait to construct these until robotInit()
 	public static Autonomous autonomous;
 	public static OI oi;
+	public static EventServer eventServer;
 
 	// autonomous start time monitoring
 	private static long autonomousStartTime;
@@ -111,6 +113,14 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		DriverStation.reportError("About to construct OI... \n", false);
 		oi = new OI();
 		DriverStation.reportError("Done constructing OI.\n", false);
+
+		eventServer = new EventServer();
+		eventServer.add(new TMinusEvent("T-Minus 10", 10));
+		eventServer.add(new TMinusEvent("T-Minus 5", 5));
+		eventServer.add(new TMinusEvent("T-Minus 4", 4));
+		eventServer.add(new TMinusEvent("T-Minus 3", 3));
+		eventServer.add(new TMinusEvent("T-Minus 2", 2));
+		eventServer.add(new TMinusEvent("T-Minus 1", 1));
 
 		// initialize the subsystems that need it
 		drive.init();
