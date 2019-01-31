@@ -6,6 +6,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 class TCPClient extends Thread {
 
+    private static final int PORT = 5809;
+
     public static void main(String argv[]) throws Exception {
         new TCPClient().start();
 
@@ -17,7 +19,7 @@ class TCPClient extends Thread {
             String modifiedSentence;
             System.out.println("start");
 
-            Socket clientSocket = new Socket("localhost", 6789);
+            Socket clientSocket = new Socket("localhost", PORT);
             System.out.println("open socket");
 
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
