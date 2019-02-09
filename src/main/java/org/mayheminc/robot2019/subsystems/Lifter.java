@@ -21,26 +21,64 @@ public class Lifter extends Subsystem {
     private final MayhemTalonSRX motorLeft = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_A_TALON);
     private final MayhemTalonSRX motorRight = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_A_TALON);
 
+    private int past_pos_r = 0;
+    private int past_pos_l = 0;
+
     private int m_pos;
+
+    private Boolean StartClimb = false;
+
+    private int TicksToClimb = 60000;
 
     public Lifter() {
 
-        // configure the Left Motor
-        motorLeft.setNeutralMode(NeutralMode.Coast);
-        motorLeft.configNominalOutputVoltage(+0.0f, -0.0f);
-        motorLeft.configPeakOutputVoltage(+12.0, -6.0);
-        motorLeft.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-
+        //Config right motor
+        ConfigMotor(motorLeft);
+        ConfigMotor(motorRight);
+        //Config 
         // the Right motor follows the left.
-        motorRight.changeControlMode(ControlMode.Follower);
-        motorRight.set(motorLeft.getDeviceID());
+        // motorRight.changeControlMode(ControlMode.Follower);
+        // motorRight.set(motorLeft.getDeviceID());
 
         Tuck();
     }
 
+    public void ConfigMotor(MayhemTalonSRX motor){
+        motor.setNeutralMode(NeutralMode.Coast);
+        motor.configNominalOutputVoltage(+0.0f, -0.0f);
+        motor.configPeakOutputVoltage(+12.0, -6.0);
+        motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+    }
+
     public void Lift() {
-        motorLeft.set(ControlMode.Position, Lifter.LIFTED_POS);
-        m_pos = Lifter.LIFTED_POS;
+        //Tell autolift to climb
+        this.StartClimb = true;
+    }
+
+    public void AutoLift(){
+        //Get the encoder postions
+        if(this.StartClimb){
+            int pos_r = motorRight.getSelectedSensorPosition();
+            int pos_l = motorLeft.getSelectedSensorPosition();
+    
+            //Find the delta for between now and the past
+
+            if (Math.abs(pos_r-pos_l) < 100){
+                motorRight.set(ControlMode.PercentOutput, 0.5);
+                motorLeft.set(ControlMode.PercentOutput, 0.5);
+            }
+            else if(pos_r > pos_l){
+                motorRight.set(ControlMode.PercentOutput, 0.4);
+            }
+            else if(pos_r < pos_l){
+                motorLeft.set(ControlMode.PercentOutput, 0.4);
+            }
+            if(pos_r >= TicksToClimb){
+                motorRight.set(ControlMode.PercentOutput, 0.0);
+                motorLeft.set(ControlMode.PercentOutput, 0.0);
+                this.StartClimb = false;
+            }
+        }
     }
 
     public void Tuck() {
