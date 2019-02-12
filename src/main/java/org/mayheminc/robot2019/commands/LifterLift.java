@@ -14,13 +14,13 @@ import edu.wpi.first.wpilibj.command.Command;
 public class LifterLift extends Command {
   public LifterLift() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.lifter);
+    // requires(Robot.lifter);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.lifter.Lift();
+    Robot.lifter.Tuck();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -31,7 +31,8 @@ public class LifterLift extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.lifter.IsAtSetpoint();
+    // return Robot.lifter.IsAtSetpoint();
+    return false;
   }
 
   // Called once after isFinished returns true
