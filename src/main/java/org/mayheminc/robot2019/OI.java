@@ -183,8 +183,9 @@ public class OI {
 		// **************************************/
 
 		if (USE_PID_TUNER) {
-			// pidTuner = new PidTuner(DRIVER_STICK_BUTTON_SIX, DRIVER_STICK_BUTTON_SEVEN, DRIVER_STICK_BUTTON_ELEVEN,
-			// 		DRIVER_STICK_BUTTON_TEN, Robot.elevator);
+			// pidTuner = new PidTuner(DRIVER_STICK_BUTTON_SIX, DRIVER_STICK_BUTTON_SEVEN,
+			// DRIVER_STICK_BUTTON_ELEVEN,
+			// DRIVER_STICK_BUTTON_TEN, Robot.elevator);
 		}
 
 		// *******************************DRIVER
@@ -192,7 +193,7 @@ public class OI {
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0));
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait(0));
-		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new Wait(0)); // Climb up
+		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new LifterLift()); // Climb up
 		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0)); // Descend down
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whileHeld(new Wait(0));
