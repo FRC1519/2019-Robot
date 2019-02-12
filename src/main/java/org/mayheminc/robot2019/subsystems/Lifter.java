@@ -85,6 +85,7 @@ public class Lifter extends Subsystem {
         //Tell autolift to climb
         motorRight.set(ControlMode.PercentOutput, maxPower);
         motorLeft.set(ControlMode.PercentOutput, maxPower);
+        // this.StartClimb = false;
     }
 
     public void Tuck() {
