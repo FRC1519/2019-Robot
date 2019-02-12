@@ -369,6 +369,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		Robot.shifter.updateAutoShift();
 		Robot.drive.updateHistory();
 		Robot.lifter.AutoLift();
+		Robot.lifter.updateSmartDashboard();
 	}
 
 	public static boolean getBrownoutMode() {
