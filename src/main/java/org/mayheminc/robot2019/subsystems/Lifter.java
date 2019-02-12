@@ -28,7 +28,8 @@ public class Lifter extends Subsystem {
 
     private Boolean StartClimb = false;
 
-    private int TicksToClimb = 60000;
+    private int TicksToClimb = 320000;
+    private double maxPower = 0.5;
 
     public Lifter() {
 
@@ -64,8 +65,8 @@ public class Lifter extends Subsystem {
             //Find the delta for between now and the past
 
             if (Math.abs(pos_r-pos_l) < 100){
-                motorRight.set(ControlMode.PercentOutput, 0.5);
-                motorLeft.set(ControlMode.PercentOutput, 0.5);
+                motorRight.set(ControlMode.PercentOutput, maxPower);
+                motorLeft.set(ControlMode.PercentOutput, maxPower);
             }
             else if(pos_r > pos_l){
                 motorRight.set(ControlMode.PercentOutput, 0.4);
@@ -73,6 +74,7 @@ public class Lifter extends Subsystem {
             else if(pos_r < pos_l){
                 motorLeft.set(ControlMode.PercentOutput, 0.4);
             }
+            
             if(pos_r >= TicksToClimb){
                 motorRight.set(ControlMode.PercentOutput, 0.0);
                 motorLeft.set(ControlMode.PercentOutput, 0.0);
