@@ -54,11 +54,6 @@ public class Lifter extends Subsystem {
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     }
 
-    public void Lift() {
-        //Tell autolift to climb
-        this.StartClimb = true;
-    }
-
     public void AutoLift(){
         //Get the encoder postions
         if(this.StartClimb){
@@ -84,6 +79,12 @@ public class Lifter extends Subsystem {
                 this.StartClimb = false;
             }
         }
+    }
+
+    public void Lift() {
+        //Tell autolift to climb
+        motorRight.set(ControlMode.PercentOutput, maxPower);
+        motorLeft.set(ControlMode.PercentOutput, maxPower);
     }
 
     public void Tuck() {
