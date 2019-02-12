@@ -64,7 +64,7 @@ public class Lifter extends Subsystem {
     
             //Find the delta for between now and the past
 
-            if (Math.abs(pos_r-pos_l) < 100){
+            if (Math.abs(pos_r-pos_l) < 5000){
                 motorRight.set(ControlMode.PercentOutput, maxPower);
                 motorLeft.set(ControlMode.PercentOutput, maxPower);
             }
@@ -73,8 +73,7 @@ public class Lifter extends Subsystem {
             }
             else if(pos_r < pos_l){
                 motorLeft.set(ControlMode.PercentOutput, 0.4);
-            }
-            
+            }          
             if(pos_r >= TicksToClimb){
                 motorRight.set(ControlMode.PercentOutput, 0.0);
                 motorLeft.set(ControlMode.PercentOutput, 0.0);
