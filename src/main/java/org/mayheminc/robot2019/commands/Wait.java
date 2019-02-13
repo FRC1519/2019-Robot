@@ -2,27 +2,32 @@ package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
 public class Wait extends Command {
-	Timer m_Timer = new Timer();
+    Timer m_Timer = new Timer();
     double m_endTime;
-    
-    public Wait() {  
+
+    static int m_count = 0;
+
+    public Wait() {
         this(0);
     }
 
     public Wait(double endTime) {
-            // Use requires() here to declare subsystem dependencies
+        // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	m_endTime = endTime;
+        m_endTime = endTime;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	m_Timer.start();
+        m_Timer.start();
+        SmartDashboard.putNumber("Wait", m_count);
+        m_count++;
     }
 
     // Called repeatedly when this Command is scheduled to run

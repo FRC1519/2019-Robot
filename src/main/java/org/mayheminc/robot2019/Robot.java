@@ -137,6 +137,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * robotPeriodic to avoid a warning message at startup.
 	 */
 	public void robotPeriodic() {
+		// update sensors that need periodic update
+		Scheduler.getInstance().run();
 	}
 
 	/**
@@ -175,6 +177,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	private double dpElapsedTotal = 0.0;
 
 	public void disabledPeriodic() {
+		lifter.updateSmartDashboard();
 
 		// update Smart Dashboard, including fields for setting up autonomous operation
 		// TODO: Commented out the below and instead immersed various
@@ -183,50 +186,53 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// have latency of about 0.5ms each.
 		// updateSmartDashboard(UPDATE_AUTO_SETUP_FIELDS);
 
-		dpWaitLoops++;
-		if (dpWaitLoops > (10.0 * 1.0 / LOOP_TIME)) { // should wait for 10 seconds after first disabled
-			dpLoops++;
-			dpTime0 = Timer.getFPGATimestamp();
+		// dpWaitLoops++;
+		// if (dpWaitLoops > (10.0 * 1.0 / LOOP_TIME)) { // should wait for 10 seconds
+		// after first disabled
+		// dpLoops++;
+		// dpTime0 = Timer.getFPGATimestamp();
 
-			// update sensors that need periodic update
-			Scheduler.getInstance().run();
+		// // update sensors that need periodic update
+		// Scheduler.getInstance().run();
 
-			dpTime1 = Timer.getFPGATimestamp();
-			dpElapsed1 = dpElapsed1 + dpTime1 - dpTime0;
+		// dpTime1 = Timer.getFPGATimestamp();
+		// dpElapsed1 = dpElapsed1 + dpTime1 - dpTime0;
 
-			drive.updateSmartDashboard();
+		// drive.updateSmartDashboard();
+		// lifter.updateSmartDashboard();
 
-			dpTime2 = Timer.getFPGATimestamp();
-			dpElapsed2 = dpElapsed2 + dpTime2 - dpTime1;
+		// dpTime2 = Timer.getFPGATimestamp();
+		// dpElapsed2 = dpElapsed2 + dpTime2 - dpTime1;
 
-			dpTime3 = Timer.getFPGATimestamp();
-			dpElapsed3 = dpElapsed3 + dpTime3 - dpTime2;
+		// dpTime3 = Timer.getFPGATimestamp();
+		// dpElapsed3 = dpElapsed3 + dpTime3 - dpTime2;
 
-			// PrintPeriodicPeriod();
-			dpTime4 = Timer.getFPGATimestamp();
-			dpElapsed4 = dpElapsed4 + dpTime4 - dpTime3;
+		// // PrintPeriodicPeriod();
+		// dpTime4 = Timer.getFPGATimestamp();
+		// dpElapsed4 = dpElapsed4 + dpTime4 - dpTime3;
 
-			if (OI.pidTuner != null) {
-				OI.pidTuner.updateSmartDashboard();
-			}
+		// if (OI.pidTuner != null) {
+		// OI.pidTuner.updateSmartDashboard();
+		// }
 
-			Autonomous.updateSmartDashboard();
+		// Autonomous.updateSmartDashboard();
 
-			Robot.drive.updateHistory();
+		// Robot.drive.updateHistory();
 
-			dpTime5 = Timer.getFPGATimestamp();
-			dpElapsed5 = dpElapsed5 + dpTime5 - dpTime4;
-			dpElapsedTotal = dpElapsedTotal + dpTime5 - dpTime0;
+		// dpTime5 = Timer.getFPGATimestamp();
+		// dpElapsed5 = dpElapsed5 + dpTime5 - dpTime4;
+		// dpElapsedTotal = dpElapsedTotal + dpTime5 - dpTime0;
 
-			if ((dpLoops % 40) == 0) {
-				System.out.println("dpAvg1: " + Utils.fourDecimalPlaces(dpElapsed1 / dpLoops) + "   dpAvg2: "
-						+ Utils.fourDecimalPlaces(dpElapsed2 / dpLoops) + "   dpAvg3: "
-						+ Utils.fourDecimalPlaces(dpElapsed3 / dpLoops) + "   dpAvg4: "
-						+ Utils.fourDecimalPlaces(dpElapsed4 / dpLoops) + "   dpAvg5: "
-						+ Utils.fourDecimalPlaces(dpElapsed5 / dpLoops) + "   dpAvgTot: "
-						+ Utils.fourDecimalPlaces(dpElapsedTotal / dpLoops));
-			}
-		}
+		// if ((dpLoops % 40) == 0) {
+		// System.out.println("dpAvg1: " + Utils.fourDecimalPlaces(dpElapsed1 / dpLoops)
+		// + " dpAvg2: "
+		// + Utils.fourDecimalPlaces(dpElapsed2 / dpLoops) + " dpAvg3: "
+		// + Utils.fourDecimalPlaces(dpElapsed3 / dpLoops) + " dpAvg4: "
+		// + Utils.fourDecimalPlaces(dpElapsed4 / dpLoops) + " dpAvg5: "
+		// + Utils.fourDecimalPlaces(dpElapsed5 / dpLoops) + " dpAvgTot: "
+		// + Utils.fourDecimalPlaces(dpElapsedTotal / dpLoops));
+		// }
+		// }
 	}
 
 	public void autonomousInit() {
@@ -312,6 +318,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		DriverStation.reportError("Entering Teleop.\n", false);
 
 		shifter.setGear(Shifter.LOW_GEAR);
+
+		// RJD: need a place to zero the lifter. This should be in a command in auto.
+		lifter.Zero();
 	}
 
 	/**

@@ -21,8 +21,8 @@ public class RobotMap {
 	public static final int INTAKE_ROLLER_TALON = 22;
 	public static final int LIFTER_LEFT_A_TALON = 23;
 	public static final int LIFTER_RIGHT_A_TALON = 24;
-	// public static final int LIFTER_LEFT_B_TALON = 25;
-	// public static final int LIFTER_RIGHT_B_TALON = 26;
+	public static final int LIFTER_LEFT_B_TALON = 25;
+	public static final int LIFTER_RIGHT_B_TALON = 26;
 
 	// Solenoids:
 	public static final int SHIFTING_SOLENOID = 0;
