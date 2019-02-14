@@ -27,6 +27,8 @@ public class Lifter extends Subsystem {
 
     // private static final int LIFTED_POS = 1000000; // 1 million ticks
     private static final int LIFTED_POS = 100000; // 100k ticks debug tick count
+    public static final int AUTO_LIFTED_POS_1 = 100000; // 100k ticks debug tick count
+    public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
 
     private final MayhemTalonSRX motorLeft = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_A_TALON);
     private final MayhemTalonSRX motorRight = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_A_TALON);
@@ -103,6 +105,14 @@ public class Lifter extends Subsystem {
                 this.StartClimb = false;
             }
         }
+    }
+
+    public void set(int position) {
+        motorSet(LIFTING_POWER);
+        this.StartClimb = true;
+        m_pos = position;
+        // set motor speed to correct direction
+
     }
 
     public void Lift() {
