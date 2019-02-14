@@ -16,19 +16,19 @@ public class Lifter extends Subsystem {
     private static final double STOP_POWER = 0.0;
     private static final double TUCKED_POWER = -0.1;
     // private static final double LIFTING_POWER = 1.0;
-    private static final double LIFTING_POWER = 0.3; // debug speed
+    private static final double LIFTING_POWER = 0.4; // debug speed
 
-    private static final double CHANGE_POWER = 0.1;
+    private static final double SLOW_SPEED_MULTIPLIER = 0.8;
 
     // constants for positions
     private static final int STARTING_POS = 0;
-    private static final int IN_POSITION_SLOP = 100;
-    private static final int MAX_MOTOR_OFFSET = 5000;
-
     // private static final int LIFTED_POS = 1000000; // 1 million ticks
     private static final int LIFTED_POS = 100000; // 100k ticks debug tick count
     public static final int AUTO_LIFTED_POS_1 = 100000; // 100k ticks debug tick count
     public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
+
+    private static final int IN_POSITION_SLOP = 100;
+    private static final int MAX_MOTOR_OFFSET = 5000;
 
     private final MayhemTalonSRX motorLeft = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_A_TALON);
     private final MayhemTalonSRX motorRight = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_A_TALON);
@@ -39,6 +39,7 @@ public class Lifter extends Subsystem {
     // MayhemTalonSRX(RobotMap.LIFTER_RIGHT_B_TALON);
 
     private int m_pos;
+    private double m_targetSpeed;
 
     private Boolean StartClimb = false;
 
@@ -77,6 +78,9 @@ public class Lifter extends Subsystem {
         motorRight.setSelectedSensorPosition(0); // start at 0
         // motorRightB.setSelectedSensorPosition(0); // start at 0
         Stop();
+
+        SmartDashboard.putString("Lifter Debug", "Zero");
+
     }
 
     public void AutoLift() {
@@ -87,23 +91,27 @@ public class Lifter extends Subsystem {
 
             // if the positions are close together, then lift together.
             if (Math.abs(pos_r - pos_l) < MAX_MOTOR_OFFSET) {
-                motorRight.set(ControlMode.PercentOutput, LIFTING_POWER);
-                motorLeft.set(ControlMode.PercentOutput, LIFTING_POWER);
+                SmartDashboard.putString("Lifter Debug", "Matched");
+                motorSet(m_targetSpeed);
             }
 
-            // If one motor is far ahead of the other, slow down 1 side.
-            else if (pos_r > pos_l) {
-                motorRight.set(ControlMode.PercentOutput, LIFTING_POWER - CHANGE_POWER);
-            } else if (pos_r < pos_l) {
-                motorLeft.set(ControlMode.PercentOutput, LIFTING_POWER - CHANGE_POWER);
+            // If one motor is far ahead of the other, slow down 1 side. Depends on the
+            // direction of the target speed.
+            else if ((m_targetSpeed > 0 && pos_r > pos_l) || (m_targetSpeed < 0 && pos_l > pos_r)) {
+                SmartDashboard.putString("Lifter Debug", "Slow R");
+                motorRight.set(ControlMode.PercentOutput, m_targetSpeed * SLOW_SPEED_MULTIPLIER);
+            } else if ((m_targetSpeed > 0 && pos_r < pos_l) || (m_targetSpeed < 0 && pos_l < pos_r)) {
+                SmartDashboard.putString("Lifter Debug", "Slow L");
+                motorLeft.set(ControlMode.PercentOutput, m_targetSpeed * SLOW_SPEED_MULTIPLIER);
             }
 
-            // Stop if done climbing
-            if (pos_r >= LIFTED_POS) {
-                motorRight.set(ControlMode.PercentOutput, STOP_POWER);
-                motorLeft.set(ControlMode.PercentOutput, STOP_POWER);
+            // Stop if done climbing or done tucking
+            if ((m_targetSpeed > 0 && pos_r >= LIFTED_POS) || (m_targetSpeed < 0 && pos_r <= 1000)) {
+                SmartDashboard.putString("Lifter Debug", "Done");
+                motorSet(Lifter.STOP_POWER);
                 this.StartClimb = false;
             }
+
         }
     }
 
@@ -117,7 +125,8 @@ public class Lifter extends Subsystem {
 
     public void Lift() {
         // Tell autolift to climb
-        motorSet(LIFTING_POWER);
+        motorSet(Lifter.LIFTING_POWER);
+        m_targetSpeed = Lifter.LIFTING_POWER;
 
         this.StartClimb = true;
 
@@ -127,15 +136,17 @@ public class Lifter extends Subsystem {
 
     public void Tuck() {
         // start with percent output to keep the lifter tucked under the belly.
-        motorSet(TUCKED_POWER);
-        this.StartClimb = false;
+        motorSet(Lifter.TUCKED_POWER);
+        this.StartClimb = true;
+        m_targetSpeed = Lifter.TUCKED_POWER;
 
         m_pos = Lifter.STARTING_POS;
     }
 
     public void Stop() {
-        motorSet(STOP_POWER);
+        motorSet(Lifter.STOP_POWER);
         this.StartClimb = false;
+        m_targetSpeed = STOP_POWER;
     }
 
     private void motorSet(double value) {

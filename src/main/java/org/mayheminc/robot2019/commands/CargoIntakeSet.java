@@ -8,12 +8,12 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Set the CargoIntake to a power.
  */
-public class CargoIntakeSet extends InstantCommand {
+public class CargoIntakeSet extends Command {
   /**
    * Add your docs here.
    */
@@ -31,5 +31,23 @@ public class CargoIntakeSet extends InstantCommand {
   @Override
   protected void initialize() {
     Robot.cargoIntake.set(m_power);
+  }
+
+  @Override
+  protected boolean isFinished() {
+    return false;
+  }
+
+  // Called once after isFinished returns true
+  @Override
+  protected void end() {
+    Robot.cargoIntake.set(0);
+  }
+
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
+  @Override
+  protected void interrupted() {
+    Robot.cargoIntake.set(0);
   }
 }

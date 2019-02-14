@@ -49,18 +49,30 @@ public class OI {
 	public static final Joystick DRIVER_STICK = new Joystick(RobotMap.DRIVER_JOYSTICK);
 
 	// driver stick buttons
-	private static final Button DRIVER_STICK_BUTTON_ONE_DISABLED = new DisabledOnlyJoystickButton(DRIVER_STICK, 1);
-	private static final Button DRIVER_STICK_BUTTON_ONE_ENABLED = new EnabledOnlyJoystickButton(DRIVER_STICK, 1);
-	private static final Button DRIVER_STICK_BUTTON_TWO = new DisabledOnlyJoystickButton(DRIVER_STICK, 2);
-	private static final Button DRIVER_STICK_BUTTON_THREE = new DisabledOnlyJoystickButton(DRIVER_STICK, 3);
-	private static final Button DRIVER_STICK_BUTTON_FOUR = new DisabledOnlyJoystickButton(DRIVER_STICK, 4);
-	private static final Button DRIVER_STICK_BUTTON_FIVE = new DisabledOnlyJoystickButton(DRIVER_STICK, 5);
-	private static final Button DRIVER_STICK_BUTTON_SIX = new DisabledOnlyJoystickButton(DRIVER_STICK, 6);
-	private static final Button DRIVER_STICK_BUTTON_SEVEN = new DisabledOnlyJoystickButton(DRIVER_STICK, 7);
-	private static final Button DRIVER_STICK_BUTTON_EIGHT = new DisabledOnlyJoystickButton(DRIVER_STICK, 8);
-	private static final Button DRIVER_STICK_BUTTON_NINE = new JoystickButton(DRIVER_STICK, 9);
-	private static final Button DRIVER_STICK_BUTTON_TEN = new DisabledOnlyJoystickButton(DRIVER_STICK, 10);
-	private static final Button DRIVER_STICK_BUTTON_ELEVEN = new DisabledOnlyJoystickButton(DRIVER_STICK, 11);
+	// private static final Button DRIVER_STICK_BUTTON_ONE_DISABLED = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 1);
+	// private static final Button DRIVER_STICK_BUTTON_ONE_ENABLED = new
+	// EnabledOnlyJoystickButton(DRIVER_STICK, 1);
+	// private static final Button DRIVER_STICK_BUTTON_TWO = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 2);
+	// private static final Button DRIVER_STICK_BUTTON_THREE = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 3);
+	// private static final Button DRIVER_STICK_BUTTON_FOUR = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 4);
+	// private static final Button DRIVER_STICK_BUTTON_FIVE = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 5);
+	// private static final Button DRIVER_STICK_BUTTON_SIX = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 6);
+	// private static final Button DRIVER_STICK_BUTTON_SEVEN = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 7);
+	// private static final Button DRIVER_STICK_BUTTON_EIGHT = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 8);
+	// private static final Button DRIVER_STICK_BUTTON_NINE = new
+	// JoystickButton(DRIVER_STICK, 9);
+	// private static final Button DRIVER_STICK_BUTTON_TEN = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 10);
+	// private static final Button DRIVER_STICK_BUTTON_ELEVEN = new
+	// DisabledOnlyJoystickButton(DRIVER_STICK, 11);
 
 	// operator pad and stick
 	public static final Joystick OPERATOR_PAD = new Joystick(RobotMap.OPERATOR_GAMEPAD);
@@ -202,30 +214,30 @@ public class OI {
 		// ******************************* DRIVER STICK
 		// ****************************************************************************
 
-		DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new Wait(0));
-		DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new Wait(0));
+		// DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new Wait(0));
+		// DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new Wait(0));
 
-		// adjust auto parameters
-		DRIVER_STICK_BUTTON_THREE.whenPressed(new SelectAutonomousProgram(1));
-		DRIVER_STICK_BUTTON_TWO.whenPressed(new SelectAutonomousProgram(-1));
-		DRIVER_STICK_BUTTON_FOUR.whenPressed(new SelectAutonomousDelay(-1));
-		DRIVER_STICK_BUTTON_FIVE.whenPressed(new SelectAutonomousDelay(1));
+		// // adjust auto parameters
+		// DRIVER_STICK_BUTTON_THREE.whenPressed(new SelectAutonomousProgram(1));
+		// DRIVER_STICK_BUTTON_TWO.whenPressed(new SelectAutonomousProgram(-1));
+		// DRIVER_STICK_BUTTON_FOUR.whenPressed(new SelectAutonomousDelay(-1));
+		// DRIVER_STICK_BUTTON_FIVE.whenPressed(new SelectAutonomousDelay(1));
 
-		// NOTE: buttons SIX, SEVEN, TEN, ELEVEN are reserved for PidTuner
+		// // NOTE: buttons SIX, SEVEN, TEN, ELEVEN are reserved for PidTuner
 
-		// zero elements that require zeroing
-		DRIVER_STICK_BUTTON_EIGHT.whenPressed(new DriveZeroGyro());
-		DRIVER_STICK_BUTTON_NINE.whenPressed(new Wait(0));
+		// // zero elements that require zeroing
+		// DRIVER_STICK_BUTTON_EIGHT.whenPressed(new DriveZeroGyro());
+		// DRIVER_STICK_BUTTON_NINE.whenPressed(new Wait(0));
 
 		// *************************OPERATOR PAD*******************************
 
-		OPERATOR_PAD_BUTTON_ONE.whileHeld(new Wait(0));
-		OPERATOR_PAD_BUTTON_TWO.whenPressed(new Wait(0));
-		OPERATOR_PAD_BUTTON_THREE.whenPressed(new Wait(0));
+		OPERATOR_PAD_BUTTON_ONE.whileHeld(new CargoIntakeSet(-.75));
+		OPERATOR_PAD_BUTTON_TWO.whileHeld(new LifterTuck());
+		OPERATOR_PAD_BUTTON_THREE.whileHeld(new CargoIntakeSet(.75));
 
 		// OPERATOR_PAD_BUTTON_FOUR does two different commands simultaneously!
-		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new Wait(0));
-		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new Wait(0));
+		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new Wait(0));
+		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new LifterLift());
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new Wait());
