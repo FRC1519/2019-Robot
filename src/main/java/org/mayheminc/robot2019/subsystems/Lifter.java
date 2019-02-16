@@ -24,6 +24,8 @@ public class Lifter extends Subsystem {
     private static final int STARTING_POS = 0;
     // private static final int LIFTED_POS = 1000000; // 1 million ticks
     private static final int LIFTED_POS = 100000; // 100k ticks debug tick count
+    public static final int AUTO_LIFTED_POS_1 = 100000; // 100k ticks debug tick count
+    public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
 
     private static final int IN_POSITION_SLOP = 100;
     private static final int MAX_MOTOR_OFFSET = 5000;
@@ -113,6 +115,14 @@ public class Lifter extends Subsystem {
             }
 
         }
+    }
+
+    public void set(int position) {
+        motorSet(LIFTING_POWER);
+        this.StartClimb = true;
+        m_pos = position;
+        // set motor speed to correct direction
+
     }
 
     public void Lift() {
