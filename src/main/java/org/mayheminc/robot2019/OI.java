@@ -244,7 +244,7 @@ public class OI {
 		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new Wait());
 
 		// Button Six and Eight currently control rollers of intake or elevator
-		OPERATOR_PAD_BUTTON_SIX.whileHeld(new Wait());
+		OPERATOR_PAD_BUTTON_SIX.whileHeld(new HatchPanelSet(true));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new Wait());
 
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new Wait());

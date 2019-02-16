@@ -24,6 +24,8 @@ public class HatchPanelPickUp extends Subsystem {
         this.solenoid.set(m_pos);
     }
 
+    
+
     public void updateSmartDashboard() {
         SmartDashboard.putBoolean("Hatch Panel Pos", m_pos);
     }
