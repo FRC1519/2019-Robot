@@ -27,14 +27,15 @@ public class Wrist extends Subsystem {
         motor.config_kD(0, 0.0, 0);
         motor.config_kF(0, 0.0, 0);
 
-        motor.setNeutralMode(NeutralMode.Coast);
+        motor.setNeutralMode(NeutralMode.Brake);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+    }
 
+    public void Zero() {
         // zero the position.
-        motor.setSelectedSensorPosition(0);
-        set(STARTING_POS);
+        motor.setSelectedSensorPosition(STARTING_POS);
     }
 
     public void set(int pos) {

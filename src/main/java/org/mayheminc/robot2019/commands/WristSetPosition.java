@@ -48,6 +48,7 @@ public class WristSetPosition extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    // Tell the wrist to stay where it is at.
     Robot.wrist.set(Robot.wrist.get());
   }
 }

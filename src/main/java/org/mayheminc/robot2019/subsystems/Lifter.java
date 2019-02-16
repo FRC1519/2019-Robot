@@ -31,10 +31,8 @@ public class Lifter extends Subsystem {
     private final MayhemTalonSRX motorLeft = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_A_TALON);
     private final MayhemTalonSRX motorRight = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_A_TALON);
 
-    // private final MayhemTalonSRX motorLeftB = new
-    // MayhemTalonSRX(RobotMap.LIFTER_LEFT_B_TALON);
-    // private final MayhemTalonSRX motorRightB = new
-    // MayhemTalonSRX(RobotMap.LIFTER_RIGHT_B_TALON);
+    private final MayhemTalonSRX motorLeftB = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_B_TALON);
+    private final MayhemTalonSRX motorRightB = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_B_TALON);
 
     private int m_pos;
     private double m_targetSpeed;
@@ -47,8 +45,8 @@ public class Lifter extends Subsystem {
         ConfigMotor(motorLeft, false);
         ConfigMotor(motorRight, true);
 
-        // ConfigMotorFollower(motorLeftB, motorLeft);
-        // ConfigMotorFollower(motorRightB, motorRight);
+        ConfigMotorFollower(motorLeftB, motorLeft);
+        ConfigMotorFollower(motorRightB, motorRight);
 
         // Tuck();
     }
@@ -87,8 +85,15 @@ public class Lifter extends Subsystem {
             int pos_r = motorRight.getSelectedSensorPosition();
             int pos_l = motorLeft.getSelectedSensorPosition();
 
+            // Stop if done climbing or done tucking
+            if ((m_targetSpeed > 0 && pos_r >= LIFTED_POS) || (m_targetSpeed < 0 && pos_r <= 1000)) {
+                SmartDashboard.putString("Lifter Debug", "Done");
+                motorSet(Lifter.STOP_POWER);
+                this.StartClimb = false;
+            }
+
             // if the positions are close together, then lift together.
-            if (Math.abs(pos_r - pos_l) < MAX_MOTOR_OFFSET) {
+            else if (Math.abs(pos_r - pos_l) < Lifter.MAX_MOTOR_OFFSET) {
                 SmartDashboard.putString("Lifter Debug", "Matched");
                 motorSet(m_targetSpeed);
             }
@@ -98,16 +103,13 @@ public class Lifter extends Subsystem {
             else if ((m_targetSpeed > 0 && pos_r > pos_l) || (m_targetSpeed < 0 && pos_l > pos_r)) {
                 SmartDashboard.putString("Lifter Debug", "Slow R");
                 motorRight.set(ControlMode.PercentOutput, m_targetSpeed * SLOW_SPEED_MULTIPLIER);
-            } else if ((m_targetSpeed > 0 && pos_r < pos_l) || (m_targetSpeed < 0 && pos_l < pos_r)) {
-                SmartDashboard.putString("Lifter Debug", "Slow L");
-                motorLeft.set(ControlMode.PercentOutput, m_targetSpeed * SLOW_SPEED_MULTIPLIER);
+                motorLeft.set(ControlMode.PercentOutput, m_targetSpeed);
             }
 
-            // Stop if done climbing or done tucking
-            if ((m_targetSpeed > 0 && pos_r >= LIFTED_POS) || (m_targetSpeed < 0 && pos_r <= 1000)) {
-                SmartDashboard.putString("Lifter Debug", "Done");
-                motorSet(Lifter.STOP_POWER);
-                this.StartClimb = false;
+            else if ((m_targetSpeed > 0 && pos_r < pos_l) || (m_targetSpeed < 0 && pos_l < pos_r)) {
+                SmartDashboard.putString("Lifter Debug", "Slow L");
+                motorLeft.set(ControlMode.PercentOutput, m_targetSpeed * SLOW_SPEED_MULTIPLIER);
+                motorRight.set(ControlMode.PercentOutput, m_targetSpeed);
             }
 
         }

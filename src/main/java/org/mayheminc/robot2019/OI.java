@@ -231,9 +231,9 @@ public class OI {
 
 		// *************************OPERATOR PAD*******************************
 
-		OPERATOR_PAD_BUTTON_ONE.whileHeld(new CargoIntakeSet(-.75));
+		OPERATOR_PAD_BUTTON_ONE.whileHeld(new Wait(1));
 		OPERATOR_PAD_BUTTON_TWO.whileHeld(new LifterTuck());
-		OPERATOR_PAD_BUTTON_THREE.whileHeld(new CargoIntakeSet(.75));
+		OPERATOR_PAD_BUTTON_THREE.whileHeld(new Wait(.75));
 
 		// OPERATOR_PAD_BUTTON_FOUR does two different commands simultaneously!
 		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new Wait(0));
@@ -244,8 +244,8 @@ public class OI {
 		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new Wait());
 
 		// Button Six and Eight currently control rollers of intake or elevator
-		OPERATOR_PAD_BUTTON_SIX.whileHeld(new Wait());
-		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new Wait());
+		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(-.75));
+		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(.75));
 
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new Wait());
 		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new Wait());

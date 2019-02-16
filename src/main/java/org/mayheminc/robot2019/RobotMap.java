@@ -27,6 +27,7 @@ public class RobotMap {
 	// Solenoids:
 	public static final int SHIFTING_SOLENOID = 0;
 	public static final int HATCH_PANEL_SOLENOID = 1;
+	public static final int SHOULDER_BRAKE_SOLENOID = 2;
 
 	// Analog Inputs
 

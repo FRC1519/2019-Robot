@@ -292,7 +292,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
+		// Scheduler.getInstance().run(); called in periodic().
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 		Robot.drive.updateHistory();
@@ -362,7 +362,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		}
 		teleopOnce = true;
 
-		Scheduler.getInstance().run();
+		// Scheduler.getInstance().run(); called in periodic
 
 		if (!oi.autoInTeleop()) {
 			if (drive.isSpeedRacerDrive()) {
@@ -378,7 +378,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		Robot.shifter.updateAutoShift();
 		Robot.drive.updateHistory();
 		Robot.lifter.AutoLift();
-		Robot.lifter.updateSmartDashboard();
+		Robot.shoulder.periodic();
 	}
 
 	public static boolean getBrownoutMode() {
@@ -405,6 +405,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			this.updateSmartDashboard();
 
 			drive.updateSmartDashboard();
+			lifter.updateSmartDashboard();
+			shoulder.updateSmartDashboard();
 
 			if (OI.pidTuner != null) {
 				OI.pidTuner.updateSmartDashboard();
