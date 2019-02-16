@@ -21,7 +21,7 @@ public class Shoulder extends Subsystem {
     private static double BRAKE_RELASE_TIME_SEC = 0.1;
 
     private MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.SHOULDER_TALON_A);
-    private Solenoid brake = new Solenoid(RobotMap.SHOULDER_BREAK_SOLENOID);
+    private Solenoid brake = new Solenoid(RobotMap.SHOULDER_BRAKE_SOLENOID);
 
     private int m_pos;
 
