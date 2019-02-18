@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.mayheminc.robot2019.OI;
 
 import org.mayheminc.util.MayhemTalonSRX;
 
@@ -22,6 +23,7 @@ public class Shoulder extends Subsystem {
 
     private MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.SHOULDER_TALON_A);
     private Solenoid brake = new Solenoid(RobotMap.SHOULDER_BRAKE_SOLENOID);
+    private boolean percentState = false; 
 
     private int m_pos;
 
@@ -81,6 +83,7 @@ public class Shoulder extends Subsystem {
         SmartDashboard.putBoolean("Shoulder Brake", brake.get());
     }
 
+
     public void periodic() {
         switch (m_state) {
 
@@ -116,7 +119,16 @@ public class Shoulder extends Subsystem {
                 m_state = State.STOPPED;
             }
             break;
-
         }
+    
+        if(Robot.oi.pivotArmPower() != 0.0){
+            this.brake.set(false);
+            this.motor.set(ControlMode.PercentOutput, Robot.oi.pivotArmPower());
+            percentState = true;
+        }else if(percentState) {
+            m_state=State.STOPPED;
+            percentState = false;
+        }
+
     }
 }

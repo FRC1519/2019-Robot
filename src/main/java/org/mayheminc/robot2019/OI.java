@@ -240,17 +240,17 @@ public class OI {
 		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new LifterLift());
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
-		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new Wait());
-		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new Wait());
+		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(true));
+		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(false));
 
 		// Button Six and Eight currently control rollers of intake or elevator
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(-.75));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(.75));
 
-		OPERATOR_PAD_D_PAD_UP.whenPressed(new Wait());
-		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new Wait());
+		OPERATOR_PAD_D_PAD_UP.whenPressed(new CargoHigh());
+		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new CargoLow());
 		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new Wait());
-		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait());
+		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
 
 		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait());
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new Wait());
@@ -404,7 +404,7 @@ public class OI {
 		);
 	}
 
-	public double getTurretManualPower() {
+	public double getManualPower() {
 
 		// Positive turret power should give clockwise rotation.
 		// KBS: Note that right axis should be positive when clockwise; I don't think we
@@ -435,7 +435,7 @@ public class OI {
 		}
 	}
 
-	public double getElevatorPower() {
+	public double getWristPower() {
 		// NOTE: Joystick has "up" be negative and "down" be positive. Reverse this by
 		// multiplying by -1.
 		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS) * -1);
@@ -452,21 +452,21 @@ public class OI {
 		return value;
 	}
 
-	public boolean getTurretFieldOrientedIsCommanded() {
-		double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
-		double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
+	// public boolean getTurretFieldOrientedIsCommanded() {
+	// 	double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
+	// 	double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
 
-		double mag = Math.sqrt(x * x + y * y);
+	// 	double mag = Math.sqrt(x * x + y * y);
 
-		return mag > 0.5;
-	}
+	// 	return mag > 0.5;
+	// }
 
-	public double getTurretFieldOrientedDirection() {
-		double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
-		double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
+	// public double getTurretFieldOrientedDirection() {
+	// 	double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
+	// 	double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
 
-		double radians = Math.atan2(x, y);
-		double degrees = radians * 180 / Math.PI;
-		return degrees;
-	}
+	// 	double radians = Math.atan2(x, y);
+	// 	double degrees = radians * 180 / Math.PI;
+	// 	return degrees;
+	// }
 }
