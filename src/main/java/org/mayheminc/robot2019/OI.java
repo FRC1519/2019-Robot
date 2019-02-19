@@ -204,7 +204,7 @@ public class OI {
 		// PAD**************************************
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0));
-		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait(0));
+		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait());
 		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new AutoLift()); // Climb up
 		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0)); // Descend down
 
@@ -247,10 +247,10 @@ public class OI {
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(-.75));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(.75));
 
-		OPERATOR_PAD_D_PAD_UP.whenPressed(new CargoHigh());
-		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new CargoLow());
+		OPERATOR_PAD_D_PAD_UP.whenPressed(new Wait());
+		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new Wait());
 		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new Wait());
-		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
+		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait());
 
 		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait());
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new Wait());
@@ -453,20 +453,22 @@ public class OI {
 	}
 
 	// public boolean getTurretFieldOrientedIsCommanded() {
-	// 	double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
-	// 	double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
+	// double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
+	// double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is
+	// positive
 
-	// 	double mag = Math.sqrt(x * x + y * y);
+	// double mag = Math.sqrt(x * x + y * y);
 
-	// 	return mag > 0.5;
+	// return mag > 0.5;
 	// }
 
 	// public double getTurretFieldOrientedDirection() {
-	// 	double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
-	// 	double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
+	// double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
+	// double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is
+	// positive
 
-	// 	double radians = Math.atan2(x, y);
-	// 	double degrees = radians * 180 / Math.PI;
-	// 	return degrees;
+	// double radians = Math.atan2(x, y);
+	// double degrees = radians * 180 / Math.PI;
+	// return degrees;
 	// }
 }

@@ -82,60 +82,58 @@ public class Shoulder extends Subsystem {
 
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("Shoulder Pos", m_pos);
-        SmartDashboard.putString("Shoulder State", m_state.toString());
+        // SmartDashboard.putString("Shoulder State", m_state.toString());
         SmartDashboard.putBoolean("Shoulder Brake", brake.get());
     }
 
-    public boolean percentState = false; 
+    public boolean percentState = false;
+
     public void periodic() {
-        
-        // switch (m_state) {
-        
 
-        // case STOPPED:
-        //     // when we are stopped, set the motor 0 power.
-        //     this.motor_A.set(ControlMode.PercentOutput, 0);
-        //     // set the brake.
-        //     this.brake.set(true);
-        //     break;
+        switch (m_state) {
 
-        // case START_MOVING:
-        //     // release the brake
-        //     this.brake.set(false);
-        //     // start a timer
-        //     m_startTimer = m_timer.get();
-        //     m_state = State.WAIT_FOR_BRAKE_RELEASE;
-        //     break;
+        case STOPPED:
+            // when we are stopped, set the motor 0 power.
+            this.motor_A.set(ControlMode.PercentOutput, 0);
+            // set the brake.
+            this.brake.set(true);
+            break;
 
-        // case WAIT_FOR_BRAKE_RELEASE:
-        //     // when the timer expires, set the motor to the desired position.
-        //     if (m_timer.get() - m_startTimer >= BRAKE_RELASE_TIME_SEC) {
-        //         motor_A.set(ControlMode.Position, m_pos);
-        //     }
-        //     break;
+        case START_MOVING:
+            // release the brake
+            this.brake.set(false);
+            // start a timer
+            m_startTimer = m_timer.get();
+            m_state = State.WAIT_FOR_BRAKE_RELEASE;
+            break;
 
-        // case MOTOR_MOVING:
-        //     // If we are close to position...
-        //     if (Math.abs(get() - m_pos) < IN_POSITION_SLOP) {
-        //         // turn off the motor.
-        //         this.motor_A.set(ControlMode.PercentOutput, 0);
-        //         // set the brake
-        //         this.brake.set(true);
-        //         m_state = State.STOPPED;
-        //     }
-        //     break;
-        // }
+        case WAIT_FOR_BRAKE_RELEASE:
+            // when the timer expires, set the motor to the desired position.
+            if (m_timer.get() - m_startTimer >= BRAKE_RELASE_TIME_SEC) {
+                motor_A.set(ControlMode.Position, m_pos);
+            }
+            break;
 
-        // if(Robot.oi.pivotArmPower() != 0.0 ){
-        //     this.brake.set(false);
-        //     this.motor_A.set(ControlMode.PercentOutput, Robot.oi.pivotArmPower());
-            // percentState = true;
-        // } 
-        // else
-        // if(percentState) {
-        //     m_state=State.STOPPED;
-        //     percentState = false;
-        // }
+        case MOTOR_MOVING:
+            // If we are close to position...
+            if (Math.abs(get() - m_pos) < IN_POSITION_SLOP) {
+                // turn off the motor.
+                this.motor_A.set(ControlMode.PercentOutput, 0);
+                // set the brake
+                this.brake.set(true);
+                m_state = State.STOPPED;
+            }
+            break;
+        }
+
+        if (Robot.oi.pivotArmPower() != 0.0) {
+            this.brake.set(false);
+            this.motor_A.set(ControlMode.PercentOutput, Robot.oi.pivotArmPower());
+            percentState = true;
+        } else if (percentState) {
+            m_state = State.STOPPED;
+            percentState = false;
+        }
 
     }
 }
