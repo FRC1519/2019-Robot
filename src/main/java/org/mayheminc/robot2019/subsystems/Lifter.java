@@ -28,7 +28,8 @@ public class Lifter extends Subsystem {
     public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
 
     private static final int IN_POSITION_SLOP = 100;
-    private static final int MAX_MOTOR_OFFSET = 5000;
+    private static final int MAX_MOTOR_OFFSET = 15000;
+    private static final int NOMINAL_MOTOR_OFFSET = 5000;
 
     private final MayhemTalonSRX motorLeft = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_A_TALON);
     private final MayhemTalonSRX motorRight = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_A_TALON);
@@ -90,15 +91,20 @@ public class Lifter extends Subsystem {
             int pos_l = motorLeft.getSelectedSensorPosition();
 
             // Stop if done climbing or done tucking
-            if ((m_targetSpeed > 0 && pos_r >= m_pos - Lifter.IN_POSITION_SLOP) || (m_targetSpeed < 0 && pos_r <= m_pos + Lifter.IN_POSITION_SLOP)) {
+            if ((m_targetSpeed > 0 && pos_r >= m_pos - Lifter.IN_POSITION_SLOP)
+                    || (m_targetSpeed < 0 && pos_r <= m_pos + Lifter.IN_POSITION_SLOP)) {
                 SmartDashboard.putString("Lifter Debug", "Done");
-                // motorSet(Lifter.STOP_POWER);
-                // this.StartClimb = false;
+                Stop();
+            }
+
+            // if the positions are too far apart, emergency stop.
+            else if (Math.abs(pos_r - pos_l) > Lifter.MAX_MOTOR_OFFSET) {
+                SmartDashboard.putString("Lifter Debug", "E-Stop");
                 Stop();
             }
 
             // if the positions are close together, then lift together.
-            else if (Math.abs(pos_r - pos_l) < Lifter.MAX_MOTOR_OFFSET) {
+            else if (Math.abs(pos_r - pos_l) < Lifter.NOMINAL_MOTOR_OFFSET) {
                 SmartDashboard.putString("Lifter Debug", "Matched");
                 motorSet(m_targetSpeed);
             }

@@ -18,7 +18,7 @@ public class Wrist extends Subsystem {
 
     private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
     private int m_pos;
-    private boolean m_manualMode;
+    private boolean m_manualMode = true;
 
     public final int CARGO_PICK_UP_POSITION = 1000;
 

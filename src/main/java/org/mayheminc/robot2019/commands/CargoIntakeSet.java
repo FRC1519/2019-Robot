@@ -8,6 +8,9 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
+import org.mayheminc.robot2019.subsystems.CargoIntake;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -31,6 +34,7 @@ public class CargoIntakeSet extends Command {
   @Override
   protected void initialize() {
     Robot.cargoIntake.set(m_power);
+    DriverStation.reportError("CargoIntake Run", false);
   }
 
   @Override
@@ -41,13 +45,13 @@ public class CargoIntakeSet extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.cargoIntake.set(0);
+    Robot.cargoIntake.set(CargoIntake.HOLD);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.cargoIntake.set(0);
+    Robot.cargoIntake.set(CargoIntake.HOLD);
   }
 }
