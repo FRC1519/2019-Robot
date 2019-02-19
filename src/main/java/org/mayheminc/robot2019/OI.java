@@ -237,7 +237,7 @@ public class OI {
 
 		// OPERATOR_PAD_BUTTON_FOUR does two different commands simultaneously!
 		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new Wait(0));
-		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new LifterLift());
+		OPERATOR_PAD_BUTTON_FOUR.whileHeld(new LifterLift());
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(true));

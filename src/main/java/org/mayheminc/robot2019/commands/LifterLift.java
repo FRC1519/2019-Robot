@@ -23,7 +23,7 @@ public class LifterLift extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.lifter.Lift();
+      Robot.lifter.Lift();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -35,13 +35,12 @@ public class LifterLift extends Command {
   @Override
   protected boolean isFinished() {
     return Robot.lifter.IsAtSetpoint();
-    // return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.lifter.Stop();
+    Robot.lifter.stop();
     SmartDashboard.putNumber("LifterLift Stop", m_count);
     m_count++;
   }
@@ -50,7 +49,7 @@ public class LifterLift extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.lifter.Stop();
+    Robot.lifter.stop();
     SmartDashboard.putNumber("LifterLift Interrupt", m_count);
     m_count++;
   }

@@ -193,7 +193,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// dpTime0 = Timer.getFPGATimestamp();
 
 		// // update sensors that need periodic update
-		// Scheduler.getInstance().run();
+		Scheduler.getInstance().run();
 
 		// dpTime1 = Timer.getFPGATimestamp();
 		// dpElapsed1 = dpElapsed1 + dpTime1 - dpTime0;
@@ -322,7 +322,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		shifter.setGear(Shifter.LOW_GEAR);
 
 		// RJD: need a place to zero the lifter. This should be in a command in auto.
-		lifter.Zero();
+		lifter.zero();
 	}
 
 	/**
@@ -379,7 +379,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		Robot.shifter.updateAutoShift();
 		Robot.drive.updateHistory();
-		Robot.lifter.AutoLift();
+		Robot.lifter.synchronizedLift();
 		Robot.shoulder.update();
 		Robot.wrist.update();
 	}

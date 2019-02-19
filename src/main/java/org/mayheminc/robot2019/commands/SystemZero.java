@@ -22,17 +22,17 @@ public class SystemZero extends InstantCommand {
     super();
 
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.shoulder);
-    requires(Robot.lifter);
-    requires(Robot.wrist);
-    requires(Robot.drive);
+    // requires(Robot.shoulder);
+    // requires(Robot.lifter);
+    // requires(Robot.wrist);
+    // requires(Robot.drive);
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
     Robot.shoulder.Zero();
-    Robot.lifter.Zero();
+    Robot.lifter.zero();
     Robot.wrist.Zero();
     Robot.drive.zeroHeadingGyro(0);
   }

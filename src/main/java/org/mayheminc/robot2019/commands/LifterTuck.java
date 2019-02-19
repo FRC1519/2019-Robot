@@ -40,13 +40,13 @@ public class LifterTuck extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.lifter.Stop();
+    Robot.lifter.stop();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.lifter.Stop();
+    Robot.lifter.stop();
   }
 }
