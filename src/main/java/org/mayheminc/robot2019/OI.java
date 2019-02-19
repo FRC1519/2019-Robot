@@ -253,7 +253,7 @@ public class OI {
 		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
 
 		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait());
-		OPERATOR_PAD_BUTTON_TEN.whenPressed(new Wait());
+		OPERATOR_PAD_BUTTON_TEN.whenPressed(new SystemZero());
 
 		// Uncomment any of the "blackbox" commands in order to debug the OI buttons
 		// Robot.blackbox.addButton("DRIVER_PAD_BLUE_BUTTON", DRIVER_PAD_BLUE_BUTTON);
@@ -453,20 +453,22 @@ public class OI {
 	}
 
 	// public boolean getTurretFieldOrientedIsCommanded() {
-	// 	double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
-	// 	double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
+	// double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
+	// double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is
+	// positive
 
-	// 	double mag = Math.sqrt(x * x + y * y);
+	// double mag = Math.sqrt(x * x + y * y);
 
-	// 	return mag > 0.5;
+	// return mag > 0.5;
 	// }
 
 	// public double getTurretFieldOrientedDirection() {
-	// 	double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
-	// 	double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is positive
+	// double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
+	// double y = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS) * -1; // up is
+	// positive
 
-	// 	double radians = Math.atan2(x, y);
-	// 	double degrees = radians * 180 / Math.PI;
-	// 	return degrees;
+	// double radians = Math.atan2(x, y);
+	// double degrees = radians * 180 / Math.PI;
+	// return degrees;
 	// }
 }

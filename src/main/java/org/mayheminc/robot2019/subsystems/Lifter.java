@@ -72,9 +72,11 @@ public class Lifter extends Subsystem {
 
     public void Zero() {
         motorLeft.setSelectedSensorPosition(0); // start at 0
-        // motorLeftB.setSelectedSensorPosition(0); // start at 0
         motorRight.setSelectedSensorPosition(0); // start at 0
+
+        // motorLeftB.setSelectedSensorPosition(0); // start at 0
         // motorRightB.setSelectedSensorPosition(0); // start at 0
+
         Stop();
 
         SmartDashboard.putString("Lifter Debug", "Zero");
@@ -88,10 +90,11 @@ public class Lifter extends Subsystem {
             int pos_l = motorLeft.getSelectedSensorPosition();
 
             // Stop if done climbing or done tucking
-            if ((m_targetSpeed > 0 && pos_r >= LIFTED_POS) || (m_targetSpeed < 0 && pos_r <= 1000)) {
+            if ((m_targetSpeed > 0 && pos_r >= m_pos - Lifter.IN_POSITION_SLOP) || (m_targetSpeed < 0 && pos_r <= m_pos + Lifter.IN_POSITION_SLOP)) {
                 SmartDashboard.putString("Lifter Debug", "Done");
-                motorSet(Lifter.STOP_POWER);
-                this.StartClimb = false;
+                // motorSet(Lifter.STOP_POWER);
+                // this.StartClimb = false;
+                Stop();
             }
 
             // if the positions are close together, then lift together.
@@ -118,21 +121,15 @@ public class Lifter extends Subsystem {
     }
 
     public void set(int position) {
-        motorSet(LIFTING_POWER);
+        motorSet(Lifter.LIFTING_POWER);
         this.StartClimb = true;
         m_pos = position;
-        // set motor speed to correct direction
-
     }
 
     public void Lift() {
         // Tell autolift to climb
         motorSet(Lifter.LIFTING_POWER);
-        m_targetSpeed = Lifter.LIFTING_POWER;
-
         this.StartClimb = true;
-
-        // set the target position
         m_pos = Lifter.LIFTED_POS;
     }
 
@@ -140,19 +137,17 @@ public class Lifter extends Subsystem {
         // start with percent output to keep the lifter tucked under the belly.
         motorSet(Lifter.TUCKED_POWER);
         this.StartClimb = true;
-        m_targetSpeed = Lifter.TUCKED_POWER;
-
         m_pos = Lifter.STARTING_POS;
     }
 
     public void Stop() {
         motorSet(Lifter.STOP_POWER);
         this.StartClimb = false;
-        m_targetSpeed = STOP_POWER;
+        m_pos = motorRight.getSelectedSensorPosition();
     }
 
     private void motorSet(double value) {
-
+        m_targetSpeed = value;
         motorLeft.set(ControlMode.PercentOutput, value);
         motorRight.set(ControlMode.PercentOutput, value);
     }
@@ -167,7 +162,6 @@ public class Lifter extends Subsystem {
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("Lifter Pos R", motorRight.getSelectedSensorPosition());
         SmartDashboard.putNumber("Lifter Pos L", motorLeft.getSelectedSensorPosition());
-
     }
 
 }

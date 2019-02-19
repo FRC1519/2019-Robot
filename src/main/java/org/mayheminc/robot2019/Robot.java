@@ -296,6 +296,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 		Robot.drive.updateHistory();
+		Robot.shoulder.update();
+		Robot.wrist.update();
 	}
 
 	public void teleopInit() {
@@ -378,7 +380,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		Robot.shifter.updateAutoShift();
 		Robot.drive.updateHistory();
 		Robot.lifter.AutoLift();
-		Robot.shoulder.periodic();
+		Robot.shoulder.update();
+		Robot.wrist.update();
 	}
 
 	public static boolean getBrownoutMode() {

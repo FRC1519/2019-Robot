@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.mayheminc.robot2019.OI;
 
 import org.mayheminc.util.MayhemTalonSRX;
 
@@ -31,9 +30,11 @@ public class Shoulder extends Subsystem {
         STOPPED, START_MOVING, WAIT_FOR_BRAKE_RELEASE, MOTOR_MOVING,
     };
 
-    State m_state;
+    State m_state = State.STOPPED;
     Timer m_timer = new Timer();
     double m_startTimer;
+
+    boolean manualMode = true; // TODO: debug. Set to false for init
 
     public Shoulder() {
 
@@ -86,56 +87,55 @@ public class Shoulder extends Subsystem {
         SmartDashboard.putBoolean("Shoulder Brake", brake.get());
     }
 
-    public boolean percentState = false; 
-    public void periodic() {
-        
-        // switch (m_state) {
-        
+    public void setManualMode(boolean b) {
+        this.manualMode = b;
+    }
 
-        // case STOPPED:
-        //     // when we are stopped, set the motor 0 power.
-        //     this.motor_A.set(ControlMode.PercentOutput, 0);
-        //     // set the brake.
-        //     this.brake.set(true);
-        //     break;
+    public void update() {
 
-        // case START_MOVING:
-        //     // release the brake
-        //     this.brake.set(false);
-        //     // start a timer
-        //     m_startTimer = m_timer.get();
-        //     m_state = State.WAIT_FOR_BRAKE_RELEASE;
-        //     break;
+        if (!manualMode) { // auto mode...
+            switch (m_state) {
 
-        // case WAIT_FOR_BRAKE_RELEASE:
-        //     // when the timer expires, set the motor to the desired position.
-        //     if (m_timer.get() - m_startTimer >= BRAKE_RELASE_TIME_SEC) {
-        //         motor_A.set(ControlMode.Position, m_pos);
-        //     }
-        //     break;
+            case STOPPED:
+                // when we are stopped, set the motor 0 power.
+                this.motor_A.set(ControlMode.PercentOutput, 0);
+                // set the brake.
+                this.brake.set(true);
+                break;
 
-        // case MOTOR_MOVING:
-        //     // If we are close to position...
-        //     if (Math.abs(get() - m_pos) < IN_POSITION_SLOP) {
-        //         // turn off the motor.
-        //         this.motor_A.set(ControlMode.PercentOutput, 0);
-        //         // set the brake
-        //         this.brake.set(true);
-        //         m_state = State.STOPPED;
-        //     }
-        //     break;
-        // }
+            case START_MOVING:
+                // release the brake
+                this.brake.set(false);
+                // start a timer
+                m_startTimer = m_timer.get();
+                m_state = State.WAIT_FOR_BRAKE_RELEASE;
+                break;
 
-        // if(Robot.oi.pivotArmPower() != 0.0 ){
-        //     this.brake.set(false);
-        //     this.motor_A.set(ControlMode.PercentOutput, Robot.oi.pivotArmPower());
-            // percentState = true;
-        // } 
-        // else
-        // if(percentState) {
-        //     m_state=State.STOPPED;
-        //     percentState = false;
-        // }
+            case WAIT_FOR_BRAKE_RELEASE:
+                // when the timer expires, set the motor to the desired position.
+                if (m_timer.get() - m_startTimer >= BRAKE_RELASE_TIME_SEC) {
+                    this.motor_A.set(ControlMode.Position, m_pos);
+                }
+                break;
 
+            case MOTOR_MOVING:
+                // If we are close to position...
+                if (Math.abs(get() - m_pos) < IN_POSITION_SLOP) {
+                    // turn off the motor.
+                    this.motor_A.set(ControlMode.PercentOutput, 0);
+                    // set the brake
+                    this.brake.set(true);
+                    m_state = State.STOPPED;
+                }
+                break;
+            }
+        } else // manual mode...
+        {
+            m_state = State.STOPPED;
+            this.brake.set(false);
+
+            this.motor_A.set(ControlMode.PercentOutput, Robot.oi.pivotArmPower());
+
+        }
     }
 }
