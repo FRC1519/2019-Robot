@@ -23,13 +23,13 @@ public class Lifter extends Subsystem {
     // constants for positions
     private static final int STARTING_POS = 0;
     // private static final int LIFTED_POS = 1000000; // 1 million ticks
-    private static final int LIFTED_POS = 100000; // 100k ticks debug tick count
+    private static final int LIFTED_POS = 500000; // 100k ticks debug tick count
     public static final int AUTO_LIFTED_POS_1 = 100000; // 100k ticks debug tick count
     public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
 
     private static final int IN_POSITION_SLOP = 100;
-    private static final int MAX_MOTOR_OFFSET = 15000;
-    private static final int NOMINAL_MOTOR_OFFSET = 5000;
+    private static final int MAX_MOTOR_OFFSET = 200000;
+    private static final int NOMINAL_MOTOR_OFFSET = 50000;
 
     private final MayhemTalonSRX motorLeft = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_A_TALON);
     private final MayhemTalonSRX motorRight = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_A_TALON);
@@ -48,8 +48,8 @@ public class Lifter extends Subsystem {
         ConfigMotor(motorLeft, false);
         ConfigMotor(motorRight, true);
 
-        ConfigMotorFollower(motorLeftB, motorLeft);
-        ConfigMotorFollower(motorRightB, motorRight);
+        ConfigMotorFollower(motorLeftB, motorLeft, false);
+        ConfigMotorFollower(motorRightB, motorRight, true);
 
         // Tuck();
     }
@@ -57,9 +57,10 @@ public class Lifter extends Subsystem {
     /**
      * Set a motor to follow another motor
      */
-    private void ConfigMotorFollower(MayhemTalonSRX follower, MayhemTalonSRX following) {
+    private void ConfigMotorFollower(MayhemTalonSRX follower, MayhemTalonSRX following, boolean b) {
         follower.changeControlMode(ControlMode.Follower);
         follower.set(following.getDeviceID());
+        follower.setInverted(b);
     }
 
     private void ConfigMotor(MayhemTalonSRX motor, boolean inverted) {
@@ -97,11 +98,11 @@ public class Lifter extends Subsystem {
                 Stop();
             }
 
-            // if the positions are too far apart, emergency stop.
-            else if (Math.abs(pos_r - pos_l) > Lifter.MAX_MOTOR_OFFSET) {
-                SmartDashboard.putString("Lifter Debug", "E-Stop");
-                Stop();
-            }
+            // // if the positions are too far apart, emergency stop.
+            // else if (Math.abs(pos_r - pos_l) > Lifter.MAX_MOTOR_OFFSET) {
+            // SmartDashboard.putString("Lifter Debug", "E-Stop");
+            // Stop();
+            // }
 
             // if the positions are close together, then lift together.
             else if (Math.abs(pos_r - pos_l) < Lifter.NOMINAL_MOTOR_OFFSET) {
