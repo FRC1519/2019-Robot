@@ -18,6 +18,7 @@ public class Wrist extends Subsystem {
 
     private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
     private int m_pos;
+    private boolean m_manualMode = true;
 
     public final int CARGO_PICK_UP_POSITION = 1000;
 
@@ -38,6 +39,10 @@ public class Wrist extends Subsystem {
         motor.setSelectedSensorPosition(STARTING_POS);
     }
 
+    public void setManualMode(boolean b) {
+        this.m_manualMode = b;
+    }
+
     public void set(int pos) {
         m_pos = pos;
         motor.set(ControlMode.Position, pos);
@@ -56,5 +61,11 @@ public class Wrist extends Subsystem {
 
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("Wrist Pos", m_pos);
+    }
+
+    public void update() {
+        if (m_manualMode) {
+            motor.set(ControlMode.PercentOutput, Robot.oi.getWristPower());
+        }
     }
 }

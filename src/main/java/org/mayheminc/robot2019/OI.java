@@ -253,7 +253,7 @@ public class OI {
 		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait());
 
 		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait());
-		OPERATOR_PAD_BUTTON_TEN.whenPressed(new Wait());
+		OPERATOR_PAD_BUTTON_TEN.whenPressed(new SystemZero());
 
 		// Uncomment any of the "blackbox" commands in order to debug the OI buttons
 		// Robot.blackbox.addButton("DRIVER_PAD_BLUE_BUTTON", DRIVER_PAD_BLUE_BUTTON);
@@ -333,26 +333,26 @@ public class OI {
 	// control of the robot mechanisms.
 	public double pivotArmPower() {
 		// if the joystick button is held in, calculate the power.
-		if (OPERATOR_PAD_BUTTON_TWELVE.get()) {
-			// NOTE: Joystick has "up" be negative and "down" be positive. Reverse this by
-			// multiplying by -1.
-			double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS)) * -1;
-			// if the power is less than 20%, make it 0
-			if (-0.2 < value && value < 0.2) {
-				value = 0.0;
-			} else if (value > 0.2) {
-				// if it is above 20%, subtract the 20% to keep the linearness.
-				value = value - 0.2;
-			} else // (this means value < -0.2)
-			{
-				// if it is above 20%, subtract the 20% to keep the linearness.
-				value = value + 0.2;
-			}
-			return value;
-		} else // joystick button is not held in, return 0 power.
+		// if (OPERATOR_PAD_BUTTON_TWELVE.get()) {
+		// NOTE: Joystick has "up" be negative and "down" be positive. Reverse this by
+		// multiplying by -1.
+		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS)) * -1;
+		// if the power is less than 20%, make it 0
+		if (-0.2 < value && value < 0.2) {
+			value = 0.0;
+		} else if (value > 0.2) {
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value - 0.2;
+		} else // (this means value < -0.2)
 		{
-			return 0.0;
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value + 0.2;
 		}
+		return value;
+		// } else // joystick button is not held in, return 0 power.
+		// {
+		// return 0.0;
+		// }
 	}
 
 	public double tankDriveLeft() {

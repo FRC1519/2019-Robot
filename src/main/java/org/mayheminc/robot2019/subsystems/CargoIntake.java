@@ -39,4 +39,8 @@ public class CargoIntake extends Subsystem {
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("Cargo Intake Power", m_power);
     }
+
+    public void update() {
+        motor.set(ControlMode.PercentOutput, .3);
+    }
 }

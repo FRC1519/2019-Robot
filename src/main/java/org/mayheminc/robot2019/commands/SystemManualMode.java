@@ -14,27 +14,28 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  * Add your docs here.
  */
-public class SystemZero extends InstantCommand {
+public class SystemManualMode extends InstantCommand {
+
+  boolean m_manualMode;
+
   /**
-   * Tell all the subsystems to Zero the encoders.
+   * Add your docs here.
    */
-  public SystemZero() {
+  public SystemManualMode(boolean b) {
     super();
 
     // Use requires() here to declare subsystem dependencies
     requires(Robot.shoulder);
-    requires(Robot.lifter);
     requires(Robot.wrist);
-    requires(Robot.drive);
+
+    m_manualMode = b;
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.shoulder.Zero();
-    Robot.lifter.Zero();
-    Robot.wrist.Zero();
-    Robot.drive.zeroHeadingGyro(0);
+    Robot.shoulder.setManualMode(m_manualMode);
+    Robot.wrist.setManualMode(m_manualMode);
   }
 
 }
