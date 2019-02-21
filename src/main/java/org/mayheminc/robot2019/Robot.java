@@ -178,6 +178,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 	public void disabledPeriodic() {
 		lifter.updateSmartDashboard();
+		wrist.updateSmartDashboard();
+		shoulder.updateSmartDashboard();
 
 		// update Smart Dashboard, including fields for setting up autonomous operation
 		// TODO: Commented out the below and instead immersed various
@@ -382,6 +384,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		Robot.lifter.synchronizedLift();
 		Robot.shoulder.update();
 		Robot.wrist.update();
+
 	}
 
 	public static boolean getBrownoutMode() {
@@ -410,6 +413,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			drive.updateSmartDashboard();
 			lifter.updateSmartDashboard();
 			shoulder.updateSmartDashboard();
+			wrist.updateSmartDashboard();
 
 			if (OI.pidTuner != null) {
 				OI.pidTuner.updateSmartDashboard();

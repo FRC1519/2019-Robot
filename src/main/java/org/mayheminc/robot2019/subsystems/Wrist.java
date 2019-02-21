@@ -17,8 +17,8 @@ public class Wrist extends Subsystem {
     private static int IN_POSITION_SLOP = 100;
 
     private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
-    private int m_pos;
-    private boolean m_manualMode = true;
+    private int m_desiredPostion;
+    private boolean m_manualMode = false;
 
     public final int CARGO_PICK_UP_POSITION = 1000;
 
@@ -30,26 +30,23 @@ public class Wrist extends Subsystem {
 
         motor.setNeutralMode(NeutralMode.Brake);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
-        motor.configPeakOutputVoltage(+12.0, -12.0);
+        motor.configPeakOutputVoltage(+6.0, -6.0);
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     }
 
-    public void Zero() {
+    public void zero() {
         // zero the position.
         motor.setSelectedSensorPosition(STARTING_POS);
     }
 
-    public void setManualMode(boolean b) {
-        this.m_manualMode = b;
-    }
-
     public void set(int pos) {
-        m_pos = pos;
+        m_desiredPostion = pos;
+        this.m_manualMode = false;
         motor.set(ControlMode.Position, pos);
     }
 
     public boolean IsAtSetpoint() {
-        return Math.abs(motor.getPosition() - m_pos) < Wrist.IN_POSITION_SLOP;
+        return Math.abs(get() - m_desiredPostion) < Wrist.IN_POSITION_SLOP;
     }
 
     public int get() {
@@ -60,12 +57,20 @@ public class Wrist extends Subsystem {
     }
 
     public void updateSmartDashboard() {
-        SmartDashboard.putNumber("Wrist Pos", m_pos);
+        SmartDashboard.putNumber("Wrist Desired", m_desiredPostion);
+        SmartDashboard.putNumber("wrist postion", get());
     }
 
     public void update() {
-        if (m_manualMode) {
-            motor.set(ControlMode.PercentOutput, Robot.oi.getWristPower());
+        // If we are not moving the arm and we are in manual mode, keep the position.
+        if (this.m_manualMode == true && Robot.oi.getOperatorRightY() == 0.0) {
+            motor.set(ControlMode.Position, get());
+            this.m_manualMode = false;
+        }
+
+        if (Robot.oi.getOperatorRightY() != 0.0) {
+            this.m_manualMode = true;
+            motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY());
         }
     }
 }

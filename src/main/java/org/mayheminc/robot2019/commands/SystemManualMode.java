@@ -35,7 +35,7 @@ public class SystemManualMode extends InstantCommand {
   @Override
   protected void initialize() {
     Robot.shoulder.setManualMode(m_manualMode);
-    Robot.wrist.setManualMode(m_manualMode);
+    // Robot.wrist.setManualMode(m_manualMode);
   }
 
 }

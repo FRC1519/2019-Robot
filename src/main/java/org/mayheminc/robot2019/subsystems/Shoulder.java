@@ -38,19 +38,40 @@ public class Shoulder extends Subsystem {
 
     public Shoulder() {
 
-        motor_B.changeControlMode(ControlMode.Follower);
-        motor_B.set(motor_A.getDeviceID());
+        // motor_B.changeControlMode(ControlMode.Follower);
+        // motor_B.set(motor_A.getDeviceID());
 
-        motor_A.config_kP(0, 1.0, 0);
-        motor_A.config_kI(0, 0.0, 0);
-        motor_A.config_kD(0, 0.0, 0);
-        motor_A.config_kF(0, 0.0, 0);
+        configMotor(motor_A);
+        configMotorFollower(motor_B, motor_A.getDeviceID());
+        // motor_A.config_kP(0, 1.0, 0);
+        // motor_A.config_kI(0, 0.0, 0);
+        // motor_A.config_kD(0, 0.0, 0);
+        // motor_A.config_kF(0, 0.0, 0);
 
-        motor_A.setNeutralMode(NeutralMode.Coast);
-        motor_A.configNominalOutputVoltage(+0.0f, -0.0f);
-        motor_A.configPeakOutputVoltage(+12.0, -12.0);
-        motor_A.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        // motor_A.setNeutralMode(NeutralMode.Coast);
+        // motor_A.configNominalOutputVoltage(+0.0f, -0.0f);
+        // motor_A.configPeakOutputVoltage(+12.0, -12.0);
+        // motor_A.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
+    }
+
+    void configMotorFollower(MayhemTalonSRX motor, int id) {
+        configMotor(motor);
+
+        motor.changeControlMode(ControlMode.Follower);
+        motor.set(id);
+    }
+
+    void configMotor(MayhemTalonSRX motor) {
+        motor.config_kP(0, 1.0, 0);
+        motor.config_kI(0, 0.0, 0);
+        motor.config_kD(0, 0.0, 0);
+        motor.config_kF(0, 0.0, 0);
+
+        motor.setNeutralMode(NeutralMode.Coast);
+        motor.configNominalOutputVoltage(+0.0f, -0.0f);
+        motor.configPeakOutputVoltage(+12.0, -12.0);
+        motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     }
 
     /**
@@ -129,13 +150,27 @@ public class Shoulder extends Subsystem {
                 }
                 break;
             }
-        } else // manual mode...
-        {
+        }
+        // else // manual mode...
+        // {
+        // m_state = State.STOPPED;
+        // this.brake.set(false);
+
+        // this.motor_A.set(ControlMode.PercentOutput, Robot.oi.getOperatorLeftY());
+
+        // }
+
+        if (this.manualMode == true && Robot.oi.getOperatorLeftY() == 0.0) {
+            motor_A.set(ControlMode.Position, get());
+            this.manualMode = false;
             m_state = State.STOPPED;
+            this.brake.set(true);
+        }
+
+        if (Robot.oi.getOperatorLeftY() != 0.0) {
+            this.manualMode = true;
             this.brake.set(false);
-
-            this.motor_A.set(ControlMode.PercentOutput, Robot.oi.pivotArmPower());
-
+            motor_A.set(ControlMode.PercentOutput, Robot.oi.getOperatorLeftY());
         }
     }
 }

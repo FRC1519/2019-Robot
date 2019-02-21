@@ -33,7 +33,7 @@ public class SystemZero extends InstantCommand {
   protected void initialize() {
     Robot.shoulder.Zero();
     Robot.lifter.zero();
-    Robot.wrist.Zero();
+    Robot.wrist.zero();
     Robot.drive.zeroHeadingGyro(0);
   }
 

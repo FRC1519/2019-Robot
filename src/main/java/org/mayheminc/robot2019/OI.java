@@ -231,29 +231,25 @@ public class OI {
 
 		// *************************OPERATOR PAD*******************************
 
-		OPERATOR_PAD_BUTTON_ONE.whileHeld(new Wait(1));
-		OPERATOR_PAD_BUTTON_TWO.whileHeld(new LifterTuck());
-		OPERATOR_PAD_BUTTON_THREE.whileHeld(new Wait(.75));
-
-		// OPERATOR_PAD_BUTTON_FOUR does two different commands simultaneously!
-		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new Wait(0));
-		OPERATOR_PAD_BUTTON_FOUR.whileHeld(new LifterLift());
+		OPERATOR_PAD_BUTTON_ONE.whileHeld(new HatchFloor());
+		OPERATOR_PAD_BUTTON_TWO.whileHeld(new HatchPanelLow());
+		OPERATOR_PAD_BUTTON_THREE.whileHeld(new HatchPanelMid());
+		OPERATOR_PAD_BUTTON_FOUR.whileHeld(new HatchPanalHigh());
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(true));
 		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(false));
 
-		// Button Six and Eight currently control rollers of intake or elevator
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(-.75));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(.75));
 
-		OPERATOR_PAD_D_PAD_UP.whenPressed(new Wait());
-		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new Wait());
-		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new Wait());
-		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait());
+		OPERATOR_PAD_D_PAD_UP.whenPressed(new CargoHigh());
+		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new CargoLow());
+		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new CargoShip());
+		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
 
-		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait());
-		OPERATOR_PAD_BUTTON_TEN.whenPressed(new SystemZero());
+		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Depot());
+		OPERATOR_PAD_BUTTON_TEN.whenPressed(new LifterLift());
 
 		// Uncomment any of the "blackbox" commands in order to debug the OI buttons
 		// Robot.blackbox.addButton("DRIVER_PAD_BLUE_BUTTON", DRIVER_PAD_BLUE_BUTTON);
@@ -294,6 +290,70 @@ public class OI {
 
 	}
 
+	public double getOperatorRightY() {
+		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS));
+		// if the power is less than 20%, make it 0
+		if (-0.2 < value && value < 0.2) {
+			value = 0.0;
+		} else if (value > 0.2) {
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value - 0.2;
+		} else // (this means value < -0.2)
+		{
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value + 0.2;
+		}
+		return value;
+	}
+
+	public double getOperatorRightX() {
+		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS)) * -1;
+		// if the power is less than 20%, make it 0
+		if (-0.2 < value && value < 0.2) {
+			value = 0.0;
+		} else if (value > 0.2) {
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value - 0.2;
+		} else // (this means value < -0.2)
+		{
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value + 0.2;
+		}
+		return value;
+	}
+
+	public double getOperatorLeftY() {
+		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS)) * -1;
+		// if the power is less than 20%, make it 0
+		if (-0.2 < value && value < 0.2) {
+			value = 0.0;
+		} else if (value > 0.2) {
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value - 0.2;
+		} else // (this means value < -0.2)
+		{
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value + 0.2;
+		}
+		return value;
+	}
+
+	public double getOperatorLeftX() {
+		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_X_AXIS)) * -1;
+		// if the power is less than 20%, make it 0
+		if (-0.2 < value && value < 0.2) {
+			value = 0.0;
+		} else if (value > 0.2) {
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value - 0.2;
+		} else // (this means value < -0.2)
+		{
+			// if it is above 20%, subtract the 20% to keep the linearness.
+			value = value + 0.2;
+		}
+		return value;
+	}
+
 	public boolean quickTurn() {
 		return (DRIVER_PAD.getRawButton(OI.GAMEPAD_F310_RIGHT_BUTTON));
 	}
@@ -314,45 +374,6 @@ public class OI {
 		}
 
 		return (throttleVal);
-	}
-
-	// TODO: Note that there is a piece of code within pivotArmPower which is
-	// shared with other joystick features.
-	// I'm inclined to put that code in a shared function for
-	// "linearizeStickWithDeadZone(double percentage)"
-	// but also want to do some joystick testing to determine an appropriate size
-	// for the deadzone. 20%
-	// seems a bit too large. The linearization could also be improved. A
-	// side-effect of the current algorithm
-	// is that the "maximum" power available from the joystick is 100% -
-	// DEAD_ZONE_PERCENT. While probably okay
-	// for the specific cases here, this might not be the right thing to do in
-	// general. However, in here would
-	// be a good place to enforce "operator-controlled" restrictions on maximum
-	// power to be applied for manual
-	// control of the robot mechanisms.
-	public double pivotArmPower() {
-		// if the joystick button is held in, calculate the power.
-		// if (OPERATOR_PAD_BUTTON_TWELVE.get()) {
-		// NOTE: Joystick has "up" be negative and "down" be positive. Reverse this by
-		// multiplying by -1.
-		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS)) * -1;
-		// if the power is less than 20%, make it 0
-		if (-0.2 < value && value < 0.2) {
-			value = 0.0;
-		} else if (value > 0.2) {
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value - 0.2;
-		} else // (this means value < -0.2)
-		{
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value + 0.2;
-		}
-		return value;
-		// } else // joystick button is not held in, return 0 power.
-		// {
-		// return 0.0;
-		// }
 	}
 
 	public double tankDriveLeft() {
@@ -404,53 +425,55 @@ public class OI {
 		);
 	}
 
-	public double getManualPower() {
+	// public double getManualPower() {
 
-		// Positive turret power should give clockwise rotation.
-		// KBS: Note that right axis should be positive when clockwise; I don't think we
-		// really want this
-		// reversed for the turret. Looks like a copy/paste error from pivotArmPower.
-		// For ease of
-		// thinking about the turret operation, I think we want clockwise to be
-		// "forward" and ascending
-		// sensor values.
+	// // Positive turret power should give clockwise rotation.
+	// // KBS: Note that right axis should be positive when clockwise; I don't think
+	// we
+	// // really want this
+	// // reversed for the turret. Looks like a copy/paste error from pivotArmPower.
+	// // For ease of
+	// // thinking about the turret operation, I think we want clockwise to be
+	// // "forward" and ascending
+	// // sensor values.
 
-		if (OPERATOR_PAD_BUTTON_TWELVE.get()) {
+	// if (OPERATOR_PAD_BUTTON_TWELVE.get()) {
 
-			double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS));
-			// if the power is less than 20%, make it 0
-			if (value < 0.2 && value > -0.2) {
-				value = 0.0;
-			} else if (value > 0.2) {
-				// if it is above 20%, subtract the 20% to keep the linearness.
-				value = value - 0.2;
-			} else {
-				// if it is below -20%, add the 20% to keep the linearness.
-				value = value + 0.2;
-			}
-			return value;
-		} else // if the joysitck button is not held in, return 0.0
-		{
-			return 0.0;
-		}
-	}
+	// double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS));
+	// // if the power is less than 20%, make it 0
+	// if (value < 0.2 && value > -0.2) {
+	// value = 0.0;
+	// } else if (value > 0.2) {
+	// // if it is above 20%, subtract the 20% to keep the linearness.
+	// value = value - 0.2;
+	// } else {
+	// // if it is below -20%, add the 20% to keep the linearness.
+	// value = value + 0.2;
+	// }
+	// return value;
+	// } else // if the joysitck button is not held in, return 0.0
+	// {
+	// return 0.0;
+	// }
+	// }
 
-	public double getWristPower() {
-		// NOTE: Joystick has "up" be negative and "down" be positive. Reverse this by
-		// multiplying by -1.
-		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS) * -1);
-		// if the power is less than 20%, make it 0
-		if (value < 0.2 && value > -0.2) {
-			value = 0.0;
-		} else if (value > 0.2) {
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value - 0.2;
-		} else {
-			// if it is below -20%, add the 20% to keep the linearness.
-			value = value + 0.2;
-		}
-		return value;
-	}
+	// public double getWristPower() {
+	// // NOTE: Joystick has "up" be negative and "down" be positive. Reverse this
+	// by
+	// // multiplying by -1.
+	// double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS) * -1);
+	// // if the power is less than 20%, make it 0
+	// if (value < 0.2 && value > -0.2) {
+	// value = 0.0;
+	// } else if (value > 0.2) {
+	// // if it is above 20%, subtract the 20% to keep the linearness.
+	// value = value - 0.2;
+	// } else {
+	// // if it is below -20%, add the 20% to keep the linearness.
+	// value = value + 0.2;
+	// }
+	// return value;
+	// }
 
 	// public boolean getTurretFieldOrientedIsCommanded() {
 	// double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
