@@ -25,7 +25,7 @@ public class WristSetPosition extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.wrist.set(m_pos);
+    Robot.wrist.setDesiredPosition(m_pos);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -36,7 +36,7 @@ public class WristSetPosition extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.wrist.IsAtSetpoint();
+    return Robot.wrist.isAtSetpoint();
   }
 
   // Called once after isFinished returns true
@@ -49,6 +49,6 @@ public class WristSetPosition extends Command {
   @Override
   protected void interrupted() {
     // Tell the wrist to stay where it is at.
-    Robot.wrist.set(Robot.wrist.get());
+    Robot.wrist.setDesiredPosition(Robot.wrist.getCurrentPosition());
   }
 }

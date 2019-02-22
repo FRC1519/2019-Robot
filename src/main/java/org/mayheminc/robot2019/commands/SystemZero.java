@@ -20,6 +20,7 @@ public class SystemZero extends InstantCommand {
    */
   public SystemZero() {
     super();
+    this.setRunWhenDisabled(true);
 
     // Use requires() here to declare subsystem dependencies
     // requires(Robot.shoulder);

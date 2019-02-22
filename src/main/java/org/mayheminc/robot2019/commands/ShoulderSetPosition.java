@@ -46,6 +46,6 @@ public class ShoulderSetPosition extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.shoulder.set(Robot.wrist.get());
+    Robot.shoulder.set(Robot.shoulder.getCurrentPosition());
   }
 }

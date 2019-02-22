@@ -49,8 +49,8 @@ public class OI {
 	public static final Joystick DRIVER_STICK = new Joystick(RobotMap.DRIVER_JOYSTICK);
 
 	// driver stick buttons
-	// private static final Button DRIVER_STICK_BUTTON_ONE_DISABLED = new
-	// DisabledOnlyJoystickButton(DRIVER_STICK, 1);
+	private static final Button DRIVER_STICK_BUTTON_ONE_DISABLED = new
+	DisabledOnlyJoystickButton(DRIVER_STICK, 1);
 	// private static final Button DRIVER_STICK_BUTTON_ONE_ENABLED = new
 	// EnabledOnlyJoystickButton(DRIVER_STICK, 1);
 	// private static final Button DRIVER_STICK_BUTTON_TWO = new
@@ -214,7 +214,7 @@ public class OI {
 		// ******************************* DRIVER STICK
 		// ****************************************************************************
 
-		// DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new Wait(0));
+		DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new SystemZero());
 		// DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new Wait(0));
 
 		// // adjust auto parameters
@@ -231,24 +231,29 @@ public class OI {
 
 		// *************************OPERATOR PAD*******************************
 
-		OPERATOR_PAD_BUTTON_ONE.whileHeld(new HatchFloor());
-		OPERATOR_PAD_BUTTON_TWO.whileHeld(new HatchPanelLow());
-		OPERATOR_PAD_BUTTON_THREE.whileHeld(new HatchPanelMid());
-		OPERATOR_PAD_BUTTON_FOUR.whileHeld(new HatchPanalHigh());
+		// OPERATOR_PAD_BUTTON_ONE.whileHeld(new HatchFloor());
+		// OPERATOR_PAD_BUTTON_TWO.whileHeld(new HatchPanelLow());
+		// OPERATOR_PAD_BUTTON_THREE.whileHeld(new HatchPanelMid());
+		// OPERATOR_PAD_BUTTON_FOUR.whileHeld(new HatchPanalHigh());
+
+		OPERATOR_PAD_BUTTON_ONE.whenPressed(new Wait(0));
+		OPERATOR_PAD_BUTTON_TWO.whenPressed(new WristSetPosition(Wrist.DEBUG_B_POS));
+		OPERATOR_PAD_BUTTON_THREE.whenPressed(new WristSetPosition(Wrist.DEBUG_A_POS));
+		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new WristSetPosition(Wrist.STARTING_POS));
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(true));
 		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(false));
 
-		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(-.75));
-		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(.75));
+		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(CargoIntake.INTAKE_HARD_POWER));
+		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(CargoIntake.OUTTAKE_HARD_POWER));
 
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new CargoHigh());
 		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new CargoLow());
 		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new CargoShip());
 		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
 
-		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Depot());
+		// OPERATOR_PAD_BUTTON_NINE.whenPressed(new Depot());
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new LifterLift());
 
 		// Uncomment any of the "blackbox" commands in order to debug the OI buttons

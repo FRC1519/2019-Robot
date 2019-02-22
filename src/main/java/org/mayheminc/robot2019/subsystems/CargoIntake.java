@@ -11,11 +11,12 @@ import org.mayheminc.util.MayhemTalonSRX;
 
 public class CargoIntake extends Subsystem {
 
-    public static final double INTAKE = 1.0;
-    public static final double HOLD = 0.1;
-    public static final double OFF = 0.0;
-    public static final double OUTTAKE = -0.5;
-    public static final double OUTTAKE_HARD = -1.0;
+    public static final double INTAKE_HARD_POWER = 1.0;
+    public static final double INTAKE_SOFT_PANEL = 0.6;
+    public static final double HOLD_POWER = 0.05;
+    public static final double OFF_POWER = 0.0;
+    public static final double OUTTAKE_SOFT_POWER = -0.6;
+    public static final double OUTTAKE_HARD_POWER = -1.0;
 
     private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.INTAKE_ROLLER_TALON);
     double m_power;
@@ -24,14 +25,14 @@ public class CargoIntake extends Subsystem {
         motor.setNeutralMode(NeutralMode.Coast);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
-
-        this.set(CargoIntake.OFF);
+        motor.setInverted(true);
+        this.setPower(CargoIntake.OFF_POWER);
     }
 
     public void initDefaultCommand() {
     }
 
-    public void set(double power) {
+    public void setPower(double power) {
         m_power = power;
         motor.set(ControlMode.PercentOutput, m_power);
     }
@@ -41,6 +42,5 @@ public class CargoIntake extends Subsystem {
     }
 
     public void update() {
-        motor.set(ControlMode.PercentOutput, .3);
     }
 }

@@ -24,7 +24,8 @@ public class Shoulder extends Subsystem {
     private MayhemTalonSRX motor_B = new MayhemTalonSRX(RobotMap.SHOULDER_TALON_B);
     private Solenoid brake = new Solenoid(RobotMap.SHOULDER_BRAKE_SOLENOID);
 
-    private int m_pos;
+    private double m_currentPosition = 0.0;
+    private double m_pos;
 
     enum State {
         STOPPED, START_MOVING, WAIT_FOR_BRAKE_RELEASE, MOTOR_MOVING,
@@ -95,15 +96,23 @@ public class Shoulder extends Subsystem {
         return Math.abs(motor_A.getPosition() - m_pos) < Shoulder.IN_POSITION_SLOP;
     }
 
-    public int get() {
+    public int getCurrentPosition() {
+        // TODO:  should really get the position once per periodic cycle and "cache" it in a m_currentPosition field
         return (int) motor_A.getPosition();
     }
 
     public void initDefaultCommand() {
     }
 
+     // updateSensors() should be called on every main loop, whether robot is disabled, autonomous, or teleop
+     public void updateSensors() {
+        m_currentPosition = motor_A.getPosition();
+    }
+
     public void updateSmartDashboard() {
-        SmartDashboard.putNumber("Shoulder Pos", m_pos);
+        SmartDashboard.putNumber("Shoulder Current Pos", getCurrentPosition());
+        SmartDashboard.putNumber("Shoulder Voltage A", motor_A.getOutputVoltage());
+        SmartDashboard.putNumber("Shoulder Voltage B", motor_B.getOutputVoltage());
         SmartDashboard.putString("Shoulder State", m_state.toString());
         SmartDashboard.putBoolean("Shoulder Brake", brake.get());
     }
@@ -141,7 +150,7 @@ public class Shoulder extends Subsystem {
 
             case MOTOR_MOVING:
                 // If we are close to position...
-                if (Math.abs(get() - m_pos) < IN_POSITION_SLOP) {
+                if (Math.abs(getCurrentPosition() - m_pos) < IN_POSITION_SLOP) {
                     // turn off the motor.
                     this.motor_A.set(ControlMode.PercentOutput, 0);
                     // set the brake
@@ -161,7 +170,7 @@ public class Shoulder extends Subsystem {
         // }
 
         if (this.manualMode == true && Robot.oi.getOperatorLeftY() == 0.0) {
-            motor_A.set(ControlMode.Position, get());
+            motor_A.set(ControlMode.Position, getCurrentPosition());
             this.manualMode = false;
             m_state = State.STOPPED;
             this.brake.set(true);

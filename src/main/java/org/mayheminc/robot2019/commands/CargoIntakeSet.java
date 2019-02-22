@@ -33,7 +33,7 @@ public class CargoIntakeSet extends Command {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.cargoIntake.set(m_power);
+    Robot.cargoIntake.setPower(m_power);
     DriverStation.reportError("CargoIntake Run", false);
   }
 
@@ -45,13 +45,13 @@ public class CargoIntakeSet extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.cargoIntake.set(CargoIntake.HOLD);
+    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.cargoIntake.set(CargoIntake.HOLD);
+    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
   }
 }

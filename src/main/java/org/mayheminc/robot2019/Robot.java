@@ -137,7 +137,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * robotPeriodic to avoid a warning message at startup.
 	 */
 	public void robotPeriodic() {
-		// update sensors that need periodic update
+		// run the scheduler on every main loop so that commands execute
 		Scheduler.getInstance().run();
 	}
 
@@ -177,22 +177,13 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	private double dpElapsedTotal = 0.0;
 
 	public void disabledPeriodic() {
-		lifter.updateSmartDashboard();
-		wrist.updateSmartDashboard();
-		shoulder.updateSmartDashboard();
+
+		// update all sensors in the robot
+		updateSensors();
 
 		// update Smart Dashboard, including fields for setting up autonomous operation
-		// TODO: Commented out the below and instead immersed various
-		// SmartDashboard updates directly below
-		// while debugging latency of various calls. Primary finding is that CTRE calls
-		// have latency of about 0.5ms each.
-		// updateSmartDashboard(UPDATE_AUTO_SETUP_FIELDS);
-
-		// dpWaitLoops++;
-		// if (dpWaitLoops > (10.0 * 1.0 / LOOP_TIME)) { // should wait for 10 seconds
-		// after first disabled
-		// dpLoops++;
-		// dpTime0 = Timer.getFPGATimestamp();
+		// Note:  Want to avoid excess CTRE calls, as they have latency of about 0.5ms each.
+		updateSmartDashboard(UPDATE_AUTO_SETUP_FIELDS);
 
 		// // update sensors that need periodic update
 		Scheduler.getInstance().run();
@@ -294,6 +285,10 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+
+		// update all sensors in the robot
+		updateSensors();
+
 		// Scheduler.getInstance().run(); called in periodic().
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
@@ -368,6 +363,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// Scheduler.getInstance().run(); called in periodic
 
+		// update all sensors in the robot
+		updateSensors();
+
 		if (!oi.autoInTeleop()) {
 			if (drive.isSpeedRacerDrive()) {
 				drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
@@ -384,7 +382,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		Robot.lifter.synchronizedLift();
 		Robot.shoulder.update();
 		Robot.wrist.update();
-
 	}
 
 	public static boolean getBrownoutMode() {
@@ -395,6 +392,11 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
+	}
+
+	public void updateSensors() {
+		shoulder.updateSensors();
+		wrist.updateSensors();
 	}
 
 	private double SMART_DASHBOARD_UPDATE_INTERVAL = 0.250; // was 0.250;
@@ -414,6 +416,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			lifter.updateSmartDashboard();
 			shoulder.updateSmartDashboard();
 			wrist.updateSmartDashboard();
+			cargoIntake.updateSmartDashboard();
 
 			if (OI.pidTuner != null) {
 				OI.pidTuner.updateSmartDashboard();
