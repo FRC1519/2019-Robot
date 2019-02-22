@@ -30,7 +30,7 @@ public class HatchPanelLow extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addParallel(new ShoulderSetPosition(32500));
+    addParallel(new ShoulderSetAngle(32500));
     addParallel(new WristSetPosition(1000));
   }
 }

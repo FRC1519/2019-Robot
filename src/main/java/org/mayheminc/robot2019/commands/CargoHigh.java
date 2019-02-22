@@ -30,7 +30,7 @@ public class CargoHigh extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addParallel(new ShoulderSetPosition(173000));
+    addParallel(new ShoulderSetAngle(173000));
     addParallel(new WristSetPosition(5000));
   }
 }

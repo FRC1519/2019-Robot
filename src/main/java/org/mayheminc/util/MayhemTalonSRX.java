@@ -135,7 +135,7 @@ public class MayhemTalonSRX extends TalonSRX {
 			this.setSelectedSensorPosition(zeroPositionCount, 0, 1000);
 	}
 
-	public double getPosition() {
+	public int getPosition() {
 		return this.getSelectedSensorPosition(0);
 	}
 

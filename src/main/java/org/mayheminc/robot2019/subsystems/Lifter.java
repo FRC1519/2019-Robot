@@ -16,7 +16,6 @@ public class Lifter extends Subsystem {
     private static final double STOP_POWER = 0.0;
     private static final double TUCKED_POWER = -0.1;
     private static final double LIFTING_POWER = 0.7;   //used 1.0 for initial testing;  reducing power to save mechanism
-    // private static final double LIFTING_POWER = 0.4; // debug speed
 
     private static final double SLOW_SPEED_MULTIPLIER = 0.8;
 
@@ -67,6 +66,7 @@ public class Lifter extends Subsystem {
         motor.setNeutralMode(NeutralMode.Coast);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
+        motor.configClosedloopRamp(0.1);
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
         motor.setInverted(inverted);

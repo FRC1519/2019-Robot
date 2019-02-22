@@ -133,10 +133,13 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	}
 
 	/**
-	 * This function is called during every period. We have defined an empty
-	 * robotPeriodic to avoid a warning message at startup.
+	 * This function is called during every period, AFTER the calls to "modePeriodic".
+	 * Need to at least define robotPeriodic() to avoid a warning message at startup.
 	 */
 	public void robotPeriodic() {
+		// TODO:  To avoid having essential calls overlooked in "modePeriodic()" calls, consider consolidating stuff here
+		// examples:  updateSensors, updateSmartDashboard, etc.
+
 		// run the scheduler on every main loop so that commands execute
 		Scheduler.getInstance().run();
 	}
@@ -160,91 +163,37 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// blackbox.reset();
 	}
 
-	private double dpTime0 = 0.0;
-	private double dpTime1 = 0.0;
-	private double dpTime2 = 0.0;
-	private double dpTime3 = 0.0;
-	private double dpTime4 = 0.0;
-	private double dpTime5 = 0.0;
-	private int dpWaitLoops = 0;
-	private int dpLoops = 0;
-
-	private double dpElapsed1 = 0.0;
-	private double dpElapsed2 = 0.0;
-	private double dpElapsed3 = 0.0;
-	private double dpElapsed4 = 0.0;
-	private double dpElapsed5 = 0.0;
-	private double dpElapsedTotal = 0.0;
 
 	public void disabledPeriodic() {
-
 		// update all sensors in the robot
 		updateSensors();
 
 		// update Smart Dashboard, including fields for setting up autonomous operation
 		// Note:  Want to avoid excess CTRE calls, as they have latency of about 0.5ms each.
 		updateSmartDashboard(UPDATE_AUTO_SETUP_FIELDS);
+		
+		// ensure that the drive base updates its history (probably belongs in "updateSensors")
+		Robot.drive.updateHistory();
 
-		// // update sensors that need periodic update
-		Scheduler.getInstance().run();
-
-		// dpTime1 = Timer.getFPGATimestamp();
-		// dpElapsed1 = dpElapsed1 + dpTime1 - dpTime0;
-
-		// drive.updateSmartDashboard();
-		// lifter.updateSmartDashboard();
-
-		// dpTime2 = Timer.getFPGATimestamp();
-		// dpElapsed2 = dpElapsed2 + dpTime2 - dpTime1;
-
-		// dpTime3 = Timer.getFPGATimestamp();
-		// dpElapsed3 = dpElapsed3 + dpTime3 - dpTime2;
-
-		// // PrintPeriodicPeriod();
-		// dpTime4 = Timer.getFPGATimestamp();
-		// dpElapsed4 = dpElapsed4 + dpTime4 - dpTime3;
-
-		// if (OI.pidTuner != null) {
-		// OI.pidTuner.updateSmartDashboard();
-		// }
-
-		// Autonomous.updateSmartDashboard();
-
-		// Robot.drive.updateHistory();
-
-		// dpTime5 = Timer.getFPGATimestamp();
-		// dpElapsed5 = dpElapsed5 + dpTime5 - dpTime4;
-		// dpElapsedTotal = dpElapsedTotal + dpTime5 - dpTime0;
-
-		// if ((dpLoops % 40) == 0) {
-		// System.out.println("dpAvg1: " + Utils.fourDecimalPlaces(dpElapsed1 / dpLoops)
-		// + " dpAvg2: "
-		// + Utils.fourDecimalPlaces(dpElapsed2 / dpLoops) + " dpAvg3: "
-		// + Utils.fourDecimalPlaces(dpElapsed3 / dpLoops) + " dpAvg4: "
-		// + Utils.fourDecimalPlaces(dpElapsed4 / dpLoops) + " dpAvg5: "
-		// + Utils.fourDecimalPlaces(dpElapsed5 / dpLoops) + " dpAvgTot: "
-		// + Utils.fourDecimalPlaces(dpElapsedTotal / dpLoops));
-		// }
-		// }
+		// Scheduler.getInstance().run(); called in periodic().
 	}
+
 
 	public void autonomousInit() {
 
+		// TODO:  do we want autonomous in high gear instead this year?
 		// force low gear
 		shifter.setShifter(Shifter.LOW_GEAR);
 
 		// turn off the compressor
-		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the
-		// compressor
-		// didn't affect the operation of the autonomous programs. Not sure we really
-		// want this.
-		// At the least, we can take advantage of the last few seconds in autonomous by
-		// turning
-		// on the compressor at the end of our autonomous programs instead of waiting
-		// for the
+		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the compressor
+		// didn't affect the operation of the autonomous programs. Not sure we really want this.
+		// At the least, we can take advantage of the last few seconds in autonomous by turning
+		// on the compressor at the end of our autonomous programs instead of waiting for the
 		// teleopInit to be called at the start of teleop.
 		compressor.stop();
 
+		// TODO: examine section below for "Zero" updates needed in 2019.
 		// "Zero" the robot subsystems which have position encoders in this section.
 		// Overall strategy for zeroing subsystems is as follows:
 		// Every time autonomous starts:
@@ -300,10 +249,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public void teleopInit() {
 
 		// before doing anything else in teleop, kill any existing commands
+		// TODO:  consider if this is still desirable in 2019 with the "sandstorm" period
 		Scheduler.getInstance().removeAll();
-
-		// turn on the compressor
-		compressor.start();
 
 		// NOTE: BELOW SHOULD BE OBE WITH above Scheduler.getInstance().removeAll();
 		// // This makes sure that the autonomous stops running when
@@ -314,11 +261,14 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// autonomousCommand.cancel();
 		// }
 
+		// turn on the compressor  (may have been off in autonomous)
+		compressor.start();
+
 		DriverStation.reportError("Entering Teleop.\n", false);
 
 		shifter.setGear(Shifter.LOW_GEAR);
 
-		// RJD: need a place to zero the lifter. This should be in a command in auto.
+		// TODO:  RJD: need a place to zero the lifter. This should be in a command in auto.
 		lifter.zero();
 	}
 
@@ -366,6 +316,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// update all sensors in the robot
 		updateSensors();
 
+		// drive the robot based upon joystick inputs, unless an "auto" command is driving
 		if (!oi.autoInTeleop()) {
 			if (drive.isSpeedRacerDrive()) {
 				drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());

@@ -32,7 +32,7 @@ public class SystemZero extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.shoulder.Zero();
+    Robot.shoulder.zero();
     Robot.lifter.zero();
     Robot.wrist.zero();
     Robot.drive.zeroHeadingGyro(0);

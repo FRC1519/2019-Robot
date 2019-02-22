@@ -52,7 +52,7 @@ public class Wrist extends Subsystem {
     public void setDesiredPosition(int pos) {
         m_desiredPostion = pos;
         this.m_manualMode = false;
-        motor.set(ControlMode.Position, pos);
+        // motor.set(ControlMode.Position, pos);
     }
 
     public boolean isAtSetpoint() {
@@ -87,7 +87,7 @@ public class Wrist extends Subsystem {
 
         if (Robot.oi.getOperatorRightY() != 0.0) {
             this.m_manualMode = true;
-            motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY());
+            // motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY());
         }
     }
 }

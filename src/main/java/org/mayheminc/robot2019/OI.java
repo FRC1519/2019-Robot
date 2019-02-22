@@ -241,6 +241,10 @@ public class OI {
 		OPERATOR_PAD_BUTTON_THREE.whenPressed(new WristSetPosition(Wrist.DEBUG_A_POS));
 		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new WristSetPosition(Wrist.STARTING_POS));
 
+		OPERATOR_PAD_BUTTON_TWO.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
+		OPERATOR_PAD_BUTTON_THREE.whenPressed(new ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
+		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
+
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(true));
 		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(false));
@@ -254,7 +258,11 @@ public class OI {
 		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
 
 		// OPERATOR_PAD_BUTTON_NINE.whenPressed(new Depot());
+		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait(0));
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new LifterLift());
+
+		OPERATOR_PAD_BUTTON_ELEVEN.whenPressed(new Wait(0));
+		OPERATOR_PAD_BUTTON_TWELVE.whenPressed(new Wait(0));
 
 		// Uncomment any of the "blackbox" commands in order to debug the OI buttons
 		// Robot.blackbox.addButton("DRIVER_PAD_BLUE_BUTTON", DRIVER_PAD_BLUE_BUTTON);
@@ -295,73 +303,55 @@ public class OI {
 
 	}
 
-	public double getOperatorRightY() {
-		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS));
-		// if the power is less than 20%, make it 0
-		if (-0.2 < value && value < 0.2) {
+	private static final double ARM_DEAD_ZONE_PERCENT = 0.15;
+
+	private double applyLinearizedDeadZone(double value, double deadZonePercent) {
+		// if the value is within the deadZone, make it 0.0
+		if (Math.abs(value) < deadZonePercent) {
 			value = 0.0;
-		} else if (value > 0.2) {
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value - 0.2;
-		} else // (this means value < -0.2)
-		{
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value + 0.2;
+		} else if (value > deadZonePercent) {
+			// if it is above deadZonePercent, subtract the deadZonePercent to keep the linearness.
+			value = value - deadZonePercent;
+		} else {  // (this means value < -deadZonePercent)
+			// if it is below deadZonePercent, add the deadZonePercent to keep the linearness.
+			value = value + deadZonePercent;
 		}
 		return value;
+	}
+
+	// This is for the "Y" axis of the Operator Gamepad.
+	// However, the joysticks give -1.0 on the Y axis when pushed forward
+	// This method reverses that, so that positive numbers are forward
+	public double getOperatorRightY() {
+		double value = -OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS);    // NOTE:  Don't overlook the negation!
+		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
 	}
 
 	public double getOperatorRightX() {
-		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS)) * -1;
-		// if the power is less than 20%, make it 0
-		if (-0.2 < value && value < 0.2) {
-			value = 0.0;
-		} else if (value > 0.2) {
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value - 0.2;
-		} else // (this means value < -0.2)
-		{
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value + 0.2;
-		}
-		return value;
+		double value = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
+		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
 	}
 
+	// This is for the "Y" axis of the Operator Gamepad.
+	// However, the joysticks give -1.0 on the Y axis when pushed forward
+	// This method reverses that, so that positive numbers are forward
 	public double getOperatorLeftY() {
-		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS)) * -1;
-		// if the power is less than 20%, make it 0
-		if (-0.2 < value && value < 0.2) {
-			value = 0.0;
-		} else if (value > 0.2) {
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value - 0.2;
-		} else // (this means value < -0.2)
-		{
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value + 0.2;
-		}
-		return value;
+		double value = -OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS);    // NOTE:  Don't overlook the negation!
+		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
 	}
 
 	public double getOperatorLeftX() {
-		double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_X_AXIS)) * -1;
-		// if the power is less than 20%, make it 0
-		if (-0.2 < value && value < 0.2) {
-			value = 0.0;
-		} else if (value > 0.2) {
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value - 0.2;
-		} else // (this means value < -0.2)
-		{
-			// if it is above 20%, subtract the 20% to keep the linearness.
-			value = value + 0.2;
-		}
-		return value;
+		double value = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_X_AXIS);
+		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
 	}
+
 
 	public boolean quickTurn() {
 		return (DRIVER_PAD.getRawButton(OI.GAMEPAD_F310_RIGHT_BUTTON));
 	}
+
+	private static final double THROTTLE_DEAD_ZONE_PERCENT = 0.05;
+	private static final double STEERING_DEAD_ZONE_PERCENT = 0.05;
 
 	public double driveThrottle() {
 		// the driveThrottle is the "Y" axis of the Driver Gamepad.
@@ -369,7 +359,7 @@ public class OI {
 		// This method reverses that, so that positive numbers are forward
 		double throttleVal = -DRIVER_PAD.getY();
 
-		if (Math.abs(throttleVal) < 0.05) {
+		if (Math.abs(throttleVal) < THROTTLE_DEAD_ZONE_PERCENT) {
 			throttleVal = 0.0;
 		}
 
@@ -384,7 +374,7 @@ public class OI {
 	public double tankDriveLeft() {
 		double tankDriveLeftAxis = -DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_LEFT_Y_AXIS);
 
-		if (Math.abs(tankDriveLeftAxis) < 0.05) {
+		if (Math.abs(tankDriveLeftAxis) < THROTTLE_DEAD_ZONE_PERCENT) {
 			tankDriveLeftAxis = 0.0;
 		}
 		return tankDriveLeftAxis;
@@ -393,7 +383,7 @@ public class OI {
 	public double tankDriveRight() {
 		double tankDriveRightAxis = -DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_RIGHT_Y_AXIS);
 
-		if (Math.abs(tankDriveRightAxis) < 0.05) {
+		if (Math.abs(tankDriveRightAxis) < THROTTLE_DEAD_ZONE_PERCENT) {
 			tankDriveRightAxis = 0.0;
 		}
 		return tankDriveRightAxis;
@@ -402,7 +392,7 @@ public class OI {
 	public double steeringX() {
 		// SteeringX is the "X" axis of the right stick on the Driver Gamepad.
 		double value = DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_RIGHT_X_AXIS);
-		if (Math.abs(value) < 0.05) {
+		if (Math.abs(value) < STEERING_DEAD_ZONE_PERCENT) {
 			value = 0.0;
 		}
 
@@ -415,7 +405,7 @@ public class OI {
 	public double steeringY() {
 		// However, the joysticks give -1.0 on that axis when pushed forward
 		// This method reverses that, so that positive numbers are forward
-		return (-DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_RIGHT_Y_AXIS));
+		return -DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_RIGHT_Y_AXIS);    // NOTE:  Don't overlook the negation!
 	}
 
 	public boolean forceLowGear() {
@@ -431,54 +421,6 @@ public class OI {
 	}
 
 	// public double getManualPower() {
-
-	// // Positive turret power should give clockwise rotation.
-	// // KBS: Note that right axis should be positive when clockwise; I don't think
-	// we
-	// // really want this
-	// // reversed for the turret. Looks like a copy/paste error from pivotArmPower.
-	// // For ease of
-	// // thinking about the turret operation, I think we want clockwise to be
-	// // "forward" and ascending
-	// // sensor values.
-
-	// if (OPERATOR_PAD_BUTTON_TWELVE.get()) {
-
-	// double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS));
-	// // if the power is less than 20%, make it 0
-	// if (value < 0.2 && value > -0.2) {
-	// value = 0.0;
-	// } else if (value > 0.2) {
-	// // if it is above 20%, subtract the 20% to keep the linearness.
-	// value = value - 0.2;
-	// } else {
-	// // if it is below -20%, add the 20% to keep the linearness.
-	// value = value + 0.2;
-	// }
-	// return value;
-	// } else // if the joysitck button is not held in, return 0.0
-	// {
-	// return 0.0;
-	// }
-	// }
-
-	// public double getWristPower() {
-	// // NOTE: Joystick has "up" be negative and "down" be positive. Reverse this
-	// by
-	// // multiplying by -1.
-	// double value = (OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS) * -1);
-	// // if the power is less than 20%, make it 0
-	// if (value < 0.2 && value > -0.2) {
-	// value = 0.0;
-	// } else if (value > 0.2) {
-	// // if it is above 20%, subtract the 20% to keep the linearness.
-	// value = value - 0.2;
-	// } else {
-	// // if it is below -20%, add the 20% to keep the linearness.
-	// value = value + 0.2;
-	// }
-	// return value;
-	// }
 
 	// public boolean getTurretFieldOrientedIsCommanded() {
 	// double x = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
