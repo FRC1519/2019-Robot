@@ -16,6 +16,6 @@ public class ArmRocketCargo2 extends CommandGroup {
    * Add your docs here.
    */
   public ArmRocketCargo2() {
-    addSequential(new ArmMove(1000, 500));
+    // addSequential(new ArmMove(1000, 500));
   }
 }

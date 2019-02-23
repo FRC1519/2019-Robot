@@ -11,21 +11,19 @@ import org.mayheminc.robot2019.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class WristSetPosition extends Command {
+public class WristSetAngle extends Command {
+  double m_desiredAngle;
 
-  int m_pos;
-
-  public WristSetPosition(int pos) {
+  public WristSetAngle(double angleInDegrees) {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.wrist);
-
-    m_pos = pos;
+    m_desiredAngle = angleInDegrees;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.wrist.setDesiredPosition(m_pos);
+    Robot.wrist.setDesiredAngle(m_desiredAngle);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -48,7 +46,6 @@ public class WristSetPosition extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    // Tell the wrist to stay where it is at.
-    Robot.wrist.setDesiredPosition(Robot.wrist.getCurrentPosition());
+    Robot.wrist.setDesiredAngle(Robot.wrist.getAngleInDegrees());
   }
 }

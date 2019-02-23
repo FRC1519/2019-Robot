@@ -31,6 +31,6 @@ public class CargoMid extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     addParallel(new ShoulderSetAngle(104000));
-    addParallel(new WristSetPosition(3000));
+    // addParallel(new WristSetAngle(3000));
   }
 }

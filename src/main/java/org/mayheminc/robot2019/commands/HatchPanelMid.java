@@ -31,6 +31,6 @@ public class HatchPanelMid extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     addParallel(new ShoulderSetAngle(32500));
-    addParallel(new WristSetPosition(1000));
+    addParallel(new WristSetAngle(1000));
   }
 }

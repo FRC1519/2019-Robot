@@ -19,12 +19,12 @@ public class Shoulder extends Subsystem {
 
     public static final int ZERO_POS = 0;
     public static final int STARTING_POS = ZERO_POS;                                    // the same as "zero_pos" - lowered all the way into the robot
-    private static final double STARTING_POSITION_DEGREES = -72.0;                      // the starting position (approx) in degrees
+    private static final double STARTING_POSITION_DEGREES = -78.0;                      // the starting position (approx) in degrees
     private static final double ENCODER_CPR = 4096.0;
     private static final double OVERALL_REDUCTION = 325.0 * 48.0/12.0;                  // gearbox reduction multiplied by sprocket reduction
     private static final double TICKS_PER_ROTATION = ENCODER_CPR * OVERALL_REDUCTION;   // turns out to be 5,324,800
     private static final double TICKS_PER_DEGREE = TICKS_PER_ROTATION / 360.0;          // turns out to be approx 14,791
-    private static final double HORIZONTAL_HOLD_OUTPUT = 0.08;                          // TODO:  determine this empirically - how much %Vbus to hold arm horizontal
+    private static final double HORIZONTAL_HOLD_OUTPUT = 0.08;                          // found this empirically - may need to adjust based upon wrist position
 
     public static final double HORIZONTAL_ANGLE = 0.0;
     public static final double DEBUG_UP_ANGLE = 30.0;
@@ -80,10 +80,12 @@ public class Shoulder extends Subsystem {
         motor.config_kF(0, 0.0, 0);
 
         motor.setNeutralMode(NeutralMode.Coast);
+        motor.setInverted(false);
+        motor.setSensorPhase(false);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
         motor.configClosedloopRamp(0.05);                      // limit neutral to full to 0.05 seconds
-        motor.configMotionCruiseVelocity(100000);               // measured velocity of ~100K at 85%; set cruise to that
+        motor.configMotionCruiseVelocity(100000);              // measured velocity of ~100K at 85%; set cruise to that
         motor.configMotionAcceleration(200000);                // acceleration of 2x velocity allows cruise to be attained in 1/2 second
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     }
@@ -114,12 +116,11 @@ public class Shoulder extends Subsystem {
 
     private void setPosition(int pos) {
         m_desiredAngle = positionToDegrees(pos);
-        m_state = State.START_MOVING;
-        m_manualMode = false;
+        m_state = State.STOPPED;
     }
 
     public boolean isAtSetpoint() {
-        return Math.abs(positionToDegrees(motor_A.getPosition()) - m_desiredAngle) < Shoulder.ANGLE_TOLERANCE;
+        return Math.abs(m_angleInDegrees - m_desiredAngle) < Shoulder.ANGLE_TOLERANCE;
     }
 
     public double getAngleInDegrees() {
@@ -167,6 +168,8 @@ public class Shoulder extends Subsystem {
         SmartDashboard.putNumber("Shoulder FeedForward", m_feedForward);
         SmartDashboard.putNumber("Shoulder Voltage A", motor_A.getOutputVoltage());
         SmartDashboard.putNumber("Shoulder Voltage B", motor_B.getOutputVoltage());
+        SmartDashboard.putNumber("Shoulder Amps A", motor_A.getOutputCurrent());
+        SmartDashboard.putNumber("Shoulder Amps B", motor_B.getOutputCurrent());
         SmartDashboard.putString("Shoulder State", m_state.toString());
         SmartDashboard.putNumber("Shoulder Joystick", Robot.oi.getOperatorLeftY());
         SmartDashboard.putNumber("Shoulder Velocity", motor_A.getSelectedSensorVelocity());

@@ -237,13 +237,9 @@ public class OI {
 		// OPERATOR_PAD_BUTTON_FOUR.whileHeld(new HatchPanalHigh());
 
 		OPERATOR_PAD_BUTTON_ONE.whenPressed(new Wait(0));
-		OPERATOR_PAD_BUTTON_TWO.whenPressed(new WristSetPosition(Wrist.DEBUG_B_POS));
-		OPERATOR_PAD_BUTTON_THREE.whenPressed(new WristSetPosition(Wrist.DEBUG_A_POS));
-		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new WristSetPosition(Wrist.STARTING_POS));
-
-		OPERATOR_PAD_BUTTON_TWO.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
-		OPERATOR_PAD_BUTTON_THREE.whenPressed(new ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
-		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
+		OPERATOR_PAD_BUTTON_TWO.whenPressed(new WristSetAngle(Wrist.CARGO_FLOOR_PICKUP_ANGLE));
+		OPERATOR_PAD_BUTTON_THREE.whenPressed(new WristSetAngle(Wrist.HORIZONTAL_ANGLE));
+		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new WristSetAngle(Wrist.CARGO_LOADING_STATION_ANGLE));
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(true));
@@ -252,10 +248,15 @@ public class OI {
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(CargoIntake.INTAKE_HARD_POWER));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(CargoIntake.OUTTAKE_HARD_POWER));
 
-		OPERATOR_PAD_D_PAD_UP.whenPressed(new CargoHigh());
-		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new CargoLow());
-		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new CargoShip());
-		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
+		// OPERATOR_PAD_D_PAD_UP.whenPressed(new CargoHigh());
+		// OPERATOR_PAD_D_PAD_DOWN.whenPressed(new CargoLow());
+		// OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new CargoShip());
+		// OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
+
+		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait(0));
+		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
+		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
+		OPERATOR_PAD_D_PAD_UP.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
 
 		// OPERATOR_PAD_BUTTON_NINE.whenPressed(new Depot());
 		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait(0));

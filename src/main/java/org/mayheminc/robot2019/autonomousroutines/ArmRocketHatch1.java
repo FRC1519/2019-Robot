@@ -16,6 +16,6 @@ public class ArmRocketHatch1 extends CommandGroup {
    * Add your docs here.
    */
   public ArmRocketHatch1() {
-    addSequential(new ArmMove(200, 600));
+    // addSequential(new ArmMove(200, 600));
   }
 }

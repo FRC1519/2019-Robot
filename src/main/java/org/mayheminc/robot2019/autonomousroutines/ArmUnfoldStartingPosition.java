@@ -16,6 +16,6 @@ public class ArmUnfoldStartingPosition extends CommandGroup {
    * Add your docs here.
    */
   public ArmUnfoldStartingPosition() {
-    addSequential(new ArmMove(100, 1000));
+    // addSequential(new ArmMove(100, 1000));
   }
 }

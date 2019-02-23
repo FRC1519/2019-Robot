@@ -15,16 +15,15 @@ public class Lifter extends Subsystem {
     // constants for power
     private static final double STOP_POWER = 0.0;
     private static final double TUCKED_POWER = -0.1;
-    private static final double LIFTING_POWER = 0.7;   //used 1.0 for initial testing;  reducing power to save mechanism
+    private static final double LIFTING_POWER = 0.2;   // used 0.7 for comp robot; used 1.0 for initial testing;  reducing power to save mechanism
 
     private static final double SLOW_SPEED_MULTIPLIER = 0.8;
 
     // constants for positions
     private static final int STARTING_POS = 0;
-    // private static final int LIFTED_POS = 1000000; // 1 million ticks
-    private static final int LIFTED_POS = 800000; // 100k ticks debug tick count
-    public static final int AUTO_LIFTED_POS_1 = 100000; // 100k ticks debug tick count
-    public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
+    private static final int LIFTED_POS = 800000;           // determined empirically on bag night
+    public static final int AUTO_LIFTED_POS_1 = 100000;     // 100k ticks debug tick count
+    public static final int AUTO_LIFTED_POS_2 = 200000;     // 200k ticks debug tick count
 
     private static final int IN_POSITION_SLOP = 100;
     private static final int MAX_MOTOR_OFFSET = 200000;
@@ -57,9 +56,9 @@ public class Lifter extends Subsystem {
      * Set a motor to follow another motor
      */
     private void configMotorFollower(MayhemTalonSRX follower, MayhemTalonSRX following, boolean b) {
+        configMotor(follower, b);
         follower.changeControlMode(ControlMode.Follower);
         follower.set(following.getDeviceID());
-        follower.setInverted(b);
     }
 
     private void configMotor(MayhemTalonSRX motor, boolean inverted) {
@@ -68,7 +67,6 @@ public class Lifter extends Subsystem {
         motor.configPeakOutputVoltage(+12.0, -12.0);
         motor.configClosedloopRamp(0.1);
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-
         motor.setInverted(inverted);
     }
 
@@ -101,11 +99,11 @@ public class Lifter extends Subsystem {
                 stop();
             }
 
-            // // if the positions are too far apart, emergency stop.
-            // else if (Math.abs(pos_r - pos_l) > Lifter.MAX_MOTOR_OFFSET) {
-            // SmartDashboard.putString("Lifter Debug", "E-Stop");
-            // Stop();
-            // }
+            // if the positions are too far apart, emergency stop.
+            else if (Math.abs(pos_r - pos_l) > Lifter.MAX_MOTOR_OFFSET) {
+                SmartDashboard.putString("Lifter Debug", "E-Stop");
+                stop();
+            }
 
             // if the positions are close together, then lift together.
             else if (Math.abs(pos_r - pos_l) < Lifter.NOMINAL_MOTOR_OFFSET) {
