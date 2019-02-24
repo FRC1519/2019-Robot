@@ -27,10 +27,21 @@ public class Shoulder extends Subsystem {
     private static final double HORIZONTAL_HOLD_OUTPUT = 0.08;                          // found this empirically - may need to adjust based upon wrist position
 
     public static final double HORIZONTAL_ANGLE = 0.0;
-    public static final double DEBUG_UP_ANGLE = 30.0;
-    public static final double DEBUG_DOWN_ANGLE = -30.0;
 
-    private static final double ANGLE_TOLERANCE = 1.0;                                   // hoping for one degree!!!  (very optimistic, about 0.5 inches)
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 60.0;
+    public static final double CARGO_ROCKET_MID_ANGLE = 30.0;
+    public static final double CARGO_ROCKET_LOW_ANGLE = -10.0;
+    public static final double CARGO_CARGO_SHIP_ANGLE = -2.0;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -30.0;
+    public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
+
+    public static final double HP_ROCKET_HIGH_ANGLE = 42.0;
+    public static final double HP_ROCKET_MID_ANGLE = -6.0;
+    public static final double HP_ROCKET_LOW_ANGLE = -63.0;
+    public static final double HP_FLOOR_PICKUP_ANGLE = -35.0;
+    public static final double HP_LOADING_STATION_ANGLE = -10.0;
+    
+    private static final double ANGLE_TOLERANCE = 3.0;                                   // hoping for one degree!!!  (very optimistic, about 0.5 inches)
     private static final double BRAKE_RELEASE_TIME_SEC = 0.0;                           // TODO:  update with the real brake release time, once we are using it
 
     private MayhemTalonSRX motor_A = new MayhemTalonSRX(RobotMap.SHOULDER_TALON_A);
@@ -119,6 +130,12 @@ public class Shoulder extends Subsystem {
         m_state = State.STOPPED;
     }
 
+    public void moveToZeroPosition() {
+        m_desiredAngle = positionToDegrees(ZERO_POS);
+        m_state = State.STOPPED;
+        m_manualMode = false;
+    };
+
     public boolean isAtSetpoint() {
         return Math.abs(m_angleInDegrees - m_desiredAngle) < Shoulder.ANGLE_TOLERANCE;
     }
@@ -164,15 +181,15 @@ public class Shoulder extends Subsystem {
         SmartDashboard.putNumber("Shoulder Current Pos", getCurrentPosition());
         SmartDashboard.putNumber("Shoulder Current Degrees", m_angleInDegrees);
         SmartDashboard.putNumber("Shoulder Desired Degrees", m_desiredAngle);
-        SmartDashboard.putNumber("Shoulder Gravity Compensation", m_gravityCompensation);
-        SmartDashboard.putNumber("Shoulder FeedForward", m_feedForward);
+        // SmartDashboard.putNumber("Shoulder Gravity Compensation", m_gravityCompensation);
+        // SmartDashboard.putNumber("Shoulder FeedForward", m_feedForward);
         SmartDashboard.putNumber("Shoulder Voltage A", motor_A.getOutputVoltage());
         SmartDashboard.putNumber("Shoulder Voltage B", motor_B.getOutputVoltage());
         SmartDashboard.putNumber("Shoulder Amps A", motor_A.getOutputCurrent());
         SmartDashboard.putNumber("Shoulder Amps B", motor_B.getOutputCurrent());
         SmartDashboard.putString("Shoulder State", m_state.toString());
-        SmartDashboard.putNumber("Shoulder Joystick", Robot.oi.getOperatorLeftY());
-        SmartDashboard.putNumber("Shoulder Velocity", motor_A.getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("Shoulder Joystick", Robot.oi.getOperatorLeftY());
+        // SmartDashboard.putNumber("Shoulder Velocity", motor_A.getSelectedSensorVelocity());
         SmartDashboard.putBoolean("Shoulder Brake", brake.get());
     }
 

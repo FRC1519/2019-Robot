@@ -7,6 +7,9 @@
 
 package org.mayheminc.robot2019.commands;
 
+import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class HatchPanelMid extends CommandGroup {
@@ -30,7 +33,7 @@ public class HatchPanelMid extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addParallel(new ShoulderSetAngle(32500));
-    addParallel(new WristSetAngle(1000));
+    addSequential(new ArmMove(Shoulder.HP_ROCKET_MID_ANGLE, Wrist.HP_ROCKET_MID_ANGLE));
+
   }
 }

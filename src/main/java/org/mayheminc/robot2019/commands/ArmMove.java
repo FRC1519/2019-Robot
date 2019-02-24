@@ -14,8 +14,8 @@ public class ArmMove extends CommandGroup {
    * Move the shoulder and wrist at the same time. The command is done when both
    * the wrist and shoulder are done moving.
    */
-  public ArmMove(int shoulder, int wrist) {
-    addParallel(new WristSetAngle(wrist));
-    addSequential(new ShoulderSetAngle(shoulder));
+  public ArmMove(double shoulderAngle, double wristAngle) {
+    addSequential(new ShoulderSetAngle(shoulderAngle));
+    addSequential(new WristSetAngle(wristAngle));         // TODO: should probably be "addParallel()"
   }
 }

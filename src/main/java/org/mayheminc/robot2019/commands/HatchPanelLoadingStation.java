@@ -9,11 +9,11 @@ package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class Depot extends CommandGroup {
+public class HatchPanelLoadingStation extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public Depot() {
+  public HatchPanelLoadingStation() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -30,7 +30,7 @@ public class Depot extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    // addParallel(new ShoulderSetAngle(104000));
-    // addParallel(new WristSetAngle(3000));
+    addSequential(new WristSetAngle(102.0 + 10.0));         // TODO: should not just use hard-coded numbers
+    addSequential(new ShoulderSetAngle(-70.0));
   }
 }

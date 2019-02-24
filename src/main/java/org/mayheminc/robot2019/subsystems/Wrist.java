@@ -22,18 +22,27 @@ public class Wrist extends Subsystem {
     private static final double OVERALL_REDUCTION = 1.0;                                // no reduction after the encoder
     private static final double TICKS_PER_ROTATION = ENCODER_CPR * OVERALL_REDUCTION;   // turns out to be 4096
     private static final double TICKS_PER_DEGREE = TICKS_PER_ROTATION / 360.0;          // turns out to be approx 11.38
-    private static final double HORIZONTAL_HOLD_OUTPUT = 0.12;                          // need to determine empirically 
+    private static final double HORIZONTAL_HOLD_OUTPUT = 0.15;                          // need to determine empirically 
     private static final double GRAVITY_OFFSET_ANGLE_RADIANS = Math.toRadians(55.0);
 
     // in general, the wrist angle positions are relative to the ground
-    public static final double HORIZONTAL_ANGLE = 0.0;
-    public static final double CARGO_LOADING_STATION_ANGLE = 10.0;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -10.0;
+    public static final double FRONT_ANGLE_SLOP = 17.0;                                 // front angles need to be increased by 15 degrees
+    public static final double HORIZONTAL_ANGLE = 0.0 + FRONT_ANGLE_SLOP;                      
 
-    public static final double HP_FLOOR_PICKUP_ANGLE = 0.0;
-    public static final double HP_LOADING_STATION_ANGLE = 90.0;
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 69.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_ROCKET_MID_ANGLE = 24.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_ROCKET_LOW_ANGLE = 20.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_CARGO_SHIP_ANGLE = 50.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -15.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_LOADING_STATION_ANGLE = 25.0 + FRONT_ANGLE_SLOP;
 
-    private static final double ANGLE_TOLERANCE = 1.0;   
+    public static final double HP_ROCKET_HIGH_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_ROCKET_MID_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_ROCKET_LOW_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_FLOOR_PICKUP_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_LOADING_STATION_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
+
+    private static final double ANGLE_TOLERANCE = 3.0;   
 
     private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
 
@@ -49,14 +58,12 @@ public class Wrist extends Subsystem {
 
     private boolean m_manualMode = true;        // TODO: debug.  Set to false for init
 
-
-
     public Wrist() {
        // initial calcs for computing kP...
         //  If we want 50% wrist power when 30 degrees from target,
         // 30 degrees is 341 ticks.
         // kP = (0.50 * 1023) / 341 = 1.50
-        motor.config_kP(0, 1.0, 0);             // based upon Ken's initial calcs, above
+        motor.config_kP(0, 3.0, 0);             // based upon Ken's initial calcs, above
 
         // typical value of about 1/100 of kP for starting tuning
         motor.config_kI(0, 0.0, 0);
@@ -74,10 +81,10 @@ public class Wrist extends Subsystem {
         motor.setSensorPhase(true);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
-        motor.configClosedloopRamp(0.05);                      // limit neutral to full to 0.05 seconds                            // motor direction is reversed; not quite sure why
+        motor.configClosedloopRamp(0.05);                       // limit neutral to full to 0.10 seconds                            // motor direction is reversed; not quite sure why
         // TODO:  Need to set up motion magic parameters for wrist below
-        // motor.configMotionCruiseVelocity(100000);           // measured velocity of ~100K at 85%; set cruise to that
-        // motor.configMotionAcceleration(200000);             // acceleration of 2x velocity allows cruise to be attained in 1/2 second
+        motor.configMotionCruiseVelocity(100);                   // measured velocity of ~100K at 85%; set cruise to that
+        motor.configMotionAcceleration(250);                    // acceleration of 2x velocity allows cruise to be attained in 1/2 second
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     }
 
@@ -149,12 +156,12 @@ public class Wrist extends Subsystem {
         SmartDashboard.putNumber("Wrist Current Pos", getCurrentPosition());
         SmartDashboard.putNumber("Wrist Current Degrees", m_angleInDegrees);
         SmartDashboard.putNumber("Wrist Desired Degrees", m_desiredAngle);
-        SmartDashboard.putNumber("Wrist Gravity Compensation", m_gravityCompensation);
-        SmartDashboard.putNumber("Wrist FeedForward", m_feedForward);
+        // SmartDashboard.putNumber("Wrist Gravity Compensation", m_gravityCompensation);
+        // SmartDashboard.putNumber("Wrist FeedForward", m_feedForward);
         SmartDashboard.putNumber("Wrist Voltage", motor.getOutputVoltage());
         SmartDashboard.putNumber("Wrist Amps A", motor.getOutputCurrent());
-        SmartDashboard.putNumber("Wrist Joystick", Robot.oi.getOperatorRightY());
-        SmartDashboard.putNumber("Wrist Velocity", motor.getSelectedSensorVelocity());
+        // SmartDashboard.putNumber("Wrist Joystick", Robot.oi.getOperatorRightY());
+        // SmartDashboard.putNumber("Wrist Velocity", motor.getSelectedSensorVelocity());
     }
 
     public void setManualMode(boolean b) {
@@ -163,7 +170,7 @@ public class Wrist extends Subsystem {
 
     public void update() {
 
-        // if the operator is moving the joystick for manual control, ensure manual mode and turn off the brake
+        // if the operator is moving the joystick for manual control, ensure manual mode
 
         if (Robot.oi.getOperatorRightY() != 0.0) {
             this.m_manualMode = true;
@@ -171,7 +178,7 @@ public class Wrist extends Subsystem {
 
         if (!m_manualMode) { // auto mode...
             // simply need to hold our position with updated FeedForward info
-            this.motor.set(ControlMode.Position, degreesToPosition(m_desiredAngle), DemandType.ArbitraryFeedForward, m_feedForward);
+            this.motor.set(ControlMode.MotionMagic, degreesToPosition(m_desiredAngle), DemandType.ArbitraryFeedForward, m_feedForward);
         } else {  // manual mode...
             motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY(), DemandType.ArbitraryFeedForward, m_feedForward);
         } 

@@ -156,6 +156,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			printAutoElapsedTime = false;
 		}
 
+		// kill any previously existing commands
+		Scheduler.getInstance().removeAll();
+
 		// // print the blackbox.
 		// blackbox.print();
 
@@ -176,6 +179,11 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		Robot.drive.updateHistory();
 
 		// Scheduler.getInstance().run(); called in periodic().
+
+		// for safety reasons, keep resetting the shoulder and wrist setpoints to the current
+		// position, so that when we leave "disabled" no shoulder or wrist motion is commanded
+		shoulder.setDesiredAngle(shoulder.getAngleInDegrees());
+		wrist.setDesiredAngle(wrist.getAngleInDegrees());
 	}
 
 
@@ -183,7 +191,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// TODO:  do we want autonomous in high gear instead this year?
 		// force low gear
-		shifter.setShifter(Shifter.LOW_GEAR);
+		shifter.setGear(Shifter.LOW_GEAR);
 
 		// turn off the compressor
 		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the compressor
@@ -269,7 +277,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		shifter.setGear(Shifter.LOW_GEAR);
 
 		// TODO:  RJD: need a place to zero the lifter. This should be in a command in auto.
-		lifter.zero();
+		// lifter.zero();
 	}
 
 	/**
@@ -324,11 +332,11 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 				drive.tankDrive(oi.tankDriveLeft(), oi.tankDriveRight());
 			}
 		} else {
+			// do nothing here since the autonomous code will do the driving...
 		}
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 
-		Robot.shifter.updateAutoShift();
 		Robot.drive.updateHistory();
 		Robot.lifter.synchronizedLift();
 		Robot.shoulder.update();
@@ -363,6 +371,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 			this.updateSmartDashboard();
 
+			shifter.updateSmartDashboard();
 			drive.updateSmartDashboard();
 			lifter.updateSmartDashboard();
 			shoulder.updateSmartDashboard();

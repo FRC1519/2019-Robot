@@ -7,6 +7,9 @@
 
 package org.mayheminc.robot2019.commands;
 
+import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class CargoHigh extends CommandGroup {
@@ -29,8 +32,7 @@ public class CargoHigh extends CommandGroup {
     // would require.
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
-    // arm.
-    // addParallel(new ShoulderSetAngle(173000));
-    // addParallel(new WristSetAngle(5000));
+    // arm
+    addSequential(new ArmMove(Shoulder.CARGO_ROCKET_HIGH_ANGLE, Wrist.CARGO_ROCKET_HIGH_ANGLE));
   }
 }

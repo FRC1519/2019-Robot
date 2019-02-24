@@ -45,7 +45,8 @@ public class OI {
 
 	// driver pad and stick
 	public static final Joystick DRIVER_PAD = new Joystick(RobotMap.DRIVER_GAMEPAD);
-	public static final Button DRIVER_PAD_BUTTON_EIGHT = new JoystickButton(DRIVER_PAD, 8);
+	// public static final Button DRIVER_PAD_BUTTON_SEVEN = new JoystickButton(DRIVER_PAD, 7);
+	// public static final Button DRIVER_PAD_BUTTON_EIGHT = new JoystickButton(DRIVER_PAD, 8);
 	public static final Joystick DRIVER_STICK = new Joystick(RobotMap.DRIVER_JOYSTICK);
 
 	// driver stick buttons
@@ -146,6 +147,8 @@ public class OI {
 	@SuppressWarnings("unused")
 	private static final Button TOGGLE_FOD_BUTTON = new DisabledOnlyJoystickButton(DRIVER_PAD, 8);
 
+	// NOTE:  DRIVER_PAD_RIGHT_UPPER_TRIGGER_BUTTON is "QUICKTURN" in Drive.java - DO NOT USE HERE!!!
+	// NOTE:  DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON is "FORCE LOW GEAR" in Drive.java - DO NOT USE HERE!!!
 	private static final Button DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON = new EnabledOnlyJoystickButton(DRIVER_PAD,
 			GAMEPAD_F310_LEFT_BUTTON);
 	private static final JoystickAxisButton DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON = new JoystickAxisButton(DRIVER_PAD,
@@ -154,6 +157,7 @@ public class OI {
 			GAMEPAD_F310_RIGHT_TRIGGER, JoystickAxisButton.POSITIVE_ONLY);
 
 	@SuppressWarnings("unused")
+	private static final Button DRIVER_PAD_BACK_BUTTON = new JoystickButton(DRIVER_PAD, GAMEPAD_F310_BACK_BUTTON);
 	private static final Button DRIVER_PAD_START_BUTTON = new JoystickButton(DRIVER_PAD, GAMEPAD_F310_START_BUTTON);
 	private static final Button DRIVER_PAD_GREEN_BUTTON = new JoystickButton(DRIVER_PAD, 1); // Green "A" button
 	private static final Button DRIVER_PAD_RED_BUTTON = new JoystickButton(DRIVER_PAD, 2); // RED 'B" button
@@ -200,19 +204,20 @@ public class OI {
 			// DRIVER_STICK_BUTTON_TEN, Robot.elevator);
 		}
 
-		// *******************************DRIVER
-		// PAD**************************************
+		// *******************************DRIVER PAD**************************************
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0));
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait());
-		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new AutoLift()); // Climb up
+		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new Wait()); // Climb up
 		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0)); // Descend down
 
-		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whileHeld(new Wait(0));
-		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whileHeld(new Wait(0));
+		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Tuck());
+		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
 
-		// ******************************* DRIVER STICK
-		// ****************************************************************************
+		DRIVER_PAD_BACK_BUTTON.whenPressed(new Wait(0));
+		DRIVER_PAD_START_BUTTON.whenPressed(new Wait(0));
+
+		// ******************************* DRIVER STICK ***********************************
 
 		DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new SystemZero());
 		// DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new Wait(0));
@@ -231,36 +236,35 @@ public class OI {
 
 		// *************************OPERATOR PAD*******************************
 
-		// OPERATOR_PAD_BUTTON_ONE.whileHeld(new HatchFloor());
-		// OPERATOR_PAD_BUTTON_TWO.whileHeld(new HatchPanelLow());
-		// OPERATOR_PAD_BUTTON_THREE.whileHeld(new HatchPanelMid());
-		// OPERATOR_PAD_BUTTON_FOUR.whileHeld(new HatchPanalHigh());
+		OPERATOR_PAD_BUTTON_ONE.whenPressed(new CargoFloor());
+		OPERATOR_PAD_BUTTON_TWO.whenPressed(new CargoLow());
+		OPERATOR_PAD_BUTTON_THREE.whenPressed(new CargoMid());
+		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new CargoHigh());
 
-		OPERATOR_PAD_BUTTON_ONE.whenPressed(new Wait(0));
-		OPERATOR_PAD_BUTTON_TWO.whenPressed(new WristSetAngle(Wrist.CARGO_FLOOR_PICKUP_ANGLE));
-		OPERATOR_PAD_BUTTON_THREE.whenPressed(new WristSetAngle(Wrist.HORIZONTAL_ANGLE));
-		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new WristSetAngle(Wrist.CARGO_LOADING_STATION_ANGLE));
+		// OPERATOR_PAD_BUTTON_ONE.whenPressed(new Wait(0));
+		// OPERATOR_PAD_BUTTON_TWO.whenPressed(new WristSetAngle(Wrist.CARGO_FLOOR_PICKUP_ANGLE));
+		// OPERATOR_PAD_BUTTON_THREE.whenPressed(new WristSetAngle(Wrist.HORIZONTAL_ANGLE));
+		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new WristSetAngle(Wrist.CARGO_LOADING_STATION_ANGLE));
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
-		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(true));
-		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(false));
+		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(false));
+		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(true));
 
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(CargoIntake.INTAKE_HARD_POWER));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(CargoIntake.OUTTAKE_HARD_POWER));
 
-		// OPERATOR_PAD_D_PAD_UP.whenPressed(new CargoHigh());
-		// OPERATOR_PAD_D_PAD_DOWN.whenPressed(new CargoLow());
-		// OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new CargoShip());
-		// OPERATOR_PAD_D_PAD_LEFT.whenPressed(new CargoMid());
+		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new HatchPanelFloor());
+		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new HatchPanelLow());
+		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new HatchPanelMid());
+		OPERATOR_PAD_D_PAD_UP.whenPressed(new HatchPanelHigh());
 
-		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait(0));
-		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
-		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
-		OPERATOR_PAD_D_PAD_UP.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
+		// OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait(0));
+		// OPERATOR_PAD_D_PAD_DOWN.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
+		// OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
+		// OPERATOR_PAD_D_PAD_UP.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
 
-		// OPERATOR_PAD_BUTTON_NINE.whenPressed(new Depot());
-		OPERATOR_PAD_BUTTON_NINE.whenPressed(new Wait(0));
-		OPERATOR_PAD_BUTTON_TEN.whenPressed(new LifterLift());
+		OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift());
+		OPERATOR_PAD_BUTTON_TEN.whenPressed(new CargoShip());
 
 		OPERATOR_PAD_BUTTON_ELEVEN.whenPressed(new Wait(0));
 		OPERATOR_PAD_BUTTON_TWELVE.whenPressed(new Wait(0));
@@ -365,9 +369,9 @@ public class OI {
 		}
 
 		// if the slow button is pressed, cut the throttle value in third.
-		if (DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get()) {
-			throttleVal = throttleVal / 3.0;
-		}
+		// if (DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get()) {
+		// 	throttleVal = throttleVal / 3.0;
+		// }
 
 		return (throttleVal);
 	}
@@ -397,9 +401,9 @@ public class OI {
 			value = 0.0;
 		}
 
-		if (DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get()) {
-			value = value / 2.0;
-		}
+		// if (DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get()) {
+		// 	value = value / 2.0;
+		// }
 		return value;
 	}
 
@@ -410,7 +414,7 @@ public class OI {
 	}
 
 	public boolean forceLowGear() {
-		return DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.get();
+		return DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get();
 	}
 
 	// returns true if any of the autoInTeleop buttons are held

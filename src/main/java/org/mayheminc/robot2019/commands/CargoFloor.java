@@ -8,12 +8,14 @@
 package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.Wrist;
 
-public class HatchPanalHigh extends CommandGroup {
+public class CargoFloor extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public HatchPanalHigh() {
+  public CargoFloor() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -30,7 +32,6 @@ public class HatchPanalHigh extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    // addParallel(new ShoulderSetAngle(32500));
-    // addParallel(new WristSetAngle(1000));
+    addSequential(new ArmMove(Shoulder.CARGO_FLOOR_PICKUP_ANGLE, Wrist.CARGO_FLOOR_PICKUP_ANGLE));
   }
 }
