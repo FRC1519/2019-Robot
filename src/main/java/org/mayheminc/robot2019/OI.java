@@ -148,7 +148,6 @@ public class OI {
 	private static final Button TOGGLE_FOD_BUTTON = new DisabledOnlyJoystickButton(DRIVER_PAD, 8);
 
 	// NOTE:  DRIVER_PAD_RIGHT_UPPER_TRIGGER_BUTTON is "QUICKTURN" in Drive.java - DO NOT USE HERE!!!
-	// NOTE:  DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON is "FORCE LOW GEAR" in Drive.java - DO NOT USE HERE!!!
 	private static final Button DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON = new EnabledOnlyJoystickButton(DRIVER_PAD,
 			GAMEPAD_F310_LEFT_BUTTON);
 	private static final JoystickAxisButton DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON = new JoystickAxisButton(DRIVER_PAD,
@@ -213,6 +212,8 @@ public class OI {
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Tuck());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
+
+		DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.whileHeld(new ShifterHoldGear(Shifter.LOW_GEAR));
 
 		DRIVER_PAD_BACK_BUTTON.whenPressed(new Wait(0));
 		DRIVER_PAD_START_BUTTON.whenPressed(new Wait(0));
@@ -411,10 +412,6 @@ public class OI {
 		// However, the joysticks give -1.0 on that axis when pushed forward
 		// This method reverses that, so that positive numbers are forward
 		return -DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_RIGHT_Y_AXIS);    // NOTE:  Don't overlook the negation!
-	}
-
-	public boolean forceLowGear() {
-		return DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get();
 	}
 
 	// returns true if any of the autoInTeleop buttons are held

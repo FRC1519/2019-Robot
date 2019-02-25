@@ -274,7 +274,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		DriverStation.reportError("Entering Teleop.\n", false);
 
-		shifter.setGear(Shifter.LOW_GEAR);
+		shifter.setGear(Shifter.HIGH_GEAR);
 
 		// TODO:  RJD: need a place to zero the lifter. This should be in a command in auto.
 		// lifter.zero();
