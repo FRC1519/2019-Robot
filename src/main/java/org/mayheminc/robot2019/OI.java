@@ -45,13 +45,14 @@ public class OI {
 
 	// driver pad and stick
 	public static final Joystick DRIVER_PAD = new Joystick(RobotMap.DRIVER_GAMEPAD);
-	// public static final Button DRIVER_PAD_BUTTON_SEVEN = new JoystickButton(DRIVER_PAD, 7);
-	// public static final Button DRIVER_PAD_BUTTON_EIGHT = new JoystickButton(DRIVER_PAD, 8);
+	// public static final Button DRIVER_PAD_BUTTON_SEVEN = new
+	// JoystickButton(DRIVER_PAD, 7);
+	// public static final Button DRIVER_PAD_BUTTON_EIGHT = new
+	// JoystickButton(DRIVER_PAD, 8);
 	public static final Joystick DRIVER_STICK = new Joystick(RobotMap.DRIVER_JOYSTICK);
 
 	// driver stick buttons
-	private static final Button DRIVER_STICK_BUTTON_ONE_DISABLED = new
-	DisabledOnlyJoystickButton(DRIVER_STICK, 1);
+	private static final Button DRIVER_STICK_BUTTON_ONE_DISABLED = new DisabledOnlyJoystickButton(DRIVER_STICK, 1);
 	// private static final Button DRIVER_STICK_BUTTON_ONE_ENABLED = new
 	// EnabledOnlyJoystickButton(DRIVER_STICK, 1);
 	// private static final Button DRIVER_STICK_BUTTON_TWO = new
@@ -147,7 +148,8 @@ public class OI {
 	@SuppressWarnings("unused")
 	private static final Button TOGGLE_FOD_BUTTON = new DisabledOnlyJoystickButton(DRIVER_PAD, 8);
 
-	// NOTE:  DRIVER_PAD_RIGHT_UPPER_TRIGGER_BUTTON is "QUICKTURN" in Drive.java - DO NOT USE HERE!!!
+	// NOTE: DRIVER_PAD_RIGHT_UPPER_TRIGGER_BUTTON is "QUICKTURN" in Drive.java - DO
+	// NOT USE HERE!!!
 	private static final Button DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON = new EnabledOnlyJoystickButton(DRIVER_PAD,
 			GAMEPAD_F310_LEFT_BUTTON);
 	private static final JoystickAxisButton DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON = new JoystickAxisButton(DRIVER_PAD,
@@ -203,14 +205,15 @@ public class OI {
 			// DRIVER_STICK_BUTTON_TEN, Robot.elevator);
 		}
 
-		// *******************************DRIVER PAD**************************************
+		// *******************************DRIVER
+		// PAD**************************************
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0));
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait(0));
-		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new Wait(0)); // Climb up
+		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new LiftCylindersSet(LiftCylinders.EXTENDED)); // Extend Cylinders while held
 		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0)); // Descend down
 
-		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Tuck());
+		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
 
 		DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.whileHeld(new ShifterHoldGear(Shifter.LOW_GEAR));
@@ -218,7 +221,8 @@ public class OI {
 		DRIVER_PAD_BACK_BUTTON.whenPressed(new Wait(0));
 		DRIVER_PAD_START_BUTTON.whenPressed(new Wait(0));
 
-		// ******************************* DRIVER STICK ***********************************
+		// ******************************* DRIVER STICK
+		// ***********************************
 
 		DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new SystemZero());
 		// DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new Wait(0));
@@ -243,9 +247,12 @@ public class OI {
 		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new CargoHigh());
 
 		// OPERATOR_PAD_BUTTON_ONE.whenPressed(new Wait(0));
-		// OPERATOR_PAD_BUTTON_TWO.whenPressed(new WristSetAngle(Wrist.CARGO_FLOOR_PICKUP_ANGLE));
-		// OPERATOR_PAD_BUTTON_THREE.whenPressed(new WristSetAngle(Wrist.HORIZONTAL_ANGLE));
-		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new WristSetAngle(Wrist.CARGO_LOADING_STATION_ANGLE));
+		// OPERATOR_PAD_BUTTON_TWO.whenPressed(new
+		// WristSetAngle(Wrist.CARGO_FLOOR_PICKUP_ANGLE));
+		// OPERATOR_PAD_BUTTON_THREE.whenPressed(new
+		// WristSetAngle(Wrist.HORIZONTAL_ANGLE));
+		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new
+		// WristSetAngle(Wrist.CARGO_LOADING_STATION_ANGLE));
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(false));
@@ -260,9 +267,12 @@ public class OI {
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new HatchPanelHigh());
 
 		// OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait(0));
-		// OPERATOR_PAD_D_PAD_DOWN.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
-		// OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
-		// OPERATOR_PAD_D_PAD_UP.whenPressed(new ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
+		// OPERATOR_PAD_D_PAD_DOWN.whenPressed(new
+		// ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
+		// OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new
+		// ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
+		// OPERATOR_PAD_D_PAD_UP.whenPressed(new
+		// ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
 
 		OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift());
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new CargoShip());
@@ -316,10 +326,12 @@ public class OI {
 		if (Math.abs(value) < deadZonePercent) {
 			value = 0.0;
 		} else if (value > deadZonePercent) {
-			// if it is above deadZonePercent, subtract the deadZonePercent to keep the linearness.
+			// if it is above deadZonePercent, subtract the deadZonePercent to keep the
+			// linearness.
 			value = value - deadZonePercent;
-		} else {  // (this means value < -deadZonePercent)
-			// if it is below deadZonePercent, add the deadZonePercent to keep the linearness.
+		} else { // (this means value < -deadZonePercent)
+			// if it is below deadZonePercent, add the deadZonePercent to keep the
+			// linearness.
 			value = value + deadZonePercent;
 		}
 		return value;
@@ -329,28 +341,27 @@ public class OI {
 	// However, the joysticks give -1.0 on the Y axis when pushed forward
 	// This method reverses that, so that positive numbers are forward
 	public double getOperatorRightY() {
-		double value = -OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS);    // NOTE:  Don't overlook the negation!
-		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
+		double value = -OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_Y_AXIS); // NOTE: Don't overlook the negation!
+		return applyLinearizedDeadZone(value, ARM_DEAD_ZONE_PERCENT);
 	}
 
 	public double getOperatorRightX() {
 		double value = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_RIGHT_X_AXIS);
-		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
+		return applyLinearizedDeadZone(value, ARM_DEAD_ZONE_PERCENT);
 	}
 
 	// This is for the "Y" axis of the Operator Gamepad.
 	// However, the joysticks give -1.0 on the Y axis when pushed forward
 	// This method reverses that, so that positive numbers are forward
 	public double getOperatorLeftY() {
-		double value = -OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS);    // NOTE:  Don't overlook the negation!
-		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
+		double value = -OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_Y_AXIS); // NOTE: Don't overlook the negation!
+		return applyLinearizedDeadZone(value, ARM_DEAD_ZONE_PERCENT);
 	}
 
 	public double getOperatorLeftX() {
 		double value = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_X_AXIS);
-		return applyLinearizedDeadZone (value, ARM_DEAD_ZONE_PERCENT);
+		return applyLinearizedDeadZone(value, ARM_DEAD_ZONE_PERCENT);
 	}
-
 
 	public boolean quickTurn() {
 		return (DRIVER_PAD.getRawButton(OI.GAMEPAD_F310_RIGHT_BUTTON));
@@ -371,7 +382,7 @@ public class OI {
 
 		// if the slow button is pressed, cut the throttle value in third.
 		// if (DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get()) {
-		// 	throttleVal = throttleVal / 3.0;
+		// throttleVal = throttleVal / 3.0;
 		// }
 
 		return (throttleVal);
@@ -402,8 +413,9 @@ public class OI {
 			value = 0.0;
 		}
 
+		// if the slow button is pressed, cut the steering value in half.
 		// if (DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.get()) {
-		// 	value = value / 2.0;
+		// value = value / 2.0;
 		// }
 		return value;
 	}
@@ -411,7 +423,7 @@ public class OI {
 	public double steeringY() {
 		// However, the joysticks give -1.0 on that axis when pushed forward
 		// This method reverses that, so that positive numbers are forward
-		return -DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_RIGHT_Y_AXIS);    // NOTE:  Don't overlook the negation!
+		return -DRIVER_PAD.getRawAxis(OI.GAMEPAD_F310_RIGHT_Y_AXIS); // NOTE: Don't overlook the negation!
 	}
 
 	// returns true if any of the autoInTeleop buttons are held

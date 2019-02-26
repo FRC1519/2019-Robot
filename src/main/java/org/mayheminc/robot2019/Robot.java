@@ -48,6 +48,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static CargoIntake cargoIntake = new CargoIntake();
 	public static HatchPanelPickUp hatchPanelPickUp = new HatchPanelPickUp();
 	public static Lifter lifter = new Lifter();
+	public static LiftCylinders liftCylinders = new LiftCylinders();
 
 	// allocate the "virtual" subsystems; wait to construct these until robotInit()
 	public static Autonomous autonomous;
@@ -133,12 +134,14 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	}
 
 	/**
-	 * This function is called during every period, AFTER the calls to "modePeriodic".
-	 * Need to at least define robotPeriodic() to avoid a warning message at startup.
+	 * This function is called during every period, AFTER the calls to
+	 * "modePeriodic". Need to at least define robotPeriodic() to avoid a warning
+	 * message at startup.
 	 */
 	public void robotPeriodic() {
-		// TODO:  To avoid having essential calls overlooked in "modePeriodic()" calls, consider consolidating stuff here
-		// examples:  updateSensors, updateSmartDashboard, etc.
+		// TODO: To avoid having essential calls overlooked in "modePeriodic()" calls,
+		// consider consolidating stuff here
+		// examples: updateSensors, updateSmartDashboard, etc.
 
 		// run the scheduler on every main loop so that commands execute
 		Scheduler.getInstance().run();
@@ -166,38 +169,44 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// blackbox.reset();
 	}
 
-
 	public void disabledPeriodic() {
 		// update all sensors in the robot
 		updateSensors();
 
 		// update Smart Dashboard, including fields for setting up autonomous operation
-		// Note:  Want to avoid excess CTRE calls, as they have latency of about 0.5ms each.
+		// Note: Want to avoid excess CTRE calls, as they have latency of about 0.5ms
+		// each.
 		updateSmartDashboard(UPDATE_AUTO_SETUP_FIELDS);
-		
-		// ensure that the drive base updates its history (probably belongs in "updateSensors")
+
+		// ensure that the drive base updates its history (probably belongs in
+		// "updateSensors")
 		Robot.drive.updateHistory();
 
 		// Scheduler.getInstance().run(); called in periodic().
 
-		// for safety reasons, keep resetting the shoulder and wrist setpoints to the current
-		// position, so that when we leave "disabled" no shoulder or wrist motion is commanded
+		// for safety reasons, keep resetting the shoulder and wrist setpoints to the
+		// current
+		// position, so that when we leave "disabled" no shoulder or wrist motion is
+		// commanded
 		shoulder.setDesiredAngle(shoulder.getAngleInDegrees());
 		wrist.setDesiredAngle(wrist.getAngleInDegrees());
 	}
 
-
 	public void autonomousInit() {
 
-		// TODO:  do we want autonomous in high gear instead this year?
+		// TODO: do we want autonomous in high gear instead this year?
 		// force low gear
 		shifter.setGear(Shifter.LOW_GEAR);
 
 		// turn off the compressor
-		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the compressor
-		// didn't affect the operation of the autonomous programs. Not sure we really want this.
-		// At the least, we can take advantage of the last few seconds in autonomous by turning
-		// on the compressor at the end of our autonomous programs instead of waiting for the
+		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the
+		// compressor
+		// didn't affect the operation of the autonomous programs. Not sure we really
+		// want this.
+		// At the least, we can take advantage of the last few seconds in autonomous by
+		// turning
+		// on the compressor at the end of our autonomous programs instead of waiting
+		// for the
 		// teleopInit to be called at the start of teleop.
 		compressor.stop();
 
@@ -257,7 +266,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public void teleopInit() {
 
 		// before doing anything else in teleop, kill any existing commands
-		// TODO:  consider if this is still desirable in 2019 with the "sandstorm" period
+		// TODO: consider if this is still desirable in 2019 with the "sandstorm" period
 		Scheduler.getInstance().removeAll();
 
 		// NOTE: BELOW SHOULD BE OBE WITH above Scheduler.getInstance().removeAll();
@@ -269,14 +278,15 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// autonomousCommand.cancel();
 		// }
 
-		// turn on the compressor  (may have been off in autonomous)
+		// turn on the compressor (may have been off in autonomous)
 		compressor.start();
 
 		DriverStation.reportError("Entering Teleop.\n", false);
 
 		shifter.setGear(Shifter.HIGH_GEAR);
 
-		// TODO:  RJD: need a place to zero the lifter. This should be in a command in auto.
+		// TODO: RJD: need a place to zero the lifter. This should be in a command in
+		// auto.
 		// lifter.zero();
 	}
 
@@ -324,7 +334,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// update all sensors in the robot
 		updateSensors();
 
-		// drive the robot based upon joystick inputs, unless an "auto" command is driving
+		// drive the robot based upon joystick inputs, unless an "auto" command is
+		// driving
 		if (!oi.autoInTeleop()) {
 			if (drive.isSpeedRacerDrive()) {
 				drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());

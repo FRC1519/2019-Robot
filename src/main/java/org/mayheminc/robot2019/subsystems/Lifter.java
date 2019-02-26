@@ -15,15 +15,16 @@ public class Lifter extends Subsystem {
     // constants for power
     private static final double STOP_POWER = 0.0;
     // private static final double TUCKED_POWER = -0.1;
-    private static final double LIFTING_POWER = 0.7;   // used 0.7 for comp robot; used 1.0 for initial testing;  reducing power to save mechanism
+    private static final double LIFTING_POWER = 0.7; // used 0.7 for comp robot; used 1.0 for initial testing; reducing
+                                                     // power to save mechanism
 
     private static final double SLOW_SPEED_MULTIPLIER = 0.8;
 
     // constants for positions
     private static final int STARTING_POS = 0;
-    private static final int LIFTED_POS = 800000;           // determined empirically on bag night
-    public static final int AUTO_LIFTED_POS_1 = 100000;     // 100k ticks debug tick count
-    public static final int AUTO_LIFTED_POS_2 = 200000;     // 200k ticks debug tick count
+    private static final int LIFTED_POS = 900000; // determined empirically on bag night
+    public static final int AUTO_LIFTED_POS_1 = 100000; // 100k ticks debug tick count
+    public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
 
     private static final int IN_POSITION_SLOP = 100;
     private static final int MAX_MOTOR_OFFSET = 200000;
@@ -125,7 +126,7 @@ public class Lifter extends Subsystem {
                 motorRightA.set(ControlMode.PercentOutput, m_targetSpeed);
             }
 
-        } else {  // not actively lifting -- tell the lifter to stop
+        } else { // not actively lifting -- tell the lifter to stop
             stop();
         }
     }
@@ -137,9 +138,9 @@ public class Lifter extends Subsystem {
     }
 
     public void Lift() {
-        // Received a command to lift.  If we're already "lifted" don't do anything!
+        // Received a command to lift. If we're already "lifted" don't do anything!
         m_desiredPosition = Lifter.LIFTED_POS;
-        if (!IsAtSetpoint()) { 
+        if (!IsAtSetpoint()) {
             // Tell synchronizedLift to climb
             setTargetMotorSpeed(Lifter.LIFTING_POWER);
             this.m_activelyLifting = true;
@@ -160,7 +161,7 @@ public class Lifter extends Subsystem {
         m_desiredPosition = motorLeftA.getSelectedSensorPosition();
     }
 
-    private void setTargetMotorSpeed (double value) {
+    private void setTargetMotorSpeed(double value) {
         m_targetSpeed = value;
     }
 
@@ -171,7 +172,8 @@ public class Lifter extends Subsystem {
     }
 
     public boolean IsAtSetpoint() {
-        // TODO:  Need to fix this to handle cases where we "jump" past the desired position too far.
+        // TODO: Need to fix this to handle cases where we "jump" past the desired
+        // position too far.
         // KBS implemented a temporary "hack" that only works in the upward direction.
         // return Math.abs(motorLeft.getPosition() - m_pos) < Lifter.IN_POSITION_SLOP;
         return motorLeftA.getPosition() - m_desiredPosition > -Lifter.IN_POSITION_SLOP;

@@ -9,11 +9,11 @@ package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class Tuck extends CommandGroup {
+public class Stow extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public Tuck() {
+  public Stow() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -30,7 +30,7 @@ public class Tuck extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new WristSetAngle(102.0 + 15.0));         // TODO: should not just use hard-coded numbers
+    addSequential(new WristSetInternalAngle(102.0 + 5.0 + 15.0)); // TODO: should not just use hard-coded numbers
     addSequential(new ShoulderSetAngle(-78.0));
   }
 }
