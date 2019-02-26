@@ -47,7 +47,7 @@ public class Drive extends Subsystem {
 	private static final double kToleranceDegreesPIDControl = 0.2;
 
 	// Drive parameters
-	public static final double DISTANCE_PER_PULSE = 3.14 * 6.26 * 36 / 42 / (250 * 4); // pi * diameter * (gear ratio) /
+	public static final double DISTANCE_PER_PULSE = 3.14 * 8.0 * 36 / 42 / (250 * 4); // pi * diameter * (gear ratio) /
 																						// (counts per rev)
 	private boolean m_closedLoopMode = false;
 	private double m_maxWheelSpeed = 130;
