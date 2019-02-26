@@ -15,7 +15,7 @@ public class Lifter extends Subsystem {
     // constants for power
     private static final double STOP_POWER = 0.0;
     // private static final double TUCKED_POWER = -0.1;
-    private static final double LIFTING_POWER = 1.0;   // used 0.7 for comp robot; used 1.0 for initial testing;  reducing power to save mechanism
+    private static final double LIFTING_POWER = 0.7;   // used 0.7 for comp robot; used 1.0 for initial testing;  reducing power to save mechanism
 
     private static final double SLOW_SPEED_MULTIPLIER = 0.8;
 
