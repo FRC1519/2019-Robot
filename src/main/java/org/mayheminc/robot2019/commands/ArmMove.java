@@ -16,6 +16,6 @@ public class ArmMove extends CommandGroup {
    */
   public ArmMove(double shoulderAngle, double wristAngle) {
     addSequential(new ShoulderSetAngle(shoulderAngle));
-    addSequential(new WristSetInternalAngle(wristAngle)); // TODO: should probably be "addParallel()"
+    addSequential(new WristSetAngle(wristAngle)); // TODO: should probably be "addParallel()"
   }
 }
