@@ -19,24 +19,11 @@ public class SecondLevelCargoShipHatchPanel extends CommandGroup {
    * Add your docs here.
    */
   public SecondLevelCargoShipHatchPanel() {
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
 
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
+    // Zero the Gyro at the start of autonomous
     addSequential(new ZeroGyro(0.0));
-    // Drive of the hab level 2
+
+    // Drive off the hab level 2
     addSequential(new DriveStraightOnHeading(0.9, 96, 0)); // Drive 60 inches at a heading of zero degrees
 
     addSequential(new Wait(1.0));
@@ -50,10 +37,6 @@ public class SecondLevelCargoShipHatchPanel extends CommandGroup {
     // Line up for the putting the hatch panel on the ship.
     addSequential(new DriveStraightOnHeading(0.7, 48, 0));
 
-    // Wait for half a second to let eveything settle
-    addSequential(new Wait(2.0));
-
-    // addSequential(new );
-
+    // stop now to let the driver's take over!
   }
 }

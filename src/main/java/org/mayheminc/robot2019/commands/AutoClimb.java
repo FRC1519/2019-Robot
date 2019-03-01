@@ -8,8 +8,6 @@
 package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-
-import org.mayheminc.robot2019.commands.DriveStraight.DistanceUnits;
 import org.mayheminc.robot2019.subsystems.*;
 
 /**

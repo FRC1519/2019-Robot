@@ -35,6 +35,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	private Command autonomousCommand;
 	private Runtime runtime = Runtime.getRuntime();
 
+	// default to not using humanDriverInAuto
+	private boolean m_humanDriverInAuto = false;
+
 	// create the robot subsystems
 	public static final Compressor compressor = new Compressor();
 	public static final Drive drive = new Drive();
@@ -222,10 +225,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// zero the drive base gyro at current position
 		drive.zeroHeadingGyro(0.0);
 
-		// where ever the pivot is, lock it there.
-		// KBS: think we don't want to do this before zeroing the pivot, which will
-		// require some time in the future. Commenting out til RJD and KBS discuss
-		// pivot.LockCurrentPosition();
+		// start the autonomous period without a human driver
+		m_humanDriverInAuto = false;
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null) {
@@ -257,6 +258,27 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// Scheduler.getInstance().run(); called in periodic().
 
+		// If the driver's joystick has either joystick deflected, end the autonomous
+		// program,
+		// and indicate that a human driver is now controlling the robot.
+		if ((oi.driveThrottle() != 0.0) || (oi.steeringX() != 0)) {
+			// ensure the autonomous command is canceled
+			if (autonomousCommand != null) {
+				autonomousCommand.cancel();
+			}
+			// switch to control by a human driver
+			m_humanDriverInAuto = true;
+		}
+
+		// if a humanDriver is operating the robot, call the appropriate drive methods
+		if (m_humanDriverInAuto) {
+			if (drive.isSpeedRacerDrive()) {
+				drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
+			} else {
+				drive.tankDrive(oi.tankDriveLeft(), oi.tankDriveRight());
+			}
+		}
+
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 		Robot.drive.updateHistory();
 		Robot.shoulder.update();
@@ -269,25 +291,12 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// TODO: consider if this is still desirable in 2019 with the "sandstorm" period
 		Scheduler.getInstance().removeAll();
 
-		// NOTE: BELOW SHOULD BE OBE WITH above Scheduler.getInstance().removeAll();
-		// // This makes sure that the autonomous stops running when
-		// // teleop starts running. If you want the autonomous to
-		// // continue until interrupted by another command, remove
-		// // this line or comment it out.
-		// if (autonomousCommand != null) {
-		// autonomousCommand.cancel();
-		// }
-
 		// turn on the compressor (may have been off in autonomous)
 		compressor.start();
 
 		DriverStation.reportError("Entering Teleop.\n", false);
 
 		shifter.setGear(Shifter.HIGH_GEAR);
-
-		// TODO: RJD: need a place to zero the lifter. This should be in a command in
-		// auto.
-		// lifter.zero();
 	}
 
 	/**
