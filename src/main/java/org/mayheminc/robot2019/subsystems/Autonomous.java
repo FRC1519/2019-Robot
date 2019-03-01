@@ -18,7 +18,11 @@ public class Autonomous extends Subsystem {
 	private static Command autonomousPrograms[] = {
 
 			/* 0 */ new StayStill(), // do nothing
-			/* 1 */ new SecondLevelCargoShipHatchPanel() // drive off the level two platform
+			/* 1 */ new StraightOffHAB2(), // drive straight off HAB2 platform and stop
+			/* 2 */ new StartLeftHAB2HPtoShipLeft(), // drive off the level two, with HP for Left Side of Ship
+			/* 3 */ new StartLeftHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
+			/* 4 */ new StartRightHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
+			/* 5 */ new StartRightHAB2HPtoShipRight(), // drive off the level two, with HP for Right Side of Ship
 	};
 
 	private static int programNumber = 0; // 0 = Do nothing

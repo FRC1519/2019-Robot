@@ -14,28 +14,21 @@ import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 
-public class SecondLevelCargoShipHatchPanel extends CommandGroup {
+public class StraightOffHAB2 extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public SecondLevelCargoShipHatchPanel() {
+  public StraightOffHAB2() {
 
     // Zero the Gyro at the start of autonomous
     addSequential(new ZeroGyro(0.0));
 
-    // Drive off the hab level 2
+    // Drive off the hab level 2 and wait a second to stop bouncing around
     addSequential(new DriveStraightOnHeading(0.9, 96, 0)); // Drive 60 inches at a heading of zero degrees
-
     addSequential(new Wait(1.0));
-    // Head for the cargo ship
-    addSequential(new DriveStraightOnHeading(0.7, 48, -90)); // Drive three more feet turning left.
 
-    // addSequential(new Wait(2.0));
-    // Get the arm into postion
-
-    addParallel(new HatchPanelLow());
-    // Line up for the putting the hatch panel on the ship.
-    addSequential(new DriveStraightOnHeading(0.7, 48, 0));
+    // Drive a foot further to ensure we're clear of HAB Level 1
+    addSequential(new DriveStraightOnHeading(0.7, 12, 0)); // Drive one more foot at a heading of zero degrees
 
     // stop now to let the driver's take over!
   }
