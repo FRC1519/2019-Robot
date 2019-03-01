@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 /**
  * Add your docs here.
  */
-public class SystemZero extends InstantCommand {
+public class SystemZeroIncludingGyro extends InstantCommand {
   /**
    * Tell all the subsystems to Zero the encoders.
    */
-  public SystemZero() {
+  public SystemZeroIncludingGyro() {
     super();
     this.setRunWhenDisabled(true);
 
@@ -35,7 +35,8 @@ public class SystemZero extends InstantCommand {
     Robot.shoulder.zero();
     Robot.lifter.zero();
 
-    // TODO:  Really need to wait for the shoulder to finish zeroing before zeroing wrist
+    // TODO: Really should to wait for the shoulder to finish zeroing before zeroing
+    // wrist
     Robot.wrist.zero();
     Robot.drive.zeroHeadingGyro(0);
   }

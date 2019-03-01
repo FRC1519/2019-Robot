@@ -219,8 +219,8 @@ public class OI {
 		// ******************************* DRIVER STICK
 		// ***********************************
 
-		DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new SystemZero());
-		// DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new Wait(0));
+		DRIVER_STICK_BUTTON_ONE_DISABLED.whenPressed(new SystemZeroIncludingGyro());
+		DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new SystemZeroWithoutGyro());
 
 		// // adjust auto parameters
 		DRIVER_STICK_BUTTON_THREE.whenPressed(new SelectAutonomousProgram(1));
@@ -241,15 +241,7 @@ public class OI {
 		OPERATOR_PAD_BUTTON_THREE.whenPressed(new CargoMid());
 		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new CargoHigh());
 
-		// OPERATOR_PAD_BUTTON_ONE.whenPressed(new Wait(0));
-		// OPERATOR_PAD_BUTTON_TWO.whenPressed(new
-		// WristSetAngle(Wrist.CARGO_FLOOR_PICKUP_ANGLE));
-		// OPERATOR_PAD_BUTTON_THREE.whenPressed(new
-		// WristSetAngle(Wrist.HORIZONTAL_ANGLE));
-		// OPERATOR_PAD_BUTTON_FOUR.whenPressed(new
-		// WristSetAngle(Wrist.CARGO_LOADING_STATION_ANGLE));
-
-		// BUTTONS FIVE AND SEVEN ARE For Operating pneumatics
+		// BUTTONS FIVE AND SEVEN ARE For Operating the hatch panel
 		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(false));
 		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(true));
 
@@ -260,14 +252,6 @@ public class OI {
 		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new HatchPanelLow());
 		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new HatchPanelMid());
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new HatchPanelHigh());
-
-		// OPERATOR_PAD_D_PAD_LEFT.whenPressed(new Wait(0));
-		// OPERATOR_PAD_D_PAD_DOWN.whenPressed(new
-		// ShoulderSetAngle(Shoulder.DEBUG_DOWN_ANGLE));
-		// OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new
-		// ShoulderSetAngle(Shoulder.HORIZONTAL_ANGLE));
-		// OPERATOR_PAD_D_PAD_UP.whenPressed(new
-		// ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
 
 		OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift(Lifter.LIFTED_POS));
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new CargoShip());
