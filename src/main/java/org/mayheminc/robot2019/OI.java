@@ -53,16 +53,11 @@ public class OI {
 
 	// driver stick buttons
 	private static final Button DRIVER_STICK_BUTTON_ONE_DISABLED = new DisabledOnlyJoystickButton(DRIVER_STICK, 1);
-	// private static final Button DRIVER_STICK_BUTTON_ONE_ENABLED = new
-	// EnabledOnlyJoystickButton(DRIVER_STICK, 1);
-	// private static final Button DRIVER_STICK_BUTTON_TWO = new
-	// DisabledOnlyJoystickButton(DRIVER_STICK, 2);
-	// private static final Button DRIVER_STICK_BUTTON_THREE = new
-	// DisabledOnlyJoystickButton(DRIVER_STICK, 3);
-	// private static final Button DRIVER_STICK_BUTTON_FOUR = new
-	// DisabledOnlyJoystickButton(DRIVER_STICK, 4);
-	// private static final Button DRIVER_STICK_BUTTON_FIVE = new
-	// DisabledOnlyJoystickButton(DRIVER_STICK, 5);
+	private static final Button DRIVER_STICK_BUTTON_ONE_ENABLED = new EnabledOnlyJoystickButton(DRIVER_STICK, 1);
+	private static final Button DRIVER_STICK_BUTTON_TWO = new DisabledOnlyJoystickButton(DRIVER_STICK, 2);
+	private static final Button DRIVER_STICK_BUTTON_THREE = new DisabledOnlyJoystickButton(DRIVER_STICK, 3);
+	private static final Button DRIVER_STICK_BUTTON_FOUR = new DisabledOnlyJoystickButton(DRIVER_STICK, 4);
+	private static final Button DRIVER_STICK_BUTTON_FIVE = new DisabledOnlyJoystickButton(DRIVER_STICK, 5);
 	// private static final Button DRIVER_STICK_BUTTON_SIX = new
 	// DisabledOnlyJoystickButton(DRIVER_STICK, 6);
 	// private static final Button DRIVER_STICK_BUTTON_SEVEN = new
@@ -210,8 +205,8 @@ public class OI {
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0));
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait(0));
-		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new LiftCylindersSet(LiftCylinders.EXTENDED)); // Extend Cylinders while held
-		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0)); // Descend down
+		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
+		DRIVER_PAD_GREEN_BUTTON.whileHeld(new AutoClimb());
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
@@ -228,10 +223,10 @@ public class OI {
 		// DRIVER_STICK_BUTTON_ONE_ENABLED.whenPressed(new Wait(0));
 
 		// // adjust auto parameters
-		// DRIVER_STICK_BUTTON_THREE.whenPressed(new SelectAutonomousProgram(1));
-		// DRIVER_STICK_BUTTON_TWO.whenPressed(new SelectAutonomousProgram(-1));
-		// DRIVER_STICK_BUTTON_FOUR.whenPressed(new SelectAutonomousDelay(-1));
-		// DRIVER_STICK_BUTTON_FIVE.whenPressed(new SelectAutonomousDelay(1));
+		DRIVER_STICK_BUTTON_THREE.whenPressed(new SelectAutonomousProgram(1));
+		DRIVER_STICK_BUTTON_TWO.whenPressed(new SelectAutonomousProgram(-1));
+		DRIVER_STICK_BUTTON_FOUR.whenPressed(new SelectAutonomousDelay(-1));
+		DRIVER_STICK_BUTTON_FIVE.whenPressed(new SelectAutonomousDelay(1));
 
 		// // NOTE: buttons SIX, SEVEN, TEN, ELEVEN are reserved for PidTuner
 
@@ -274,7 +269,7 @@ public class OI {
 		// OPERATOR_PAD_D_PAD_UP.whenPressed(new
 		// ShoulderSetAngle(Shoulder.DEBUG_UP_ANGLE));
 
-		OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift());
+		OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift(Lifter.LIFTED_POS));
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new CargoShip());
 
 		OPERATOR_PAD_BUTTON_ELEVEN.whenPressed(new Wait(0));
@@ -428,9 +423,7 @@ public class OI {
 
 	// returns true if any of the autoInTeleop buttons are held
 	public boolean autoInTeleop() {
-		return ( // DRIVER_PAD_GREEN_BUTTON.get() // added for ribfest
-		DRIVER_PAD_BLUE_BUTTON.get() || // removed for ribfest
-				DRIVER_PAD_RED_BUTTON.get() // removed for ribfest
+		return (DRIVER_PAD_GREEN_BUTTON.get() // added for 2019 week 1
 		);
 	}
 

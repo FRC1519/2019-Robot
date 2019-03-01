@@ -17,7 +17,7 @@ public class Wrist extends Subsystem {
 
     public static final int ZERO_POS = 0;
     public static final int STARTING_POS = ZERO_POS; // the same as "zero_pos" - lowered all the way into the robot
-    private static final double STARTING_POSITION_DEGREES = 180.0; // the starting position (approx) in degrees
+    public static final double STARTING_POSITION_DEGREES = 180.0; // the starting position (approx) in degrees
     private static final double ENCODER_CPR = 4096.0;
     private static final double OVERALL_REDUCTION = 1.0; // no reduction after the encoder
     private static final double TICKS_PER_ROTATION = ENCODER_CPR * OVERALL_REDUCTION; // turns out to be 4096
@@ -33,7 +33,7 @@ public class Wrist extends Subsystem {
     public static final double CARGO_ROCKET_MID_ANGLE = 24.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_ROCKET_LOW_ANGLE = 20.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_CARGO_SHIP_ANGLE = 3.0 + FRONT_ANGLE_SLOP;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -15.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -20.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_LOADING_STATION_ANGLE = 25.0 + FRONT_ANGLE_SLOP;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
@@ -117,6 +117,11 @@ public class Wrist extends Subsystem {
         // Need to add shoulder angle to convert from internal to relative coordinates
         m_internalAngleInDegrees = positionToInternalDegrees(pos);
         m_desiredAngle = m_internalAngleInDegrees + Robot.shoulder.getAngleInDegrees();
+    }
+
+    public boolean isAtInternalSetpoint() {
+        return Math
+                .abs(m_internalAngleInDegrees - positionToInternalDegrees(m_desiredPosition)) < Wrist.ANGLE_TOLERANCE;
     }
 
     public boolean isAtSetpoint() {

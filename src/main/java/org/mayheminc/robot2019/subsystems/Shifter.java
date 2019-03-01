@@ -13,23 +13,24 @@ public class Shifter extends Subsystem {
 	// Solenoid
 	Solenoid m_shifter;
 
-	public Shifter()
-	{
+	public Shifter() {
 		m_shifter = new Solenoid(RobotMap.SHIFTING_SOLENOID);
 	}
-	
-	public void initDefaultCommand() {}
-	
-	//**********************************SHIFTER PISTONS***********************************************
 
-	public static final boolean HIGH_GEAR = true;
+	public void initDefaultCommand() {
+	}
+
+	// **********************************SHIFTER
+	// PISTONS***********************************************
+
+	public static final boolean HIGH_GEAR = false;
 	public static final boolean LOW_GEAR = !HIGH_GEAR;
 	private boolean m_highGear = HIGH_GEAR; // flag for current gear setting
 
 	public final void setGear(boolean gear) {
 		m_highGear = gear;
 		if (m_highGear == HIGH_GEAR) {
-			m_shifter.set(HIGH_GEAR);  
+			m_shifter.set(HIGH_GEAR);
 		} else {
 			m_shifter.set(LOW_GEAR);
 		}
@@ -40,6 +41,6 @@ public class Shifter extends Subsystem {
 	}
 
 	public void updateSmartDashboard() {
-		SmartDashboard.putBoolean("High Gear", !m_highGear);	
+		SmartDashboard.putBoolean("High Gear", !m_highGear);
 	}
 }

@@ -15,17 +15,28 @@ import org.mayheminc.robot2019.subsystems.*;
 /**
  *
  */
-public class AutoLift extends CommandGroup {
+public class AutoClimb extends CommandGroup {
 
     /**
      * Full-power to linkage until approximently vertical Start driving robot wheels
      * forward at 1/4 speed for about 5 seconds Continue moving linkage until just
      * forward at 1/4 speedfor about 6 seconds Stop driving forward
      */
-    public AutoLift() {
-        addSequential(new LifterToPosition(Lifter.AUTO_LIFTED_POS_1)); // 100k encoder counts
-        addParallel(new DriveStraightForTime(.25, 5.0));
-        addSequential(new LifterToPosition(Lifter.AUTO_LIFTED_POS_2)); // 200k encoder counts
-        addSequential(new DriveStraight(.25, DistanceUnits.INCHES, 6.0));
+    public AutoClimb() {
+        // first, extend the lifter pistons, and wait for them to be extended before
+        // deplying the 4-bar linkage
+        addSequential(new LiftCylindersSetAndStay(LiftCylinders.EXTENDED));
+        addSequential(new Wait(2.0));
+
+        // second, deploy the 4-bar linkage, starting the drive motors a half second
+        // later
+        addParallel(new LifterToPosition(Lifter.LIFTED_POS));
+        addSequential(new Wait(0.5)); // wait a half-second before starting to drive
+        addSequential(new DriveStraightForTime(.20, 2.0));
+
+        // hopefully, by now we will have actually climbed, so retrat the cylinders and
+        // raise the lifter a bit more
+        addSequential(new LiftCylindersSetAndStay(LiftCylinders.RETRACTED));
+        addSequential(new LifterToPosition(Lifter.RAISED_AFTER_LIFTED));
     }
 }

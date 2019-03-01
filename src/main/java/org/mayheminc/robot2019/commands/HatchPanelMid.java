@@ -33,7 +33,7 @@ public class HatchPanelMid extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new ArmMove(Shoulder.HP_ROCKET_MID_ANGLE, Wrist.HP_ROCKET_MID_ANGLE));
+    addSequential(new ArmMoveWithShoulderFirst(Shoulder.HP_ROCKET_MID_ANGLE, Wrist.HP_ROCKET_MID_ANGLE));
 
   }
 }

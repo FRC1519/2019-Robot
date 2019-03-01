@@ -33,6 +33,6 @@ public class CargoLow extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new ArmMove(Shoulder.CARGO_ROCKET_LOW_ANGLE, Wrist.CARGO_ROCKET_LOW_ANGLE));
+    addSequential(new ArmMoveWithShoulderFirst(Shoulder.CARGO_ROCKET_LOW_ANGLE, Wrist.CARGO_ROCKET_LOW_ANGLE));
   }
 }

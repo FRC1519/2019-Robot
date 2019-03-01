@@ -15,16 +15,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class LifterLift extends Command {
   static int m_countEnd = 0;
   static int m_countInterrupted = 0;
+  private int m_desiredCounts = 0;
 
-  public LifterLift() {
+  public LifterLift(int desiredCounts) {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.lifter);
+    m_desiredCounts = desiredCounts;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-      Robot.lifter.Lift();
+    Robot.lifter.Lift(m_desiredCounts);
   }
 
   // Called repeatedly when this Command is scheduled to run

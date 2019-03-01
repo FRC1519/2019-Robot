@@ -13,13 +13,13 @@ import org.mayheminc.robot2019.Robot;
 /**
  * Add your docs here.
  */
-public class LiftCylindersSet extends Command {
+public class LiftCylindersSetOnlyWhileHeld extends Command {
   /**
    * Add your docs here.
    */
   boolean m_pos;
 
-  public LiftCylindersSet(boolean b) {
+  public LiftCylindersSetOnlyWhileHeld(boolean b) {
     super();
     // Use requires() here to declare subsystem dependencies
     requires(Robot.liftCylinders);

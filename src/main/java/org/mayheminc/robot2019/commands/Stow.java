@@ -7,6 +7,8 @@
 
 package org.mayheminc.robot2019.commands;
 
+import org.mayheminc.robot2019.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class Stow extends CommandGroup {
@@ -30,7 +32,7 @@ public class Stow extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new WristSetInternalAngle(102.0 + 5.0 + 15.0)); // TODO: should not just use hard-coded numbers
+    addSequential(new WristSetInternalAngle(Wrist.STARTING_POSITION_DEGREES));
     addSequential(new ShoulderSetAngle(-78.0));
   }
 }

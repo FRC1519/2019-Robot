@@ -22,9 +22,9 @@ public class Lifter extends Subsystem {
 
     // constants for positions
     private static final int STARTING_POS = 0;
-    private static final int LIFTED_POS = 900000; // determined empirically on bag night
-    public static final int AUTO_LIFTED_POS_1 = 100000; // 100k ticks debug tick count
-    public static final int AUTO_LIFTED_POS_2 = 200000; // 200k ticks debug tick count
+    public static final int LIFTED_POS = 900000; // determined empirically on bag night
+    private static final int EXTRA_FOR_RAISED_POS = 150000;
+    public static final int RAISED_AFTER_LIFTED = LIFTED_POS + EXTRA_FOR_RAISED_POS;
 
     private static final int IN_POSITION_SLOP = 100;
     private static final int MAX_MOTOR_OFFSET = 200000;
@@ -137,9 +137,9 @@ public class Lifter extends Subsystem {
         m_desiredPosition = position;
     }
 
-    public void Lift() {
+    public void Lift(int desiredPosition) {
         // Received a command to lift. If we're already "lifted" don't do anything!
-        m_desiredPosition = Lifter.LIFTED_POS;
+        m_desiredPosition = desiredPosition;
         if (!IsAtSetpoint()) {
             // Tell synchronizedLift to climb
             setTargetMotorSpeed(Lifter.LIFTING_POWER);

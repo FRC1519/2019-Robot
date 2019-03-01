@@ -30,7 +30,7 @@ public class HatchPanelLoadingStation extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new WristSetInternalAngle(102.0 + 10.0)); // TODO: should not just use hard-coded numbers
+    addSequential(new WristSetAngle(102.0 + 10.0)); // TODO: should not just use hard-coded numbers
     addSequential(new ShoulderSetAngle(-70.0));
   }
 }
