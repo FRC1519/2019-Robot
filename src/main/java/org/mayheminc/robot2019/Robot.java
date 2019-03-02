@@ -203,15 +203,12 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// turn off the compressor
 		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the
-		// compressor
-		// didn't affect the operation of the autonomous programs. Not sure we really
-		// want this.
+		// compressor didn't affect the operation of the autonomous programs. Not sure
+		// we really want this.
 		// At the least, we can take advantage of the last few seconds in autonomous by
-		// turning
-		// on the compressor at the end of our autonomous programs instead of waiting
-		// for the
-		// teleopInit to be called at the start of teleop.
-		compressor.stop();
+		// turning on the compressor at the end of our autonomous programs instead of
+		// waiting for the teleopInit to be called at the start of teleop.
+		// compressor.stop();
 
 		// TODO: examine section below for "Zero" updates needed in 2019.
 		// "Zero" the robot subsystems which have position encoders in this section.
@@ -258,13 +255,14 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// Scheduler.getInstance().run(); called in periodic().
 
-		// If the driver's joystick has either joystick deflected, end the autonomous
-		// program,
-		// and indicate that a human driver is now controlling the robot.
-		if ((oi.driveThrottle() != 0.0) || (oi.steeringX() != 0)) {
+		// If the driver's joystick has either joystick deflected, and the autonomous
+		// program is still trying to drive the robot, end the autonomous program
+		// and switch control to the human driver.
+		if ((oi.driveThrottle() != 0.0) || (oi.steeringX() != 0) && !m_humanDriverInAuto) {
 			// ensure the autonomous command is canceled
 			if (autonomousCommand != null) {
-				autonomousCommand.cancel();
+				Scheduler.getInstance().removeAll();
+				// autonomousCommand.cancel();
 			}
 			// switch to control by a human driver
 			m_humanDriverInAuto = true;
