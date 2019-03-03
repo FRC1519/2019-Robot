@@ -9,10 +9,12 @@ package org.mayheminc.robot2019.autonomousroutines;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
+import org.mayheminc.robot2019.subsystems.CargoIntake;
 
 public class StartRightHAB2HPtoShipFront extends CommandGroup {
   /**
@@ -33,6 +35,8 @@ public class StartRightHAB2HPtoShipFront extends CommandGroup {
     // Get the arm into postion while lining to put the hatch panel on the ship.
     addParallel(new HatchPanelLow());
     addSequential(new DriveStraightOnHeading(0.7, 48, 0));
+
+    addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
 
     // stop now to let the driver's take over!
   }

@@ -9,10 +9,12 @@ package org.mayheminc.robot2019.autonomousroutines;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
+import org.mayheminc.robot2019.subsystems.CargoIntake;
 
 public class StartLeftHAB2HPtoShipLeft extends CommandGroup {
   /**
@@ -36,6 +38,7 @@ public class StartLeftHAB2HPtoShipLeft extends CommandGroup {
 
     // Turn towards the side of the cargo ship
     addSequential(new DriveStraightOnHeading(0.7, 60, +90));
+    addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
 
     // stop now to let the driver's take over!
   }

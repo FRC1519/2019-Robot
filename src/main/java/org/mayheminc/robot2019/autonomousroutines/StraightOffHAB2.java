@@ -9,10 +9,12 @@ package org.mayheminc.robot2019.autonomousroutines;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
+import org.mayheminc.robot2019.subsystems.CargoIntake;
 
 public class StraightOffHAB2 extends CommandGroup {
   /**
@@ -30,6 +32,7 @@ public class StraightOffHAB2 extends CommandGroup {
     // Drive a foot further to ensure we're clear of HAB Level 1
     addSequential(new DriveStraightOnHeading(0.7, 12, 0)); // Drive one more foot at a heading of zero degrees
 
+    addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
     // stop now to let the driver's take over!
   }
 }

@@ -26,10 +26,10 @@ public class Wrist extends Subsystem {
     private static final double GRAVITY_OFFSET_ANGLE_RADIANS = Math.toRadians(55.0);
 
     // in general, the wrist angle positions are relative to the ground
-    public static final double FRONT_ANGLE_SLOP = 17.0; // front angles need to be increased by 17 degrees
+    public static final double FRONT_ANGLE_SLOP = 0.0; // 17.0; // front angles need to be increased by 17 degrees
     public static final double HORIZONTAL_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
 
-    public static final double CARGO_ROCKET_HIGH_ANGLE = 69.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 55.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_ROCKET_MID_ANGLE = 24.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_ROCKET_LOW_ANGLE = 20.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_CARGO_SHIP_ANGLE = 3.0 + FRONT_ANGLE_SLOP;
