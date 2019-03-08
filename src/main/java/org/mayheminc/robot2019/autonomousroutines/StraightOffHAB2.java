@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
-import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.subsystems.CargoIntake;

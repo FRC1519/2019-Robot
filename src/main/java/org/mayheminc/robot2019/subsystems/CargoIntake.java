@@ -18,14 +18,14 @@ public class CargoIntake extends Subsystem {
     public static final double OUTTAKE_SOFT_POWER = -0.6;
     public static final double OUTTAKE_HARD_POWER = -1.0;
 
-    private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.INTAKE_ROLLER_TALON);
+    private final MayhemTalonSRX m_motor = new MayhemTalonSRX(RobotMap.INTAKE_ROLLER_TALON);
     double m_power;
 
     public CargoIntake() {
-        motor.setNeutralMode(NeutralMode.Coast);
-        motor.configNominalOutputVoltage(+0.0f, -0.0f);
-        motor.configPeakOutputVoltage(+12.0, -12.0);
-        motor.setInverted(true);
+        m_motor.setNeutralMode(NeutralMode.Coast);
+        m_motor.configNominalOutputVoltage(+0.0f, -0.0f);
+        m_motor.configPeakOutputVoltage(+12.0, -12.0);
+        m_motor.setInverted(true);
         this.setPower(CargoIntake.OFF_POWER);
     }
 
@@ -34,11 +34,12 @@ public class CargoIntake extends Subsystem {
 
     public void setPower(double power) {
         m_power = power;
-        motor.set(ControlMode.PercentOutput, m_power);
+        m_motor.set(ControlMode.PercentOutput, m_power);
     }
 
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("Cargo Intake Power", m_power);
+        SmartDashboard.putNumber("Cargo Intake Amps", m_motor.getOutputCurrent());
     }
 
     public void update() {

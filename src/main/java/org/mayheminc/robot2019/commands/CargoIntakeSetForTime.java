@@ -10,7 +10,6 @@ package org.mayheminc.robot2019.commands;
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -39,7 +38,6 @@ public class CargoIntakeSetForTime extends Command {
   protected void initialize() {
     Robot.cargoIntake.setPower(m_power);
     m_startTime = Timer.getFPGATimestamp();
-    // DriverStation.reportError("CargoIntake Run", false);
   }
 
   @Override
