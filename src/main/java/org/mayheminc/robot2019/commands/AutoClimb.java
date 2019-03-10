@@ -22,9 +22,9 @@ public class AutoClimb extends CommandGroup {
      */
     public AutoClimb() {
         // first, extend the lifter pistons, and wait for them to be extended before
-        // deplying the 4-bar linkage
-        addSequential(new LiftCylindersSetAndStay(LiftCylinders.EXTENDED));
-        addSequential(new Wait(2.0));
+        // deploying the 4-bar linkage
+        addSequential(new LiftCylindersUntilDeployed());
+        // addSequential(new Wait(2.0));
 
         // second, deploy the 4-bar linkage, starting the drive motors a half second
         // later

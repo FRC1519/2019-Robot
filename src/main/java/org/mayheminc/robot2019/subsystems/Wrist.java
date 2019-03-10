@@ -42,7 +42,7 @@ public class Wrist extends Subsystem {
     public static final double HP_FLOOR_PICKUP_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
     public static final double HP_LOADING_STATION_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
 
-    private static final double ANGLE_TOLERANCE = 3.0;
+    private static final double ANGLE_TOLERANCE = 5.0;
 
     private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
 
