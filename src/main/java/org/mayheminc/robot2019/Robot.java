@@ -268,13 +268,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			m_humanDriverInAuto = true;
 		}
 
-		// if a humanDriver is operating the robot, call the appropriate drive methods
+		// if a humanDriver is operating the robot, call the appropriate drive method
 		if (m_humanDriverInAuto) {
-			if (drive.isSpeedRacerDrive()) {
-				drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
-			} else {
-				drive.tankDrive(oi.tankDriveLeft(), oi.tankDriveRight());
-			}
+			drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
 		}
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
@@ -344,11 +340,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// drive the robot based upon joystick inputs, unless an "auto" command is
 		// driving
 		if (!oi.autoInTeleop()) {
-			if (drive.isSpeedRacerDrive()) {
-				drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
-			} else {
-				drive.tankDrive(oi.tankDriveLeft(), oi.tankDriveRight());
-			}
+			drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
 		} else {
 			// do nothing here since the autonomous code will do the driving...
 		}
