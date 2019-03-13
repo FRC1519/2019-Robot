@@ -22,6 +22,8 @@ public class HatchPanelPickUp extends Subsystem {
     public void set(boolean b) {
         m_pos = b;
         this.solenoid.set(m_pos);
+
+        Robot.eventServer.output((m_pos) ? "HatchOpen" : "HatchClose");
     }
 
     public void updateSmartDashboard() {
