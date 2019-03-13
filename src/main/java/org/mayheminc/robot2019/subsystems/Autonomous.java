@@ -15,52 +15,58 @@ import org.mayheminc.robot2019.autonomousroutines.*;
  */
 public class Autonomous extends Subsystem {
 
-
 	private static Command autonomousPrograms[] = {
-			
-			/* 0 */   new StayStill(),  // do nothing	
+
+			/* 0 */ new StayStill(), // do nothing
+			/* 1 */ new StraightOffHAB2(), // drive straight off HAB2 platform and stop
+			/* 2 */ new StartLeftHAB2HPtoShipLeft(), // drive off the level two, with HP for Left Side of Ship
+			/* 3 */ new StartLeftHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
+			/* 4 */ new StartRightHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
+			/* 5 */ new StartRightHAB2HPtoShipRight(), // drive off the level two, with HP for Right Side of Ship
 	};
 
 	private static int programNumber = 0; // 0 = Do nothing
 	private static int delay = 0;
 
-	public enum StartOn { RIGHT, LEFT };
-	
+	public enum StartOn {
+		RIGHT, LEFT
+	};
+
 	/**
 	 * Convert a right-sided angle to either left or right.
+	 * 
 	 * @param startSide RIGHT or LEFT
-	 * @param angle 0 - 360 for the right side
+	 * @param angle     0 - 360 for the right side
 	 * @return
 	 */
 	public static double chooseAngle(StartOn startSide, double angle) {
-		
+
 		// if startSide is left, convert angle, otherwise, leave as-is
-		if (startSide == StartOn.LEFT ) {
+		if (startSide == StartOn.LEFT) {
 			angle = 360.0 - angle;
 		}
 		return (angle);
 	}
-	
+
 	public Autonomous() {
 	}
 
 	public void initDefaultCommand() {
 	}
 
-	public Command getSelectedProgram(){
+	public Command getSelectedProgram() {
 		return autonomousPrograms[programNumber];
 	}
 
 	public int getDelay() {
 		return delay;
 	}
-	
-	public void adjustProgramNumber(int delta){
+
+	public void adjustProgramNumber(int delta) {
 		programNumber += delta;
 		if (programNumber < 0) {
 			programNumber = autonomousPrograms.length - 1;
-		}
-		else if (programNumber >= autonomousPrograms.length) {
+		} else if (programNumber >= autonomousPrograms.length) {
 			programNumber = 0;
 		}
 		updateSmartDashboard();
@@ -77,7 +83,7 @@ public class Autonomous extends Subsystem {
 		}
 		updateSmartDashboard();
 	}
-	
+
 	private static StringBuffer sb = new StringBuffer();
 
 	public static void updateSmartDashboard() {
@@ -88,7 +94,7 @@ public class Autonomous extends Subsystem {
 		SmartDashboard.putNumber("Auto Delay", delay);
 	}
 
-	public String toString(){
+	public String toString() {
 		return autonomousPrograms[programNumber].getName();
 	}
 }

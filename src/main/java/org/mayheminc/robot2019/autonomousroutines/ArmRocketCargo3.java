@@ -7,7 +7,7 @@
 
 package org.mayheminc.robot2019.autonomousroutines;
 
-import org.mayheminc.robot2019.commands.ArmMove;
+// import org.mayheminc.robot2019.commands.ArmMove;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -16,6 +16,6 @@ public class ArmRocketCargo3 extends CommandGroup {
    * Add your docs here.
    */
   public ArmRocketCargo3() {
-    addSequential(new ArmMove(1500, 1500));
+    // addSequential(new ArmMove(1500, 1500));
   }
 }

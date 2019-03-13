@@ -9,17 +9,17 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DriveStraightForTime extends Command {
 
-
 	double m_targetPower;
 	double m_startTime;
 	double m_desiredTime;
-	
+
 	/**
 	 * 
 	 * @param arg_targetPower +/- motor power [-1.0, +1.0]
-	 * @param arg_distance Time is in seconds
+	 * @param arg_distance    Time is in seconds
 	 */
 	public DriveStraightForTime(double arg_targetSpeed, double timeInSeconds) {
+		requires(Robot.drive);
 		m_desiredTime = timeInSeconds;
 		m_targetPower = arg_targetSpeed;
 	}
@@ -43,9 +43,9 @@ public class DriveStraightForTime extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		Robot.drive.stop();    	
+		Robot.drive.stop();
 	}
-	
+
 	protected void interrupted() {
 		Robot.drive.stop();
 	}

@@ -8,52 +8,55 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
+import org.mayheminc.robot2019.subsystems.CargoIntake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class LifterLift extends Command {
-  static int m_countEnd = 0;
-  static int m_countInterrupted = 0;
-  private int m_desiredCounts = 0;
+/**
+ * Set the CargoIntake to a power.
+ */
+public class CargoIntakeSetForTime extends Command {
+  /**
+   * Add your docs here.
+   */
+  double m_power;
+  double m_startTime;
+  double m_desiredTime;
 
-  public LifterLift(int desiredCounts) {
+  public CargoIntakeSetForTime(double power, double timeInSeconds) {
+    super();
+
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.lifter);
-    m_desiredCounts = desiredCounts;
+    requires(Robot.cargoIntake);
+    m_power = power;
+    m_desiredTime = timeInSeconds;
   }
 
-  // Called just before this Command runs the first time
+  // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.lifter.Lift(m_desiredCounts);
+    Robot.cargoIntake.setPower(m_power);
+    m_startTime = Timer.getFPGATimestamp();
   }
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-  }
-
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.lifter.IsAtSetpoint();
+    double diff = Timer.getFPGATimestamp() - m_startTime;
+    diff = Math.abs(diff);
+    return (diff >= m_desiredTime);
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.lifter.stop();
-    SmartDashboard.putNumber("LifterLift End", m_countEnd);
-    m_countEnd++;
+    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
   }
 
   // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run, or the button is released, or ...
+  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.lifter.stop();
-    SmartDashboard.putNumber("LifterLift Interrupt", m_countInterrupted);
-    m_countInterrupted++;
+    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
   }
 }

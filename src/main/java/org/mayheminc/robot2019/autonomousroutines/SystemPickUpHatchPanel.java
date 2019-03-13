@@ -7,7 +7,7 @@
 
 package org.mayheminc.robot2019.autonomousroutines;
 
-import org.mayheminc.robot2019.commands.ArmMove;
+// import org.mayheminc.robot2019.commands.ArmMove;
 import org.mayheminc.robot2019.commands.HatchPanelSet;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.subsystems.HatchPanelPickUp;
@@ -22,15 +22,15 @@ public class SystemPickUpHatchPanel extends CommandGroup {
   public SystemPickUpHatchPanel() {
     // open (release) the hatch panel and move the arm to the 'low' position.
     addParallel(new HatchPanelSet(HatchPanelPickUp.RELEASE));
-    addSequential(new ArmMove(100, 1000));
+    // addSequential(new ArmMove(100, 1000));
 
     // move the wrist to under the robot and lower the arm a little.
-    addSequential(new ArmMove(90, 1500));
+    // addSequential(new ArmMove(90, 1500));
 
     addSequential(new HatchPanelSet(HatchPanelPickUp.GRAB));
     addSequential(new Wait(0.5));
 
     // lift the arm back up, careful to rotate the hatch panel from under the robot.
-    addSequential(new ArmMove(100, 1000));
+    // addSequential(new ArmMove(100, 1000));
   }
 }

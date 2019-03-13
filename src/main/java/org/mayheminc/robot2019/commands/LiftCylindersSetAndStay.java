@@ -7,51 +7,34 @@
 
 package org.mayheminc.robot2019.commands;
 
-import org.mayheminc.robot2019.Robot;
-import org.mayheminc.robot2019.subsystems.CargoIntake;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import org.mayheminc.robot2019.Robot;
 
 /**
- * Set the CargoIntake to a power.
+ * Add your docs here.
  */
-public class CargoIntakeSet extends Command {
+public class LiftCylindersSetAndStay extends Command {
   /**
    * Add your docs here.
    */
-  double m_power;
+  boolean m_pos;
 
-  public CargoIntakeSet(double power) {
+  public LiftCylindersSetAndStay(boolean b) {
     super();
-
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.cargoIntake);
-    m_power = power;
+    requires(Robot.liftCylinders);
+    m_pos = b;
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.cargoIntake.setPower(m_power);
-    DriverStation.reportError("CargoIntake Run", false);
+    Robot.liftCylinders.set(m_pos);
   }
 
+  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
+    return true;
   }
 }

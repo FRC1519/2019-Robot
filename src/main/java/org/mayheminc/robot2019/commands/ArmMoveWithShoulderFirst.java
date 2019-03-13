@@ -5,17 +5,17 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.mayheminc.robot2019.autonomousroutines;
-
-// import org.mayheminc.robot2019.commands.ArmMove;
+package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class ArmUnfoldStartingPosition extends CommandGroup {
+public class ArmMoveWithShoulderFirst extends CommandGroup {
   /**
-   * Add your docs here.
+   * Move the shoulder and wrist at the same time. The command is done when both
+   * the wrist and shoulder are done moving.
    */
-  public ArmUnfoldStartingPosition() {
-    // addSequential(new ArmMove(100, 1000));
+  public ArmMoveWithShoulderFirst(double shoulderAngle, double wristAngle) {
+    addSequential(new ShoulderSetAngle(shoulderAngle));
+    addSequential(new WristSetAngle(wristAngle)); // TODO: should probably be "addParallel()"
   }
 }

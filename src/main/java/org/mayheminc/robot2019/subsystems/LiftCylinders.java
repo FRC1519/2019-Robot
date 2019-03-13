@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class HatchPanelPickUp extends Subsystem {
+public class LiftCylinders extends Subsystem {
 
-    public static final boolean RELEASE = false;
-    public static final boolean GRAB = true;
+    public static final boolean RETRACTED = false;
+    public static final boolean EXTENDED = true;
 
     boolean m_pos;
-    Solenoid solenoid = new Solenoid(RobotMap.HATCH_PANEL_SOLENOID);
+    Solenoid solenoid = new Solenoid(RobotMap.LIFTER_SOLENOID);
 
     public void initDefaultCommand() {
     }
@@ -22,14 +22,10 @@ public class HatchPanelPickUp extends Subsystem {
     public void set(boolean b) {
         m_pos = b;
         this.solenoid.set(m_pos);
-
-        Robot.eventServer.output((m_pos) ? "HatchOpen" : "HatchClose");
     }
 
-    
-
     public void updateSmartDashboard() {
-        SmartDashboard.putBoolean("Hatch Panel Pos", m_pos);
+        SmartDashboard.putBoolean("Lifter Cylinder Pos", m_pos);
     }
 
 }

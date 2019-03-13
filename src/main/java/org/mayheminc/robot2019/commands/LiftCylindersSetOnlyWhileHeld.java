@@ -7,45 +7,48 @@
 
 package org.mayheminc.robot2019.commands;
 
+import edu.wpi.first.wpilibj.command.Command;
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+/**
+ * Add your docs here.
+ */
+public class LiftCylindersSetOnlyWhileHeld extends Command {
+  /**
+   * Add your docs here.
+   */
+  boolean m_pos;
 
-public class ShoulderSetPosition extends Command {
-  int m_pos;
-
-  public ShoulderSetPosition(int pos) {
+  public LiftCylindersSetOnlyWhileHeld(boolean b) {
+    super();
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.shoulder);
-    m_pos = pos;
+    requires(Robot.liftCylinders);
+    m_pos = b;
   }
 
-  // Called just before this Command runs the first time
+  // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.shoulder.set(m_pos);
-  }
-
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
+    Robot.liftCylinders.set(m_pos);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.shoulder.IsAtSetpoint();
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.liftCylinders.set(!m_pos);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.shoulder.set(Robot.wrist.get());
+    Robot.liftCylinders.set(!m_pos);
   }
+
 }

@@ -13,12 +13,12 @@ import org.mayheminc.robot2019.commands.*;
  * @author Team1519
  */
 public class StayStill extends CommandGroup {
-    
+
     public StayStill() {
-        
+
         // Perform needed initialization
         addSequential(new DriveZeroGyro());
 
-       // ALL DONE!
+        // ALL DONE!
     }
 }

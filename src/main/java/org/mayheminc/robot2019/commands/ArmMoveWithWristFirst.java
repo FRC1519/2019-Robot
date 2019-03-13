@@ -9,13 +9,13 @@ package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class ArmMove extends CommandGroup {
+public class ArmMoveWithWristFirst extends CommandGroup {
   /**
    * Move the shoulder and wrist at the same time. The command is done when both
    * the wrist and shoulder are done moving.
    */
-  public ArmMove(int shoulder, int wrist) {
-    addParallel(new WristSetPosition(wrist));
-    addSequential(new ShoulderSetPosition(shoulder));
+  public ArmMoveWithWristFirst(double shoulderAngle, double wristAngle) {
+    addSequential(new WristSetAngle(wristAngle)); // TODO: should probably be "addParallel()"
+    addSequential(new ShoulderSetAngle(shoulderAngle));
   }
 }

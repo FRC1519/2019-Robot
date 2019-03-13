@@ -35,6 +35,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	private Command autonomousCommand;
 	private Runtime runtime = Runtime.getRuntime();
 
+	// default to not using humanDriverInAuto
+	private boolean m_humanDriverInAuto = false;
+
 	// create the robot subsystems
 	public static final Compressor compressor = new Compressor();
 	public static final Drive drive = new Drive();
@@ -48,6 +51,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static CargoIntake cargoIntake = new CargoIntake();
 	public static HatchPanelPickUp hatchPanelPickUp = new HatchPanelPickUp();
 	public static Lifter lifter = new Lifter();
+	public static LiftCylinders liftCylinders = new LiftCylinders();
 
 	// allocate the "virtual" subsystems; wait to construct these until robotInit()
 	public static Autonomous autonomous;
@@ -133,10 +137,17 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	}
 
 	/**
-	 * This function is called during every period. We have defined an empty
-	 * robotPeriodic to avoid a warning message at startup.
+	 * This function is called during every period, AFTER the calls to
+	 * "modePeriodic". Need to at least define robotPeriodic() to avoid a warning
+	 * message at startup.
 	 */
 	public void robotPeriodic() {
+		// TODO: To avoid having essential calls overlooked in "modePeriodic()" calls,
+		// consider consolidating stuff here
+		// examples: updateSensors, updateSmartDashboard, etc.
+
+		// run the scheduler on every main loop so that commands execute
+		Scheduler.getInstance().run();
 	}
 
 	/**
@@ -151,6 +162,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			printAutoElapsedTime = false;
 		}
 
+		// kill any previously existing commands
+		Scheduler.getInstance().removeAll();
+
 		// // print the blackbox.
 		// blackbox.print();
 
@@ -158,94 +172,45 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// blackbox.reset();
 	}
 
-	private double dpTime0 = 0.0;
-	private double dpTime1 = 0.0;
-	private double dpTime2 = 0.0;
-	private double dpTime3 = 0.0;
-	private double dpTime4 = 0.0;
-	private double dpTime5 = 0.0;
-	private int dpWaitLoops = 0;
-	private int dpLoops = 0;
-
-	private double dpElapsed1 = 0.0;
-	private double dpElapsed2 = 0.0;
-	private double dpElapsed3 = 0.0;
-	private double dpElapsed4 = 0.0;
-	private double dpElapsed5 = 0.0;
-	private double dpElapsedTotal = 0.0;
-
 	public void disabledPeriodic() {
+		// update all sensors in the robot
+		updateSensors();
 
 		// update Smart Dashboard, including fields for setting up autonomous operation
-		// TODO: Commented out the below and instead immersed various
-		// SmartDashboard updates directly below
-		// while debugging latency of various calls. Primary finding is that CTRE calls
-		// have latency of about 0.5ms each.
-		// updateSmartDashboard(UPDATE_AUTO_SETUP_FIELDS);
+		// Note: Want to avoid excess CTRE calls, as they have latency of about 0.5ms
+		// each.
+		updateSmartDashboard(UPDATE_AUTO_SETUP_FIELDS);
 
-		dpWaitLoops++;
-		if (dpWaitLoops > (10.0 * 1.0 / LOOP_TIME)) { // should wait for 10 seconds after first disabled
-			dpLoops++;
-			dpTime0 = Timer.getFPGATimestamp();
+		// ensure that the drive base updates its history (probably belongs in
+		// "updateSensors")
+		Robot.drive.updateHistory();
 
-			// update sensors that need periodic update
-			Scheduler.getInstance().run();
+		// Scheduler.getInstance().run(); called in periodic().
 
-			dpTime1 = Timer.getFPGATimestamp();
-			dpElapsed1 = dpElapsed1 + dpTime1 - dpTime0;
-
-			drive.updateSmartDashboard();
-
-			dpTime2 = Timer.getFPGATimestamp();
-			dpElapsed2 = dpElapsed2 + dpTime2 - dpTime1;
-
-			dpTime3 = Timer.getFPGATimestamp();
-			dpElapsed3 = dpElapsed3 + dpTime3 - dpTime2;
-
-			// PrintPeriodicPeriod();
-			dpTime4 = Timer.getFPGATimestamp();
-			dpElapsed4 = dpElapsed4 + dpTime4 - dpTime3;
-
-			if (OI.pidTuner != null) {
-				OI.pidTuner.updateSmartDashboard();
-			}
-
-			Autonomous.updateSmartDashboard();
-
-			Robot.drive.updateHistory();
-
-			dpTime5 = Timer.getFPGATimestamp();
-			dpElapsed5 = dpElapsed5 + dpTime5 - dpTime4;
-			dpElapsedTotal = dpElapsedTotal + dpTime5 - dpTime0;
-
-			if ((dpLoops % 40) == 0) {
-				System.out.println("dpAvg1: " + Utils.fourDecimalPlaces(dpElapsed1 / dpLoops) + "   dpAvg2: "
-						+ Utils.fourDecimalPlaces(dpElapsed2 / dpLoops) + "   dpAvg3: "
-						+ Utils.fourDecimalPlaces(dpElapsed3 / dpLoops) + "   dpAvg4: "
-						+ Utils.fourDecimalPlaces(dpElapsed4 / dpLoops) + "   dpAvg5: "
-						+ Utils.fourDecimalPlaces(dpElapsed5 / dpLoops) + "   dpAvgTot: "
-						+ Utils.fourDecimalPlaces(dpElapsedTotal / dpLoops));
-			}
-		}
+		// for safety reasons, keep resetting the shoulder and wrist setpoints to the
+		// current
+		// position, so that when we leave "disabled" no shoulder or wrist motion is
+		// commanded
+		shoulder.setDesiredAngle(shoulder.getAngleInDegrees());
+		wrist.setDesiredAngle(wrist.getAngleInDegrees());
 	}
 
 	public void autonomousInit() {
 
+		// TODO: do we want autonomous in high gear instead this year?
 		// force low gear
-		shifter.setShifter(Shifter.LOW_GEAR);
+		shifter.setGear(Shifter.LOW_GEAR);
 
 		// turn off the compressor
 		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the
-		// compressor
-		// didn't affect the operation of the autonomous programs. Not sure we really
-		// want this.
+		// compressor didn't affect the operation of the autonomous programs. Not sure
+		// we really want this.
 		// At the least, we can take advantage of the last few seconds in autonomous by
-		// turning
-		// on the compressor at the end of our autonomous programs instead of waiting
-		// for the
-		// teleopInit to be called at the start of teleop.
-		compressor.stop();
+		// turning on the compressor at the end of our autonomous programs instead of
+		// waiting for the teleopInit to be called at the start of teleop.
+		// compressor.stop();
 
+		// TODO: examine section below for "Zero" updates needed in 2019.
 		// "Zero" the robot subsystems which have position encoders in this section.
 		// Overall strategy for zeroing subsystems is as follows:
 		// Every time autonomous starts:
@@ -257,10 +222,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// zero the drive base gyro at current position
 		drive.zeroHeadingGyro(0.0);
 
-		// where ever the pivot is, lock it there.
-		// KBS: think we don't want to do this before zeroing the pivot, which will
-		// require some time in the future. Commenting out til RJD and KBS discuss
-		// pivot.LockCurrentPosition();
+		// start the autonomous period without a human driver
+		m_humanDriverInAuto = false;
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null) {
@@ -286,32 +249,48 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
+
+		// update all sensors in the robot
+		updateSensors();
+
+		// Scheduler.getInstance().run(); called in periodic().
+
+		// If the driver's joystick has either joystick deflected, and the autonomous
+		// program is still trying to drive the robot, end the autonomous program
+		// and switch control to the human driver.
+		if ((oi.driveThrottle() != 0.0) || (oi.steeringX() != 0) && !m_humanDriverInAuto) {
+			// ensure the autonomous command is canceled
+			if (autonomousCommand != null) {
+				Scheduler.getInstance().removeAll();
+				// autonomousCommand.cancel();
+			}
+			// switch to control by a human driver
+			m_humanDriverInAuto = true;
+		}
+
+		// if a humanDriver is operating the robot, call the appropriate drive method
+		if (m_humanDriverInAuto) {
+			drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
+		}
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 		Robot.drive.updateHistory();
+		Robot.shoulder.update();
+		Robot.wrist.update();
 	}
 
 	public void teleopInit() {
 
 		// before doing anything else in teleop, kill any existing commands
+		// TODO: consider if this is still desirable in 2019 with the "sandstorm" period
 		Scheduler.getInstance().removeAll();
 
-		// turn on the compressor
+		// turn on the compressor (may have been off in autonomous)
 		compressor.start();
-
-		// NOTE: BELOW SHOULD BE OBE WITH above Scheduler.getInstance().removeAll();
-		// // This makes sure that the autonomous stops running when
-		// // teleop starts running. If you want the autonomous to
-		// // continue until interrupted by another command, remove
-		// // this line or comment it out.
-		// if (autonomousCommand != null) {
-		// autonomousCommand.cancel();
-		// }
 
 		DriverStation.reportError("Entering Teleop.\n", false);
 
-		shifter.setGear(Shifter.LOW_GEAR);
+		shifter.setGear(Shifter.HIGH_GEAR);
 	}
 
 	/**
@@ -353,21 +332,25 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		}
 		teleopOnce = true;
 
-		Scheduler.getInstance().run();
+		// Scheduler.getInstance().run(); called in periodic
 
+		// update all sensors in the robot
+		updateSensors();
+
+		// drive the robot based upon joystick inputs, unless an "auto" command is
+		// driving
 		if (!oi.autoInTeleop()) {
-			if (drive.isSpeedRacerDrive()) {
-				drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
-			} else {
-				drive.tankDrive(oi.tankDriveLeft(), oi.tankDriveRight());
-			}
+			drive.speedRacerDrive(oi.driveThrottle(), oi.steeringX(), oi.quickTurn());
 		} else {
+			// do nothing here since the autonomous code will do the driving...
 		}
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 
-		Robot.shifter.updateAutoShift();
 		Robot.drive.updateHistory();
+		Robot.lifter.synchronizedLift();
+		Robot.shoulder.update();
+		Robot.wrist.update();
 	}
 
 	public static boolean getBrownoutMode() {
@@ -378,6 +361,11 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
+	}
+
+	public void updateSensors() {
+		shoulder.updateSensors();
+		wrist.updateSensors();
 	}
 
 	private double SMART_DASHBOARD_UPDATE_INTERVAL = 0.250; // was 0.250;
@@ -393,7 +381,12 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 			this.updateSmartDashboard();
 
+			shifter.updateSmartDashboard();
 			drive.updateSmartDashboard();
+			lifter.updateSmartDashboard();
+			shoulder.updateSmartDashboard();
+			wrist.updateSmartDashboard();
+			cargoIntake.updateSmartDashboard();
 
 			if (OI.pidTuner != null) {
 				OI.pidTuner.updateSmartDashboard();
