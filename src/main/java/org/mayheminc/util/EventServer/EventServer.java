@@ -1,14 +1,6 @@
 package org.mayheminc.util.EventServer;
 
-import static org.junit.Assume.assumeTrue;
-
-import java.io.DataOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Vector;
-import java.util.concurrent.ArrayBlockingQueue;
-
-// import org.mayheminc.util.EventServer.*;
 
 /**
  * The Event Server has a TCP Server. Every 100 ms it loops through the events

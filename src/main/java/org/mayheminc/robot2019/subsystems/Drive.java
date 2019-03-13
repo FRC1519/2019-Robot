@@ -288,7 +288,10 @@ public class Drive extends Subsystem {
 	public double getTilt() {
 		return Navx.getPitch();
 	}
-
+public double getPitch()
+{
+	return Navx.getRoll();
+}
 	public double getDesiredHeading() {
 		return m_desiredHeading;
 	}
