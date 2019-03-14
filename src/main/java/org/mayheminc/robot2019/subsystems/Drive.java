@@ -43,7 +43,7 @@ public class Drive extends Subsystem {
 
 	// NavX parameters
 	private double m_desiredHeading = 0.0;
-	private boolean m_useHeadingCorrection = false; // TODO: should be TRUE!!!
+	private boolean m_useHeadingCorrection = true;
 	private static final double kToleranceDegreesPIDControl = 0.2;
 
 	// Drive parameters
@@ -333,7 +333,7 @@ public class Drive extends Subsystem {
 
 		if (m_closedLoopMode) {
 			rightFrontTalon.set(ControlMode.Velocity, rightPower * m_maxWheelSpeed);
-			leftFrontTalon.set(ControlMode.Velocity, leftPower);
+			leftFrontTalon.set(ControlMode.Velocity, leftPower * m_maxWheelSpeed);
 		} else {
 			rightFrontTalon.set(ControlMode.PercentOutput, rightPower);
 			leftFrontTalon.set(ControlMode.PercentOutput, leftPower);
