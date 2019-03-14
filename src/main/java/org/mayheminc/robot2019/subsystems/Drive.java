@@ -30,10 +30,10 @@ public class Drive extends Subsystem {
 	private boolean m_HeadingPidPreventWindup = false;
 
 	// Talons
-	private final MayhemTalonSRX leftFrontTalon = new MayhemTalonSRX(RobotMap.BACK_LEFT_TALON);
-	private final MayhemTalonSRX leftRearTalon = new MayhemTalonSRX(RobotMap.FRONT_LEFT_TALON);
-	private final MayhemTalonSRX rightFrontTalon = new MayhemTalonSRX(RobotMap.FRONT_RIGHT_TALON);
-	private final MayhemTalonSRX rightRearTalon = new MayhemTalonSRX(RobotMap.BACK_RIGHT_TALON);
+	private final MayhemTalonSRX leftFrontTalon = new MayhemTalonSRX(RobotMap.LEFT_FRONT_TALON);
+	private final MayhemTalonSRX leftRearTalon = new MayhemTalonSRX(RobotMap.LEFT_REAR_TALON);
+	private final MayhemTalonSRX rightFrontTalon = new MayhemTalonSRX(RobotMap.RIGHT_FRONT_TALON);
+	private final MayhemTalonSRX rightRearTalon = new MayhemTalonSRX(RobotMap.RIGHT_REAR_TALON);
 
 	// Sensors
 	private AHRS Navx;
@@ -43,7 +43,7 @@ public class Drive extends Subsystem {
 
 	// NavX parameters
 	private double m_desiredHeading = 0.0;
-	private boolean m_useHeadingCorrection = true;
+	private boolean m_useHeadingCorrection = false; // TODO: should be TRUE!!!
 	private static final double kToleranceDegreesPIDControl = 0.2;
 
 	// Drive parameters
@@ -101,12 +101,18 @@ public class Drive extends Subsystem {
 		rightRearTalon.changeControlMode(ControlMode.Follower);
 		rightRearTalon.set(rightFrontTalon.getDeviceID());
 
-		// the left motors move the robot backwards with positive power
-		// but the right motors are correct as is.
+		// the left motors move the robot forwards with positive power
+		// but the right motors are backwards.
 		leftFrontTalon.setInverted(true);
 		leftRearTalon.setInverted(true);
 		rightFrontTalon.setInverted(false);
 		rightRearTalon.setInverted(false);
+
+		// sensor phase is reversed, since there are 3 reduction stages in the gearbox
+		leftFrontTalon.setSensorPhase(true);
+		leftRearTalon.setSensorPhase(true);
+		rightFrontTalon.setSensorPhase(true);
+		rightRearTalon.setSensorPhase(true);
 	}
 
 	public void init() {

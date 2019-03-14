@@ -26,31 +26,35 @@ class TCPServer extends Thread {
    }
 
    public void add(String S) {
+      // add S to the buffer, but if we can't fail silently
       buffer.offer(S);
    }
 
    public void run() {
+      ServerSocket welcomeSocket;
       try {
-         String wavfile;// = "bugs_answer.wav\n";
+         String wavfile;
 
-         ServerSocket welcomeSocket = new ServerSocket(PORT);
+         welcomeSocket = new ServerSocket(PORT);
 
-         while (true) {
-            Socket connectionSocket = welcomeSocket.accept();
+         try {
+            while (true) {
+               Socket connectionSocket = welcomeSocket.accept();
 
-            System.out.println("Opening socket");
+               System.out.println("Opening socket");
 
-            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+               DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
-            try {
                while (true) {
-                  wavfile = buffer.take();
+                  wavfile = buffer.take(); // take from the buffer. Wait if nothing is available
                   outToClient.writeBytes(wavfile);
-                  // Thread.sleep(5000);
                }
-            } catch (Exception ex) {
             }
+         } catch (Exception ex) {
+         } finally {
+            welcomeSocket.close();
          }
+
       } catch (Exception ex) {
       }
    }

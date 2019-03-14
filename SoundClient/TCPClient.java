@@ -15,11 +15,10 @@ class TCPClient extends Thread {
 
     public void run() {
         try {
-            String sentence;
             String modifiedSentence;
             System.out.println("start");
 
-            Socket clientSocket = new Socket("localhost", PORT);
+            Socket clientSocket = new Socket("10.15.19.2", PORT);
             System.out.println("open socket");
 
             BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

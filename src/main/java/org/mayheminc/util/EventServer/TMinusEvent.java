@@ -15,7 +15,7 @@ public class TMinusEvent extends OneTimeEvent {
 
     public String OneTimeExecute() {
 
-        // if the match time left is less than the time, reutrn the name.
+        // if the match time left is less than the time, return the name.
         if (DriverStation.getInstance().getMatchTime() < time) {
             return name;
         }
