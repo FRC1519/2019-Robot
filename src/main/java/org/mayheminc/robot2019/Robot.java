@@ -125,6 +125,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		eventServer.add(new TMinusEvent("T-Minus 3", 3));
 		eventServer.add(new TMinusEvent("T-Minus 2", 2));
 		eventServer.add(new TMinusEvent("T-Minus 1", 1));
+		eventServer.start();
 
 		// initialize the subsystems that need it
 		drive.init();

@@ -32,6 +32,7 @@ class TCPClient extends Thread {
                 new PlaySound(modifiedSentence).start();
             }
         } catch (Exception ex) {
+			System.out.println(ex);
         }
     }
 }

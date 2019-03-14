@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 class TCPServer extends Thread {
 
    private static final int PORT = 5809;
@@ -42,12 +44,14 @@ class TCPServer extends Thread {
                Socket connectionSocket = welcomeSocket.accept();
 
                System.out.println("Opening socket");
+               DriverStation.reportError("Opening Socket for Sound", false);
 
                DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
                while (true) {
                   wavfile = buffer.take(); // take from the buffer. Wait if nothing is available
-                  outToClient.writeBytes(wavfile);
+                  outToClient.writeBytes(wavfile + "\n");
+                  DriverStation.reportError("Sending Sound: " + wavfile, false);
                }
             }
          } catch (Exception ex) {

@@ -10,7 +10,6 @@ public class TMinusEvent extends OneTimeEvent {
     public TMinusEvent(String S, int T) {
         name = S;
         time = T;
-
     }
 
     public String OneTimeExecute() {

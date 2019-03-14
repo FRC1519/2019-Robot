@@ -60,8 +60,7 @@ public class OI {
 	private static final Button DRIVER_STICK_BUTTON_FIVE = new DisabledOnlyJoystickButton(DRIVER_STICK, 5);
 	// private static final Button DRIVER_STICK_BUTTON_SIX = new
 	// DisabledOnlyJoystickButton(DRIVER_STICK, 6);
-	// private static final Button DRIVER_STICK_BUTTON_SEVEN = new
-	// DisabledOnlyJoystickButton(DRIVER_STICK, 7);
+	private static final Button DRIVER_STICK_BUTTON_SEVEN = new DisabledOnlyJoystickButton(DRIVER_STICK, 7);
 	// private static final Button DRIVER_STICK_BUTTON_EIGHT = new
 	// DisabledOnlyJoystickButton(DRIVER_STICK, 8);
 	// private static final Button DRIVER_STICK_BUTTON_NINE = new
@@ -229,6 +228,7 @@ public class OI {
 		DRIVER_STICK_BUTTON_FIVE.whenPressed(new SelectAutonomousDelay(1));
 
 		// // NOTE: buttons SIX, SEVEN, TEN, ELEVEN are reserved for PidTuner
+		DRIVER_STICK_BUTTON_SEVEN.whenPressed(new TestSound());
 
 		// // zero elements that require zeroing
 		// DRIVER_STICK_BUTTON_EIGHT.whenPressed(new DriveZeroGyro());
