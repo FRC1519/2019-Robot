@@ -123,6 +123,11 @@ public class Shoulder extends Subsystem {
         setPosition(ZERO_POS);
     }
 
+    public void relaxMotors() {
+        m_manualMode = true;
+        motor_A.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
+    }
+
     public void setDesiredAngle(double angle) {
         m_desiredAngle = angle;
         m_state = State.START_MOVING;

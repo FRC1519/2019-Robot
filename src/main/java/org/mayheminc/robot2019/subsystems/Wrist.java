@@ -29,7 +29,7 @@ public class Wrist extends Subsystem {
     public static final double FRONT_ANGLE_SLOP = 0.0; // 17.0; // front angles need to be increased by 17 degrees
     public static final double HORIZONTAL_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
 
-    public static final double CARGO_ROCKET_HIGH_ANGLE = 55.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 45.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_ROCKET_MID_ANGLE = 24.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_ROCKET_LOW_ANGLE = 20.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_CARGO_SHIP_ANGLE = 3.0 + FRONT_ANGLE_SLOP;
@@ -40,7 +40,7 @@ public class Wrist extends Subsystem {
     public static final double HP_ROCKET_MID_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
     public static final double HP_ROCKET_LOW_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
     public static final double HP_FLOOR_PICKUP_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
-    public static final double HP_LOADING_STATION_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_LOADING_STATION_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
 
     private static final double ANGLE_TOLERANCE = 5.0;
 
@@ -98,6 +98,11 @@ public class Wrist extends Subsystem {
         // zero the position.
         motor.setSelectedSensorPosition(ZERO_POS);
         setInternalPosition(ZERO_POS);
+    }
+
+    public void relaxMotors() {
+        m_mode = WristMode.MANUAL;
+        motor.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
     }
 
     // Note that this setDesiredAngle is relative to the ground!!!

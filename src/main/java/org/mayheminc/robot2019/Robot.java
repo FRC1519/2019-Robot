@@ -189,11 +189,13 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// Scheduler.getInstance().run(); called in periodic().
 
 		// for safety reasons, keep resetting the shoulder and wrist setpoints to the
-		// current
-		// position, so that when we leave "disabled" no shoulder or wrist motion is
-		// commanded
+		// current position, so that when we leave "disabled" no shoulder or wrist
+		// motion is commanded
 		shoulder.setDesiredAngle(shoulder.getAngleInDegrees());
+		shoulder.relaxMotors();
+
 		wrist.setDesiredAngle(wrist.getAngleInDegrees());
+		wrist.relaxMotors();
 	}
 
 	public void autonomousInit() {
