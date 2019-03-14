@@ -9,10 +9,10 @@ package org.mayheminc.robot2019;
 public class RobotMap {
 
 	// Drive CAN Talons
-	public static final int FRONT_LEFT_TALON = 1;
-	public static final int BACK_LEFT_TALON = 2;
-	public static final int FRONT_RIGHT_TALON = 3;
-	public static final int BACK_RIGHT_TALON = 4;
+	public static final int LEFT_FRONT_TALON = 1;
+	public static final int LEFT_REAR_TALON = 2;
+	public static final int RIGHT_FRONT_TALON = 3;
+	public static final int RIGHT_REAR_TALON = 4;
 
 	// Subsystems
 	public static final int SHOULDER_TALON_A = 20;
