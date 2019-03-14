@@ -33,7 +33,7 @@ public class Wrist extends Subsystem {
     public static final double CARGO_ROCKET_MID_ANGLE = 24.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_ROCKET_LOW_ANGLE = 20.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_CARGO_SHIP_ANGLE = 3.0 + FRONT_ANGLE_SLOP;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -20.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -22.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_LOADING_STATION_ANGLE = 25.0 + FRONT_ANGLE_SLOP;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
