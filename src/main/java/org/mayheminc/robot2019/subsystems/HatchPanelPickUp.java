@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class HatchPanelPickUp extends Subsystem {
 
-    public static final boolean RELEASE = false;
-    public static final boolean GRAB = true;
+    public static final boolean GRABBER_CONTRACTED = false;
+    public static final boolean GRABBER_EXPANDED = true;
 
     boolean m_pos;
     Solenoid solenoid = new Solenoid(RobotMap.HATCH_PANEL_SOLENOID);
