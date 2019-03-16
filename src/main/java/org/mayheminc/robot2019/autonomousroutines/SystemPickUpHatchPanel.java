@@ -21,13 +21,13 @@ public class SystemPickUpHatchPanel extends CommandGroup {
    */
   public SystemPickUpHatchPanel() {
     // open (release) the hatch panel and move the arm to the 'low' position.
-    addParallel(new HatchPanelSet(HatchPanelPickUp.RELEASE));
+    addParallel(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
     // addSequential(new ArmMove(100, 1000));
 
     // move the wrist to under the robot and lower the arm a little.
     // addSequential(new ArmMove(90, 1500));
 
-    addSequential(new HatchPanelSet(HatchPanelPickUp.GRAB));
+    addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_EXPANDED));
     addSequential(new Wait(0.5));
 
     // lift the arm back up, careful to rotate the hatch panel from under the robot.

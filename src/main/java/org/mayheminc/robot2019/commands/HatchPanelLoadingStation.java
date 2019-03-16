@@ -7,6 +7,9 @@
 
 package org.mayheminc.robot2019.commands;
 
+import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class HatchPanelLoadingStation extends CommandGroup {
@@ -30,7 +33,6 @@ public class HatchPanelLoadingStation extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new WristSetAngle(102.0 + 10.0)); // TODO: should not just use hard-coded numbers
-    addSequential(new ShoulderSetAngle(-70.0));
+    addSequential(new ArmMove(Shoulder.HP_LOADING_STATION_ANGLE, Wrist.HP_LOADING_STATION_ANGLE));
   }
 }

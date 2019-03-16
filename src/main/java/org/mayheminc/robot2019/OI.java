@@ -205,7 +205,7 @@ public class OI {
 		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0));
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait(0));
 		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
-		DRIVER_PAD_GREEN_BUTTON.whileHeld(new AutoClimb());
+		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0) /* AutoClimb() */ );
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());

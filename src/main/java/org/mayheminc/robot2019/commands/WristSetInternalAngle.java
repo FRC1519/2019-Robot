@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.command.Command;
 public class WristSetInternalAngle extends Command {
   double m_internalAngle;
 
+  // TODO: Need to add a timeout on the "Set" commands for the shoulder and wrist
+
   public WristSetInternalAngle(double angleInDegrees) {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.wrist);

@@ -7,6 +7,8 @@
 
 package org.mayheminc.robot2019.commands;
 
+import org.mayheminc.robot2019.subsystems.Wrist;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ArmMoveWithShoulderFirst extends CommandGroup {
@@ -16,6 +18,6 @@ public class ArmMoveWithShoulderFirst extends CommandGroup {
    */
   public ArmMoveWithShoulderFirst(double shoulderAngle, double wristAngle) {
     addSequential(new ShoulderSetAngle(shoulderAngle));
-    addSequential(new WristSetAngle(wristAngle)); // TODO: should probably be "addParallel()"
+    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(shoulderAngle, wristAngle)));
   }
 }

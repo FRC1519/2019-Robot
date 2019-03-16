@@ -38,11 +38,11 @@ public class Wrist extends Subsystem {
 
     public static final double HP_ROCKET_HIGH_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
     public static final double HP_ROCKET_MID_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
-    public static final double HP_ROCKET_LOW_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_ROCKET_LOW_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
     public static final double HP_FLOOR_PICKUP_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
     public static final double HP_LOADING_STATION_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
 
-    private static final double ANGLE_TOLERANCE = 5.0;
+    private static final double ANGLE_TOLERANCE = 10.0;
 
     private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
 
@@ -111,13 +111,17 @@ public class Wrist extends Subsystem {
         m_mode = WristMode.AUTO_WORLD;
     }
 
-    // Note that this setDesiredAngle is relative to the ground!!!
+    public static double computeInternalAngle(double shoulderAngle, double wristWorldAngle) {
+        return (wristWorldAngle - shoulderAngle);
+    }
+
+    // Note that this setInternalAngle is relative to the robot arm!!!
     public void setInternalAngle(double angle) {
         m_desiredPosition = internalDegreesToPosition(angle);
         m_mode = WristMode.AUTO_INTERNAL;
     }
 
-    // Note that this setInternalPosition is relative to the robot!!!
+    // Note that this setInternalPosition is relative to the arm!!!
     private void setInternalPosition(int pos) {
         // Need to add shoulder angle to convert from internal to relative coordinates
         m_internalAngleInDegrees = positionToInternalDegrees(pos);
@@ -125,8 +129,8 @@ public class Wrist extends Subsystem {
     }
 
     public boolean isAtInternalSetpoint() {
-        return Math
-                .abs(m_internalAngleInDegrees - positionToInternalDegrees(m_desiredPosition)) < Wrist.ANGLE_TOLERANCE;
+        return (Math
+                .abs(m_internalAngleInDegrees - positionToInternalDegrees(m_desiredPosition)) < Wrist.ANGLE_TOLERANCE);
     }
 
     public boolean isAtSetpoint() {

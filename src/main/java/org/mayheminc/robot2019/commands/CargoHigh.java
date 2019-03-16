@@ -33,6 +33,6 @@ public class CargoHigh extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm
-    addSequential(new ArmMoveWithShoulderFirst(Shoulder.CARGO_ROCKET_HIGH_ANGLE, Wrist.CARGO_ROCKET_HIGH_ANGLE));
+    addSequential(new ArmMove(Shoulder.CARGO_ROCKET_HIGH_ANGLE, Wrist.CARGO_ROCKET_HIGH_ANGLE));
   }
 }
