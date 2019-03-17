@@ -36,11 +36,11 @@ public class Wrist extends Subsystem {
     public static final double CARGO_FLOOR_PICKUP_ANGLE = -22.0 + FRONT_ANGLE_SLOP;
     public static final double CARGO_LOADING_STATION_ANGLE = 25.0 + FRONT_ANGLE_SLOP;
 
-    public static final double HP_ROCKET_HIGH_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_ROCKET_HIGH_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
     public static final double HP_ROCKET_MID_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
     public static final double HP_ROCKET_LOW_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
     public static final double HP_FLOOR_PICKUP_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
-    public static final double HP_LOADING_STATION_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_LOADING_STATION_ANGLE = 90.0 + FRONT_ANGLE_SLOP;
 
     private static final double ANGLE_TOLERANCE = 10.0;
 
@@ -86,8 +86,8 @@ public class Wrist extends Subsystem {
         motor.setSensorPhase(true);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
-        motor.configClosedloopRamp(0.05); // limit neutral to full to 0.10 seconds // motor direction is reversed; not
-                                          // quite sure why
+        motor.configClosedloopRamp(0.05); // limit neutral to full to 0.10 seconds
+
         // TODO: Need to set up motion magic parameters for wrist below
         motor.configMotionCruiseVelocity(100); // measured velocity of ~100K at 85%; set cruise to that
         motor.configMotionAcceleration(250); // acceleration of 2x velocity allows cruise to be attained in 1/2 second
@@ -190,6 +190,9 @@ public class Wrist extends Subsystem {
     }
 
     public void updateSmartDashboard() {
+        // TODO: add a safety of some sort to check if "getCurrentPosition" isn't
+        // changing when the motor is moving (this would indicate a disconnected encoder
+        // cable)
         SmartDashboard.putNumber("Wrist Current Pos", getCurrentPosition());
         SmartDashboard.putNumber("Wrist Current Degrees", m_angleInDegrees);
         switch (m_mode) {

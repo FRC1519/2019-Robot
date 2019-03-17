@@ -34,11 +34,11 @@ public class SystemZeroIncludingGyro extends InstantCommand {
   protected void initialize() {
     Robot.shoulder.zero();
     Robot.lifter.zero();
-
-    // TODO: Really should to wait for the shoulder to finish zeroing before zeroing
-    // wrist
-    Robot.wrist.zero();
     Robot.drive.zeroHeadingGyro(0);
+
+    // TODO: Should wait for the shoulder to finish zeroing before zeroing wrist
+    Robot.wrist.zero();
+
   }
 
 }

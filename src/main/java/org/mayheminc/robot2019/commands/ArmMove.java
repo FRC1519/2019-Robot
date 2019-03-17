@@ -67,30 +67,47 @@ public class ArmMove extends Command {
 		// the shoulder second
 
 		if (m_targetShoulderAngle >= m_startingShoulderAngle) {
-			// moving shoulder up, always safe to move shoulder up first and then move the
-			// wrist second
-			m_subCommand = new ArmMoveWithShoulderFirst(m_targetShoulderAngle, m_targetWristAngle);
+			// moving shoulder up
+
+			// if the starting shoulder angle is above -16 degrees, okay to move wrist
+			// simultaneously
+			if (m_startingShoulderAngle > -16.0) {
+				m_subCommand = new ArmMoveSimultaneous(m_targetShoulderAngle, m_targetWristAngle);
+			} else {
+				// always safe to move shoulder up first and then move the wrist second
+				// just need to give the shoulder a little bit of a head start
+				m_subCommand = new ArmMoveWithShoulderHeadStart(m_targetShoulderAngle, m_targetWristAngle);
+			}
 		} else {
-			// must be moving the shoulder down, always safe to move the wrist first and
-			// then the shoulder second
-			m_subCommand = new ArmMoveWithWristFirst(m_targetShoulderAngle, m_targetWristAngle);
+			// moving the shoulder down
+			if (m_targetShoulderAngle > -16.0) {
+				// target height is above the point where "crashing" can happen,
+				// okay to move both simultaneously
+				m_subCommand = new ArmMoveSimultaneous(m_targetShoulderAngle, m_targetWristAngle);
+			} else if (m.abs(m_startingShoulderAngle - m_targetShoulderAngle) > m
+					.abs(m_startingWristAngle - m_targetWristAngle)) {
+			} else {
+				// always safe to move the wrist first and then the shoulder second
+				m_subCommand = new ArmMoveWithWristFirst(m_targetShoulderAngle, m_targetWristAngle);
+			}
 		}
 
-		if (m_subCommand != null) {
+		if (m_subCommand != null)
+
+		{
 			m_subCommand.start();
 		}
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		// TODO: Figure out what needs to go here. Ken's current thought is nothing
-		// happens here.
+		// TODO: Figure out what needs to go here.
+		// Ken's current thought is nothing happens here.
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		// TODO: we should return when all of the subsidiary commands that were created
-		// have completed
+		// Return when all of the subsidiary commands that were created have completed
 		return m_subCommand.isCompleted();
 	}
 
@@ -104,9 +121,12 @@ public class ArmMove extends Command {
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
 	protected void interrupted() {
-		// TODO: want to have the arm and shoulder hold their current positions
-		// Robot.drive.stop();
+		// cancel any ongoing subcommand
 		m_subCommand.cancel();
 		m_subCommand = null;
+
+		// Have the arm and shoulder hold their current positions
+		Robot.shoulder.setDesiredAngle(Robot.shoulder.getAngleInDegrees());
+		Robot.wrist.setDesiredAngle(Robot.wrist.getAngleInDegrees());
 	}
 }

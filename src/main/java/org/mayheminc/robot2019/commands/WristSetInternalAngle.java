@@ -9,16 +9,26 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class WristSetInternalAngle extends Command {
   double m_internalAngle;
 
-  // TODO: Need to add a timeout on the "Set" commands for the shoulder and wrist
+  double m_timeout;
+  Timer timer = new Timer();
+
+  private static double DEFAULT_TIMEOUT = 2000.0; // default timeout of 2 seconds
 
   public WristSetInternalAngle(double angleInDegrees) {
+    this(angleInDegrees, DEFAULT_TIMEOUT);
+  }
+
+  public WristSetInternalAngle(double angleInDegrees, double timeLimit) {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.wrist);
+
+    m_timeout = timeLimit;
     m_internalAngle = angleInDegrees;
   }
 

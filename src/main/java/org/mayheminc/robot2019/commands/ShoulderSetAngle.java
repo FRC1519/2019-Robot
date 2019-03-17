@@ -9,14 +9,26 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ShoulderSetAngle extends Command {
   double m_desiredAngle;
 
+  double m_timeout;
+  Timer timer = new Timer();
+
+  private static double DEFAULT_TIMEOUT = 2000.0; // default timeout of 2 seconds
+
   public ShoulderSetAngle(double angleInDegrees) {
+    this(angleInDegrees, DEFAULT_TIMEOUT);
+  }
+
+  public ShoulderSetAngle(double angleInDegrees, double timeLimit) {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.shoulder);
+
+    m_timeout = timeLimit;
     m_desiredAngle = angleInDegrees;
   }
 

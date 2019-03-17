@@ -33,7 +33,7 @@ public class Shoulder extends Subsystem {
     public static final double CARGO_ROCKET_HIGH_ANGLE = 66.0;
     public static final double CARGO_ROCKET_MID_ANGLE = 27.0;
     public static final double CARGO_ROCKET_LOW_ANGLE = -13.0;
-    public static final double CARGO_CARGO_SHIP_ANGLE = 20.0; // (was -2.0)
+    public static final double CARGO_CARGO_SHIP_ANGLE = 18.0; // (was 0.0)
     public static final double CARGO_FLOOR_PICKUP_ANGLE = -36.0;
     public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
 
@@ -44,8 +44,7 @@ public class Shoulder extends Subsystem {
     public static final double HP_LOADING_STATION_ANGLE = -70.0;
 
     private static final double ANGLE_TOLERANCE = 3.0; // hoping for one degree!!! (very optimistic, about 0.5 inches)
-    private static final double BRAKE_RELEASE_TIME_SEC = 0.0; // TODO: update with the real brake release time, once we
-                                                              // are using it
+    private static final double BRAKE_RELEASE_TIME_SEC = 0.0; // seems like no delay needed
 
     private MayhemTalonSRX motor_A = new MayhemTalonSRX(RobotMap.SHOULDER_TALON_A);
     private MayhemTalonSRX motor_B = new MayhemTalonSRX(RobotMap.SHOULDER_TALON_B);
@@ -67,7 +66,7 @@ public class Shoulder extends Subsystem {
     private double m_gravityCompensation; // computed "Gravity Compensation" factor, based upon current angle of arm
     private double m_feedForward; // computed "Feed Forward" term, in %vbus, based upon current angle of arm
 
-    private boolean m_manualMode = true; // TODO: debug. Set to false for init
+    private boolean m_manualMode = false;
 
     public Shoulder() {
         configMotor(motor_A);
@@ -225,11 +224,7 @@ public class Shoulder extends Subsystem {
             switch (m_state) {
 
             case STOPPED:
-                // TODO: after we have a brake, when we are stopped, set the motor 0 power.
-                // this.motor_A.set(ControlMode.PercentOutput, 0,
-                // DemandType.ArbitraryFeedForward, m_feedForward);
-
-                // for now, however, need to keep holding our position
+                // hold our position with the motor (even with the brake feature)
                 this.motor_A.set(ControlMode.MotionMagic, degreesToPosition(m_desiredAngle),
                         DemandType.ArbitraryFeedForward, m_feedForward);
 

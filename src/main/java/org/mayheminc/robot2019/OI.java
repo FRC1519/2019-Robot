@@ -248,7 +248,7 @@ public class OI {
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(CargoIntake.INTAKE_HARD_POWER));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(CargoIntake.OUTTAKE_HARD_POWER));
 
-		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new HatchPanelFloor());
+		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new HatchPanelLoadingStation());
 		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new HatchPanelLow());
 		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new HatchPanelMid());
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new HatchPanelHigh());
