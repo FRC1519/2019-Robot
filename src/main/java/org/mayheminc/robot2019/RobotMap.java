@@ -14,7 +14,7 @@ public class RobotMap {
 	public static final int RIGHT_FRONT_TALON = 3;
 	public static final int RIGHT_REAR_TALON = 4;
 
-	// Subsystems
+	// Subsystem Talons
 	public static final int SHOULDER_TALON_A = 20;
 	public static final int SHOULDER_TALON_B = 27;
 	public static final int WRIST_TALON = 21;
@@ -29,6 +29,9 @@ public class RobotMap {
 	public static final int HATCH_PANEL_SOLENOID = 1;
 	public static final int SHOULDER_BRAKE_SOLENOID = 2;
 	public static final int LIFTER_SOLENOID = 3;
+
+	// PWM Devices
+	public static final int BLINKIN_LEDS_PWM = 0;
 
 	// Analog Inputs
 

@@ -1,6 +1,7 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
+import org.mayheminc.robot2019.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -13,6 +14,10 @@ public class ArmMove extends Command {
 	double m_startingWristInternalAngle;
 	double m_targetShoulderAngle;
 	double m_targetWristAngle;
+	double m_targetWristInternalAngle;
+
+	double m_deltaShoulderAngle;
+	double m_deltaWristInternalAngle;
 
 	Command m_subCommand = null;
 
@@ -35,6 +40,7 @@ public class ArmMove extends Command {
 		m_timeout = timeLimit;
 		m_targetShoulderAngle = arg_targetShoulderAngle;
 		m_targetWristAngle = arg_targetWristAngle;
+		m_targetWristInternalAngle = Wrist.computeInternalAngle(m_targetShoulderAngle, m_targetWristAngle);
 	}
 
 	// Called just before this Command runs the first time
@@ -49,6 +55,9 @@ public class ArmMove extends Command {
 		// record needed information about current arm "pose"
 		m_startingShoulderAngle = Robot.shoulder.getAngleInDegrees();
 		m_startingWristInternalAngle = Robot.wrist.getInternalAngleInDegrees();
+
+		m_deltaShoulderAngle = Math.abs(m_startingShoulderAngle - m_targetShoulderAngle);
+		m_deltaWristInternalAngle = Math.abs(m_startingWristInternalAngle - m_targetWristInternalAngle);
 
 		// prepare the timeout
 		timer.reset();
@@ -71,7 +80,7 @@ public class ArmMove extends Command {
 
 			// if the starting shoulder angle is above -16 degrees, okay to move wrist
 			// simultaneously
-			if (m_startingShoulderAngle > -16.0) {
+			if (m_startingShoulderAngle >= -16.0) {
 				m_subCommand = new ArmMoveSimultaneous(m_targetShoulderAngle, m_targetWristAngle);
 			} else {
 				// always safe to move shoulder up first and then move the wrist second
@@ -80,21 +89,32 @@ public class ArmMove extends Command {
 			}
 		} else {
 			// moving the shoulder down
-			if (m_targetShoulderAngle > -16.0) {
+			if (m_targetShoulderAngle >= -16.0) {
 				// target height is above the point where "crashing" can happen,
-				// okay to move both simultaneously
+				// always okay to move both simultaneously
 				m_subCommand = new ArmMoveSimultaneous(m_targetShoulderAngle, m_targetWristAngle);
-			} else if (m.abs(m_startingShoulderAngle - m_targetShoulderAngle) > m
-					.abs(m_startingWristAngle - m_targetWristAngle)) {
+			} else if (m_deltaShoulderAngle >= m_deltaWristInternalAngle) {
+				// the shoulder needs to move farther than the wrist, move them
+				// simultaneously
+				m_subCommand = new ArmMoveSimultaneous(m_targetShoulderAngle, m_targetWristAngle);
 			} else {
-				// always safe to move the wrist first and then the shoulder second
-				m_subCommand = new ArmMoveWithWristFirst(m_targetShoulderAngle, m_targetWristAngle);
+				// getting to this section of code means that the wrist must need to move
+				// farther than the shoulder.
+
+				// always safe to move the wrist first and then the shoulder second, but we're
+				// going to try just giving the wrist a "head start"
+
+				// Compute how much further the wrist needs to rotate than the shoulder
+				double wristExtraDistance = m_deltaWristInternalAngle - m_deltaShoulderAngle;
+
+				// give the wrist a head start of 1 second per 90 degrees
+				// TODO: Consider decreasing "head start" rate (say 1 second per 135 degrees)
+				m_subCommand = new ArmMoveWithWristHeadStart(m_targetShoulderAngle, m_targetWristAngle,
+						wristExtraDistance / 90.0);
 			}
 		}
 
-		if (m_subCommand != null)
-
-		{
+		if (m_subCommand != null) {
 			m_subCommand.start();
 		}
 	}

@@ -52,6 +52,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static HatchPanelPickUp hatchPanelPickUp = new HatchPanelPickUp();
 	public static Lifter lifter = new Lifter();
 	public static LiftCylinders liftCylinders = new LiftCylinders();
+	public static LEDLights lights = new LEDLights();
 
 	// allocate the "virtual" subsystems; wait to construct these until robotInit()
 	public static Autonomous autonomous;
@@ -277,9 +278,10 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		}
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
-		Robot.drive.updateHistory();
-		Robot.shoulder.update();
-		Robot.wrist.update();
+		drive.updateHistory();
+		shoulder.update();
+		wrist.update();
+		lights.update();
 	}
 
 	public void teleopInit() {
@@ -350,10 +352,11 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 
-		Robot.drive.updateHistory();
-		Robot.lifter.synchronizedLift();
-		Robot.shoulder.update();
-		Robot.wrist.update();
+		drive.updateHistory();
+		lifter.synchronizedLift();
+		shoulder.update();
+		wrist.update();
+		lights.update();
 	}
 
 	public static boolean getBrownoutMode() {
@@ -390,6 +393,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			shoulder.updateSmartDashboard();
 			wrist.updateSmartDashboard();
 			cargoIntake.updateSmartDashboard();
+			lights.updateSmartDashboard();
 
 			if (OI.pidTuner != null) {
 				OI.pidTuner.updateSmartDashboard();

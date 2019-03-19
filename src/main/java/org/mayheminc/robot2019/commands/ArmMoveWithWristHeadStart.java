@@ -16,9 +16,10 @@ public class ArmMoveWithWristHeadStart extends CommandGroup {
    * Move the shoulder and wrist at the same time. The command is done when both
    * the wrist and shoulder are done moving.
    */
-  public ArmMoveWithWristHeadStart(double shoulderAngle, double wristAngle) {
+  public ArmMoveWithWristHeadStart(double shoulderAngle, double wristAngle, double headStartInSecs) {
     addParallel(new WristSetInternalAngle(Wrist.computeInternalAngle(shoulderAngle, wristAngle)));
-    addSequential(new Wait(0.2));
+
+    addSequential(new Wait(headStartInSecs));
     addSequential(new ShoulderSetAngle(shoulderAngle));
   }
 }
