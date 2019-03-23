@@ -13,7 +13,7 @@ public class CargoIntake extends Subsystem {
 
     public static final double INTAKE_HARD_POWER = 1.0;
     public static final double INTAKE_SOFT_PANEL = 0.6;
-    public static final double HOLD_POWER = 0.05;
+    public static final double HOLD_POWER = 0.15; // was 0.05
     public static final double OFF_POWER = 0.0;
     public static final double OUTTAKE_SOFT_POWER = -0.6;
     public static final double OUTTAKE_HARD_POWER = -1.0;
@@ -42,6 +42,28 @@ public class CargoIntake extends Subsystem {
         SmartDashboard.putNumber("Cargo Intake Amps", m_motor.getOutputCurrent());
     }
 
+    int m_autoStopCount;
+
     public void update() {
+        // look for high current on the rollers.
+        // stop the rollers when we get a ball.
+
+        // if we are taking in a ball...
+        if (m_power >= CargoIntake.INTAKE_SOFT_PANEL) {
+            // if the current is high...
+            if (m_motor.getOutputCurrent() > 4.0) {
+                // count to 10...
+                m_autoStopCount++;
+                if (m_autoStopCount > 10) {
+                    // fall back to a hold power for the ball.
+                    this.setPower(CargoIntake.HOLD_POWER);
+                    m_autoStopCount = 0;
+                }
+            } else {
+                m_autoStopCount = 0;
+            }
+        } else {
+            m_autoStopCount = 0;
+        }
     }
 }

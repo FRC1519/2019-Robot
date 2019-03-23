@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
+import org.mayheminc.robot2019.autonomousroutines.StartCargoRightToLoadingStation;
 import org.mayheminc.robot2019.commands.*;
 import org.mayheminc.robot2019.subsystems.*;
 
@@ -246,7 +247,7 @@ public class OI {
 		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(true));
 
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(CargoIntake.INTAKE_HARD_POWER));
-		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(CargoIntake.OUTTAKE_HARD_POWER));
+		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(CargoIntake.OUTTAKE_SOFT_POWER));
 
 		OPERATOR_PAD_D_PAD_LEFT.whenPressed(new HatchPanelLoadingStation());
 		OPERATOR_PAD_D_PAD_DOWN.whenPressed(new HatchPanelLow());

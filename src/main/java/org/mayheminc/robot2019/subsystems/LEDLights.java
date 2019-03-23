@@ -8,13 +8,6 @@ import org.mayheminc.robot2019.RobotMap;
 
 public class LEDLights extends Subsystem {
 
-    public static final double INTAKE_HARD_POWER = 1.0;
-    public static final double INTAKE_SOFT_PANEL = 0.6;
-    public static final double HOLD_POWER = 0.05;
-    public static final double OFF_POWER = 0.0;
-    public static final double OUTTAKE_SOFT_POWER = -0.6;
-    public static final double OUTTAKE_HARD_POWER = -1.0;
-
     public enum PatternID {
         RAINBOW_RAINBOW_PALETTE(-0.99, "Rainbow, Rainbow Palette"),
         RAINBOW_PARTY_PALETTE(-0.97, "Rainbow, Party Palette"), RAINBOW_OCEAN_PALETTE(-0.95, "Rainbow, Ocean Palette"),

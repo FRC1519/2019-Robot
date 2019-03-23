@@ -282,6 +282,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		shoulder.update();
 		wrist.update();
 		lights.update();
+		cargoIntake.update();
 	}
 
 	public void teleopInit() {
@@ -357,6 +358,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		shoulder.update();
 		wrist.update();
 		lights.update();
+		cargoIntake.update();
 	}
 
 	public static boolean getBrownoutMode() {
