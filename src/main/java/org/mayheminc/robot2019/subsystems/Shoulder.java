@@ -257,7 +257,7 @@ public class Shoulder extends Subsystem {
             case MOTOR_MOVING:
                 // If we are close to position...
                 if (this.isAtSetpoint()) {
-                    // TODO: when we have a working brake, actually want to turn off the motor
+                    // TODO: when we have a working brake, may actually want to turn off the motor
                     // this.motor_A.set(ControlMode.PercentOutput, 0,
                     // DemandType.ArbitraryFeedForward, m_feedForward);
 

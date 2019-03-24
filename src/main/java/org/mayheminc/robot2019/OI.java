@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-import org.mayheminc.robot2019.autonomousroutines.StartCargoRightToLoadingStation;
 import org.mayheminc.robot2019.commands.*;
 import org.mayheminc.robot2019.subsystems.*;
 

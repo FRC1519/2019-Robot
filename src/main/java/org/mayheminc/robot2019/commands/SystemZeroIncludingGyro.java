@@ -36,7 +36,8 @@ public class SystemZeroIncludingGyro extends InstantCommand {
     Robot.lifter.zero();
     Robot.drive.zeroHeadingGyro(0);
 
-    // TODO: Should wait for the shoulder to finish zeroing before zeroing wrist
+    // TODO: Should really wait for the shoulder TalonSRX to know about the new
+    // "zero" angle before finishing zeroing before zeroing wrist
     Robot.wrist.zero();
 
   }

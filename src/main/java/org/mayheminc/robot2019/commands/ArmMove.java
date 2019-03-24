@@ -26,12 +26,6 @@ public class ArmMove extends Command {
 
 	private static double DEFAULT_TIMEOUT = 3000.0; // default timeout of 3 seconds
 
-	private enum ArmMoveStrategy {
-		BOTH_SIMULTANEOUS, SHOULDER_FIRST, WRIST_FIRST
-	};
-
-	private ArmMoveStrategy m_strategy = ArmMoveStrategy.BOTH_SIMULTANEOUS; // presume simultaneous motion as default
-
 	public ArmMove(double arg_targetShoulderAngle, double arg_targetWristAngle) {
 		this(arg_targetShoulderAngle, arg_targetWristAngle, DEFAULT_TIMEOUT);
 	}
@@ -121,8 +115,8 @@ public class ArmMove extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		// TODO: Figure out what needs to go here.
-		// Ken's current thought is nothing happens here.
+		// Nothing needs to happen in "execute" -- arm movement is actually controlled
+		// by subsidiary commands
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -133,8 +127,9 @@ public class ArmMove extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		// TODO: when we are done, we should have the arm hold the target position with
-		// appropriate commands, if not already done
+		// Note - when the ArmMove command isFinished, the subsidiary command will have
+		// completed, leaving the arm in a "position control" status to go to the
+		// current position, whatever that was.
 		m_subCommand = null;
 	}
 

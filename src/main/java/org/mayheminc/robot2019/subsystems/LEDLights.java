@@ -93,6 +93,21 @@ public class LEDLights extends Subsystem {
         set(m_currentPatternID);
     }
 
+    // TODO: update set to take two parameters, where the first parameter is the
+    // PatternID, and the second parameter is the type of illumination. Currently
+    // thinking that the type of illumination would be 1 of 4 different enumerated
+    // options: (1) OFF, (2) ON_SOLID, (3) SLOW_BLINK, and (4) FAST_BLINK. Would
+    // need to add an update() method that handles the blink states appropriately,
+    // either off of a timer or maybe off of calls to getFPGATime. Thoughts on
+    // "SLOW_BLINK" are probably 2 cyles per second (on/off on/off) and FAST_BLINK
+    // is probably about 4 cycles per second (on/off on/off on/off on/off).
+
+    // TODO: add "states" of operation. Thought is that there is a "resting" state,
+    // which displays a particular pattern. Various other temporary states can be
+    // defined, with a pattern and a duration to display the pattern. When the time
+    // has elapsed, the LED lights would return to the "resting" state
+    // automatically.
+
     public void set(PatternID newPattern) {
         m_currentPatternID = newPattern;
         m_blinkin.set(newPattern.getVal());
