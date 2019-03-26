@@ -24,17 +24,16 @@ public class AutoClimb extends CommandGroup {
         // first, extend the lifter pistons, and wait for them to be extended before
         // deploying the 4-bar linkage
         addSequential(new LiftCylindersUntilDeployed());
-        // addSequential(new Wait(2.0));
+        addSequential(new Wait(0.0));
 
         // second, deploy the 4-bar linkage, starting the drive motors a half second
         // later
-        addParallel(new LifterToPosition(Lifter.LIFTED_POS));
-        addSequential(new Wait(0.5)); // wait a half-second before starting to drive
-        addSequential(new DriveStraightForTime(.20, 2.0));
+        addParallel(new LifterLift(Lifter.LIFTED_POS));
 
-        // hopefully, by now we will have actually climbed, so retrat the cylinders and
-        // raise the lifter a bit more
+        addSequential(new Wait(0.5)); // wait a half-second before starting to drive
+        addSequential(new DriveStraightForTime(.60, 2.5));
+
+        // hopefully, by now we will have actually climbed, so retract the cylinders
         addSequential(new LiftCylindersSetAndStay(LiftCylinders.RETRACTED));
-        addSequential(new LifterToPosition(Lifter.RAISED_AFTER_LIFTED));
     }
 }

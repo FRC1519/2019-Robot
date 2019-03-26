@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.mayheminc.robot2019.commands.*;
+import org.mayheminc.robot2019.autonomousroutines.*;
 import org.mayheminc.robot2019.subsystems.*;
 
 /**
@@ -202,9 +203,13 @@ public class OI {
 		// *******************************DRIVER
 		// PAD**************************************
 
-		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0));
+		DRIVER_PAD_RED_BUTTON.whileHeld(new StartCargoRightToLoadingStation());
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait(0));
-		DRIVER_PAD_YELLOW_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
+		// DRIVER_PAD_YELLOW_BUTTON.whileHeld(new
+		// LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
+
+		DRIVER_PAD_YELLOW_BUTTON.whenPressed(new AutoClimb() /* AutoClimb() */ );
+
 		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0) /* AutoClimb() */ );
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());

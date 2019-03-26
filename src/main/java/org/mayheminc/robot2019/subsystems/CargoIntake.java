@@ -15,8 +15,8 @@ public class CargoIntake extends Subsystem {
     public static final double INTAKE_SOFT_PANEL = 0.6;
     public static final double HOLD_POWER = 0.15; // was 0.05
     public static final double OFF_POWER = 0.0;
-    public static final double OUTTAKE_SOFT_POWER = -0.6;
-    public static final double OUTTAKE_HARD_POWER = -1.0;
+    public static final double OUTTAKE_SOFT_POWER = -0.4;
+    public static final double OUTTAKE_HARD_POWER = -1.0; // used to release the "velcro retainer"
 
     private final MayhemTalonSRX m_motor = new MayhemTalonSRX(RobotMap.INTAKE_ROLLER_TALON);
     double m_power;

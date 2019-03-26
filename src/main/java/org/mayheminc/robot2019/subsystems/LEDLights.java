@@ -67,7 +67,7 @@ public class LEDLights extends Subsystem {
         private final double m_pwmVal;
         private final String m_patternName;
 
-        PatternID(double pwmVal, String patternName) {
+        private PatternID(double pwmVal, String patternName) {
             m_pwmVal = pwmVal;
             m_patternName = patternName;
         }
@@ -81,8 +81,50 @@ public class LEDLights extends Subsystem {
         }
     };
 
+    public class CycleElement {
+
+        private PatternID m_patternID;
+        private double m_phaseTime;
+        private double m_durationTimeout;
+
+        public CycleElement(PatternID patternID, double phaseTime, double durationTimeout) {
+            m_patternID = patternID;
+            m_phaseTime = phaseTime;
+            m_durationTimeout = durationTimeout;
+        }
+
+        // only needed methods are a get and set for each instance variable.
+        public double getPhaseTime() {
+            return m_phaseTime;
+        }
+
+        public double getDurationTimeout() {
+            return m_durationTimeout;
+        }
+
+        public PatternID getPatternID() {
+            return m_patternID;
+        }
+
+        public void setPhaseTime(double phaseTime) {
+            m_phaseTime = phaseTime;
+        }
+
+        public void setDurationTimeout(double durationTimeout) {
+            m_durationTimeout = durationTimeout;
+        }
+
+        public void setPatternID(PatternID patternID) {
+            m_patternID = patternID;
+        }
+    }
+
     private final Spark m_blinkin = new Spark(RobotMap.BLINKIN_LEDS_PWM);
     private PatternID m_currentPatternID = PatternID.BLACK;
+
+    // create a default and active "CycleList" of up to 5 CycleElements each
+    private CycleElement m_defaultCycleList[];
+    private CycleElement m_activeCycleList[];
 
     public LEDLights() {
         // the constructor defines the "default" pattern ID

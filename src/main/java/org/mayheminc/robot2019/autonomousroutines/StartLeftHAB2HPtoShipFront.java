@@ -32,7 +32,7 @@ public class StartLeftHAB2HPtoShipFront extends CommandGroup {
     // Head for the cargo ship
     addSequential(new DriveStraightOnHeading(0.7, 42, +90)); // Drive three more feet turning right.
 
-    // Get the arm into postion while lining to put the hatch panel on the ship.
+    // Get the arm into postion while lining up to put the hatch panel on the ship.
     addParallel(new HatchPanelLow());
     addSequential(new DriveStraightOnHeading(0.7, 48, 0));
     addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));

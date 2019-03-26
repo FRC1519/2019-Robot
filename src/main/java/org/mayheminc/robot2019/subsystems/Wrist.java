@@ -26,21 +26,20 @@ public class Wrist extends Subsystem {
     private static final double GRAVITY_OFFSET_ANGLE_RADIANS = Math.toRadians(55.0);
 
     // in general, the wrist angle positions are relative to the ground
-    public static final double FRONT_ANGLE_SLOP = 0.0; // 17.0; // front angles need to be increased by 17 degrees
-    public static final double HORIZONTAL_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
+    public static final double HORIZONTAL_ANGLE = 0.0;
 
-    public static final double CARGO_ROCKET_HIGH_ANGLE = 45.0 + FRONT_ANGLE_SLOP;
-    public static final double CARGO_ROCKET_MID_ANGLE = 24.0 + FRONT_ANGLE_SLOP;
-    public static final double CARGO_ROCKET_LOW_ANGLE = 20.0 + FRONT_ANGLE_SLOP;
-    public static final double CARGO_CARGO_SHIP_ANGLE = -7.0 + FRONT_ANGLE_SLOP; // was +3.0
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -18.0 + FRONT_ANGLE_SLOP; // was -22.0
-    public static final double CARGO_LOADING_STATION_ANGLE = 25.0 + FRONT_ANGLE_SLOP;
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 55.0;
+    public static final double CARGO_ROCKET_MID_ANGLE = 50.0;
+    public static final double CARGO_ROCKET_LOW_ANGLE = 50.0;
+    public static final double CARGO_CARGO_SHIP_ANGLE = -7.0;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -18.0;
+    // public static final double CARGO_LOADING_STATION_ANGLE = 25.0;
 
-    public static final double HP_ROCKET_HIGH_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
-    public static final double HP_ROCKET_MID_ANGLE = 100.0 + FRONT_ANGLE_SLOP;
-    public static final double HP_ROCKET_LOW_ANGLE = 95.0 + FRONT_ANGLE_SLOP;
-    public static final double HP_FLOOR_PICKUP_ANGLE = 0.0 + FRONT_ANGLE_SLOP;
-    public static final double HP_LOADING_STATION_ANGLE = 90.0 + FRONT_ANGLE_SLOP;
+    public static final double HP_ROCKET_HIGH_ANGLE = 95.0;
+    public static final double HP_ROCKET_MID_ANGLE = 95.0;
+    public static final double HP_ROCKET_LOW_ANGLE = 95.0;
+    public static final double HP_FLOOR_PICKUP_ANGLE = 0.0;
+    public static final double HP_LOADING_STATION_ANGLE = 90.0;
 
     private static final double ANGLE_TOLERANCE = 10.0;
 

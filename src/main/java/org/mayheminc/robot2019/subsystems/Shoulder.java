@@ -30,18 +30,18 @@ public class Shoulder extends Subsystem {
 
     public static final double HORIZONTAL_ANGLE = 0.0;
 
-    public static final double CARGO_ROCKET_HIGH_ANGLE = 66.0;
-    public static final double CARGO_ROCKET_MID_ANGLE = 27.0;
-    public static final double CARGO_ROCKET_LOW_ANGLE = -13.0;
-    public static final double CARGO_CARGO_SHIP_ANGLE = 18.0; // (was 0.0)
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -42;// -36;
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 65.0;
+    public static final double CARGO_ROCKET_MID_ANGLE = 16.0;
+    public static final double CARGO_ROCKET_LOW_ANGLE = -30.0;
+    public static final double CARGO_CARGO_SHIP_ANGLE = 18.0;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -42;
     public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 42.0;
     public static final double HP_ROCKET_MID_ANGLE = -6.0;
     public static final double HP_ROCKET_LOW_ANGLE = -68.0;
     public static final double HP_FLOOR_PICKUP_ANGLE = -35.0;
-    public static final double HP_LOADING_STATION_ANGLE = -70.0;
+    public static final double HP_LOADING_STATION_ANGLE = -65.0;
 
     private static final double ANGLE_TOLERANCE = 3.0; // hoping for one degree!!! (very optimistic, about 0.5 inches)
     private static final double BRAKE_RELEASE_TIME_SEC = 0.0; // seems like no delay needed

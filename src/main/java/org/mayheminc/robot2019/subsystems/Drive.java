@@ -81,8 +81,7 @@ public class Drive extends Subsystem {
 		// correction.
 		m_HeadingError = new PIDHeadingError();
 		m_HeadingCorrection = new PIDHeadingCorrection();
-		m_HeadingPid = new PIDController(0.015, 0.000, 0.04, m_HeadingError, m_HeadingCorrection); // vales from NECMP
-																									// and Pine Tree
+		m_HeadingPid = new PIDController(0.030, 0.000, 0.04, m_HeadingError, m_HeadingCorrection); // P was 0.015
 		m_HeadingPid.setInputRange(-180.0f, 180.0f);
 		m_HeadingPid.setContinuous(true); // treats the input range as "continous" with wrap-around
 		m_HeadingPid.setOutputRange(-.50, .50); // set the maximum power to correct twist

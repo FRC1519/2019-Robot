@@ -354,7 +354,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 
 		drive.updateHistory();
-		lifter.synchronizedLift();
+		lifter.update();
 		shoulder.update();
 		wrist.update();
 		lights.update();

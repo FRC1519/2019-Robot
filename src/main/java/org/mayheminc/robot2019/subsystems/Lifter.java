@@ -15,10 +15,9 @@ public class Lifter extends Subsystem {
     // constants for power
     private static final double STOP_POWER = 0.0;
     // private static final double TUCKED_POWER = -0.1;
+    private static final double RAISING_POWER = 0.2;
     private static final double LIFTING_POWER = 0.7; // used 0.7 for comp robot; used 1.0 for initial testing; reducing
                                                      // power to save mechanism
-
-    private static final double SLOW_SPEED_MULTIPLIER = 0.8;
 
     // constants for positions
     private static final int STARTING_POS = 0;
@@ -28,7 +27,8 @@ public class Lifter extends Subsystem {
 
     private static final int IN_POSITION_SLOP = 100;
     private static final int MAX_MOTOR_OFFSET = 200000;
-    private static final int NOMINAL_MOTOR_OFFSET = 50000;
+
+    private static final double K_FACTOR = 1.0 / MAX_MOTOR_OFFSET;
 
     private final MayhemTalonSRX motorLeftA = new MayhemTalonSRX(RobotMap.LIFTER_LEFT_A_TALON);
     private final MayhemTalonSRX motorRightA = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_A_TALON);
@@ -38,6 +38,7 @@ public class Lifter extends Subsystem {
 
     private int m_desiredPosition;
     private double m_targetSpeed;
+    private double m_modifier = 0.0;
 
     private Boolean m_activelyLifting = false;
 
@@ -81,7 +82,7 @@ public class Lifter extends Subsystem {
 
     }
 
-    public void synchronizedLift() {
+    public void update() {
 
         // Stop if not being commanded to move
         if (Math.abs(m_targetSpeed) < 0.05) {
@@ -93,6 +94,15 @@ public class Lifter extends Subsystem {
             int pos_r = motorRightA.getSelectedSensorPosition();
             int pos_l = motorLeftA.getSelectedSensorPosition();
 
+            int delta = pos_l - pos_r; // positive delta means L is "ahead"
+            m_modifier = delta * K_FACTOR; // scale delta by the K_FACTOR
+            // constrain modifier to be in the range -1.0 < m_modifier < 1.0
+            if (m_modifier > 1.0) {
+                m_modifier = 1.0;
+            } else if (m_modifier < -1.0) {
+                m_modifier = -1.0;
+            }
+
             // Stop if done climbing or done tucking
             if ((m_targetSpeed > 0 && pos_r >= m_desiredPosition - Lifter.IN_POSITION_SLOP)
                     || (m_targetSpeed < 0 && pos_r <= m_desiredPosition + Lifter.IN_POSITION_SLOP)) {
@@ -101,29 +111,22 @@ public class Lifter extends Subsystem {
             }
 
             // if the positions are too far apart, emergency stop.
-            else if (Math.abs(pos_r - pos_l) > Lifter.MAX_MOTOR_OFFSET) {
+            else if (Math.abs(delta) > Lifter.MAX_MOTOR_OFFSET) {
                 SmartDashboard.putString("Lifter Debug", "E-Stop");
                 stop();
             }
 
-            // if the positions are close together, then lift together.
-            else if (Math.abs(pos_r - pos_l) < Lifter.NOMINAL_MOTOR_OFFSET) {
+            // otherwise, command the two motors to the m_targetSpeed, adjusted
+            // proportionally to the difference
+            else {
+                // should really probably just have the motor set commands be the same, but
+                // modified by a proportional difference
                 SmartDashboard.putString("Lifter Debug", "Matched");
-                motorSet(m_targetSpeed);
-            }
 
-            // If one motor is far ahead of the other, slow down 1 side. Depends on the
-            // direction of the target speed.
-            else if ((m_targetSpeed > 0 && pos_r > pos_l) || (m_targetSpeed < 0 && pos_l > pos_r)) {
-                SmartDashboard.putString("Lifter Debug", "Slow R");
-                motorRightA.set(ControlMode.PercentOutput, m_targetSpeed * SLOW_SPEED_MULTIPLIER);
-                motorLeftA.set(ControlMode.PercentOutput, m_targetSpeed);
-            }
-
-            else if ((m_targetSpeed > 0 && pos_r < pos_l) || (m_targetSpeed < 0 && pos_l < pos_r)) {
-                SmartDashboard.putString("Lifter Debug", "Slow L");
-                motorLeftA.set(ControlMode.PercentOutput, m_targetSpeed * SLOW_SPEED_MULTIPLIER);
-                motorRightA.set(ControlMode.PercentOutput, m_targetSpeed);
+                // enhance right power by the modifier and "dehance" left power by the modifier
+                // (since positive modifier indicates that left is ahead)
+                motorRightA.set(ControlMode.PercentOutput, m_targetSpeed * (1.0 + m_modifier));
+                motorLeftA.set(ControlMode.PercentOutput, m_targetSpeed * (1.0 - m_modifier));
             }
 
         } else { // not actively lifting -- tell the lifter to stop
@@ -141,18 +144,20 @@ public class Lifter extends Subsystem {
         // Received a command to lift. If we're already "lifted" don't do anything!
         m_desiredPosition = desiredPosition;
         if (!IsAtSetpoint()) {
-            // Tell synchronizedLift to climb
+            // Set parameters so that "update()" will climb
             setTargetMotorSpeed(Lifter.LIFTING_POWER);
             this.m_activelyLifting = true;
         }
-
     }
 
-    public void Tuck() {
-        // start with percent output to keep the lifter tucked under the belly.
-        setTargetMotorSpeed(Lifter.LIFTING_POWER);
-        this.m_activelyLifting = true;
-        m_desiredPosition = Lifter.STARTING_POS;
+    public void RaiseOffFloor(int desiredPosition) {
+        // Received a command to raise the feet a little more.
+        m_desiredPosition = desiredPosition;
+        if (!IsAtSetpoint()) {
+            // Set parameters so that "update()" will climb
+            setTargetMotorSpeed(Lifter.RAISING_POWER);
+            this.m_activelyLifting = true;
+        }
     }
 
     public void stop() {
@@ -183,8 +188,11 @@ public class Lifter extends Subsystem {
     }
 
     public void updateSmartDashboard() {
+        SmartDashboard.putNumber("Lifter Modifier", m_modifier);
         SmartDashboard.putNumber("Lifter Pos R", motorRightA.getSelectedSensorPosition());
         SmartDashboard.putNumber("Lifter Pos L", motorLeftA.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Lifter VBus R", motorRightA.getMotorOutputPercent());
+        SmartDashboard.putNumber("Lifter VBus L", motorLeftA.getMotorOutputPercent());
     }
 
 }
