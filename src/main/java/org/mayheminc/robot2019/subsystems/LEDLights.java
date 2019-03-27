@@ -1,8 +1,12 @@
 package org.mayheminc.robot2019.subsystems;
 
+import org.mayheminc.robot2019.Robot;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.ArrayList;
 
 import org.mayheminc.robot2019.RobotMap;
 
@@ -79,90 +83,92 @@ public class LEDLights extends Subsystem {
         private String getName() {
             return m_patternName;
         }
-    };
-
-    public class CycleElement {
-
-        private PatternID m_patternID;
-        private double m_phaseTime;
-        private double m_durationTimeout;
-
-        public CycleElement(PatternID patternID, double phaseTime, double durationTimeout) {
-            m_patternID = patternID;
-            m_phaseTime = phaseTime;
-            m_durationTimeout = durationTimeout;
-        }
-
-        // only needed methods are a get and set for each instance variable.
-        public double getPhaseTime() {
-            return m_phaseTime;
-        }
-
-        public double getDurationTimeout() {
-            return m_durationTimeout;
-        }
-
-        public PatternID getPatternID() {
-            return m_patternID;
-        }
-
-        public void setPhaseTime(double phaseTime) {
-            m_phaseTime = phaseTime;
-        }
-
-        public void setDurationTimeout(double durationTimeout) {
-            m_durationTimeout = durationTimeout;
-        }
-
-        public void setPatternID(PatternID patternID) {
-            m_patternID = patternID;
-        }
     }
 
-    private final Spark m_blinkin = new Spark(RobotMap.BLINKIN_LEDS_PWM);
-    private PatternID m_currentPatternID = PatternID.BLACK;
+    private final Spark m_blinkin = new Spark(RobotMap.BLINKIN_LEDS_PWM); // create a default and active "CycleList" of
+                                                                          // up to 5 CycleElements each
+    private CyclePattern m_defaultCycleList;
+    private CyclePattern m_activeCycleList;
 
-    // create a default and active "CycleList" of up to 5 CycleElements each
-    private CycleElement m_defaultCycleList[];
-    private CycleElement m_activeCycleList[];
+    private double m_cycleElementStartTime;
+    private double m_cyclePatternStartTime;
+
+    CycleElement m_currentElement;
 
     public LEDLights() {
         // the constructor defines the "default" pattern ID
 
-        m_currentPatternID = PatternID.LAWN_GREEN;
-        m_currentPatternID = PatternID.HOT_PINK;
+        // m_currentPatternID = PatternID.LAWN_GREEN;
+        // m_currentPatternID = PatternID.HOT_PINK;
 
-        set(m_currentPatternID);
+        // set(m_currentPatternID);
+
+        m_defaultCycleList = new CyclePattern();
+        m_defaultCycleList.setTimeout(1.0);
+
+        m_defaultCycleList.add(new CycleElement(PatternID.LAWN_GREEN, 0, 0.5));
+        m_defaultCycleList.add(new CycleElement(PatternID.HOT_PINK, 0, 0.5));
     }
 
-    // TODO: update set to take two parameters, where the first parameter is the
-    // PatternID, and the second parameter is the type of illumination. Currently
-    // thinking that the type of illumination would be 1 of 4 different enumerated
-    // options: (1) OFF, (2) ON_SOLID, (3) SLOW_BLINK, and (4) FAST_BLINK. Would
-    // need to add an update() method that handles the blink states appropriately,
-    // either off of a timer or maybe off of calls to getFPGATime. Thoughts on
-    // "SLOW_BLINK" are probably 2 cyles per second (on/off on/off) and FAST_BLINK
-    // is probably about 4 cycles per second (on/off on/off on/off on/off).
+    public void set(CyclePattern newPattern) {
+        m_activeCycleList = newPattern;
+        m_cycleElementStartTime = -1000; // set to an absurd time so the next update will cause a change.
+    }
 
-    // TODO: add "states" of operation. Thought is that there is a "resting" state,
-    // which displays a particular pattern. Various other temporary states can be
-    // defined, with a pattern and a duration to display the pattern. When the time
-    // has elapsed, the LED lights would return to the "resting" state
-    // automatically.
-
-    public void set(PatternID newPattern) {
-        m_currentPatternID = newPattern;
-        m_blinkin.set(newPattern.getVal());
+    public void setElement(CycleElement ele) {
+        m_blinkin.set(ele.getPatternID().getVal());
+        m_currentElement = ele;
     }
 
     public void initDefaultCommand() {
     }
 
     public void updateSmartDashboard() {
-        SmartDashboard.putNumber("Blinkin Pattern ID", m_currentPatternID.getVal());
-        SmartDashboard.putString("Blinkin Pattern Name", m_currentPatternID.getName());
+        // SmartDashboard.putNumber("Blinkin Pattern ID", m_currentPatternID.getVal());
+        // SmartDashboard.putString("Blinkin Pattern Name",
+        // m_currentPatternID.getName());
     }
 
     public void update() {
+
+        // double now = Timer.getFPGATimestamp();
+
+        // if there is an active pattern...
+        if (m_activeCycleList != null) {
+            ProcessActivePattern();
+        }
+        // fall back to the default pattern...
+        else {
+            ProcessDefaultPattern();
+        }
+    }
+
+    private void ProcessActivePattern() {
+        double now = Timer.getFPGATimestamp();
+
+        // if the active pattern is done...
+        if (now - m_cyclePatternStartTime > m_activeCycleList.getTimeout()) {
+            m_activeCycleList = null;
+            ProcessDefaultPattern();
+        } else {
+            CycleElement ele = m_activeCycleList.peek();
+
+            // if the current element is done, rotate.
+            if (now - m_cycleElementStartTime > ele.getDurationTimeout()) {
+                m_activeCycleList.Rotate();
+                setElement(m_activeCycleList.peek());
+            }
+        }
+    }
+
+    private void ProcessDefaultPattern() {
+        CycleElement ele = m_defaultCycleList.peek();
+        double now = Timer.getFPGATimestamp();
+
+        if (now - m_cycleElementStartTime > ele.getDurationTimeout()) {
+            m_defaultCycleList.Rotate();
+            setElement(m_defaultCycleList.peek());
+        }
+
     }
 }
