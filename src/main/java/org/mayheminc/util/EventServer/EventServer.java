@@ -45,7 +45,6 @@ public class EventServer extends Thread {
                 EventList.forEach((n) -> n.Execute());
 
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

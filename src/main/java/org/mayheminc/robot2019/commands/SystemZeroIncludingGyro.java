@@ -32,14 +32,10 @@ public class SystemZeroIncludingGyro extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.shoulder.zero();
-    Robot.lifter.zero();
     Robot.drive.zeroHeadingGyro(0);
-
-    // TODO: Should really wait for the shoulder TalonSRX to know about the new
-    // "zero" angle before finishing zeroing before zeroing wrist
+    Robot.lifter.zero();
+    Robot.shoulder.zero();
     Robot.wrist.zero();
-
   }
 
 }

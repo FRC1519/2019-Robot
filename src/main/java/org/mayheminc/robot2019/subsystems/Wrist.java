@@ -57,7 +57,7 @@ public class Wrist extends Subsystem {
     private double m_feedForward; // computed "Feed Forward" term, in %vbus, based upon current angle of arm
 
     private enum WristMode {
-        MANUAL, AUTO_WORLD, AUTO_INTERNAL
+        MANUAL, RELAXED, AUTO_WORLD, AUTO_INTERNAL
     };
 
     private WristMode m_mode = WristMode.MANUAL; // start off in manual mode
@@ -85,9 +85,9 @@ public class Wrist extends Subsystem {
         motor.setSensorPhase(true);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
-        motor.configClosedloopRamp(0.05); // limit neutral to full to 0.10 seconds
+        motor.configClosedloopRamp(0.05); // limit neutral to full to 0.05 seconds
 
-        // TODO: Need to set up motion magic parameters for wrist below
+        // TODO: Need to verify motion magic parameters for wrist below
         motor.configMotionCruiseVelocity(100); // measured velocity of ~100K at 85%; set cruise to that
         motor.configMotionAcceleration(250); // acceleration of 2x velocity allows cruise to be attained in 1/2 second
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -97,10 +97,13 @@ public class Wrist extends Subsystem {
         // zero the position.
         motor.setSelectedSensorPosition(ZERO_POS);
         setInternalPosition(ZERO_POS);
+
+        // TODO: should zeroing instead relax the wrist motor?
+        m_mode = WristMode.MANUAL;
     }
 
     public void relaxMotors() {
-        m_mode = WristMode.MANUAL;
+        m_mode = WristMode.RELAXED;
         motor.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
     }
 
@@ -198,6 +201,9 @@ public class Wrist extends Subsystem {
         case MANUAL:
             SmartDashboard.putString("Wrist Mode", "MANUAL");
             break;
+        case RELAXED:
+            SmartDashboard.putString("Wrist Mode", "RELAXED");
+            break;
         case AUTO_WORLD:
             SmartDashboard.putString("Wrist Mode", "AUTO_WORLD");
             break;
@@ -233,6 +239,9 @@ public class Wrist extends Subsystem {
         case MANUAL:
             motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY(), DemandType.ArbitraryFeedForward,
                     m_feedForward);
+            break;
+        case RELAXED:
+            motor.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
             break;
         case AUTO_WORLD:
             this.motor.set(ControlMode.MotionMagic, degreesToPosition(m_desiredAngle), DemandType.ArbitraryFeedForward,

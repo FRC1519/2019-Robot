@@ -257,16 +257,15 @@ public class Shoulder extends Subsystem {
             case MOTOR_MOVING:
                 // If we are close to position...
                 if (this.isAtSetpoint()) {
-                    // TODO: when we have a working brake, may actually want to turn off the motor
-                    // this.motor_A.set(ControlMode.PercentOutput, 0,
-                    // DemandType.ArbitraryFeedForward, m_feedForward);
-
-                    // for now though, need to keep holding our position
-                    this.motor_A.set(ControlMode.MotionMagic, degreesToPosition(m_desiredAngle),
-                            DemandType.ArbitraryFeedForward, m_feedForward);
 
                     // set the brake
                     this.brake.set(true);
+
+                    // Keep holding our position with the motor, even though the brake is on
+                    // (Belt and suspenders...)
+                    this.motor_A.set(ControlMode.MotionMagic, degreesToPosition(m_desiredAngle),
+                            DemandType.ArbitraryFeedForward, m_feedForward);
+
                     m_state = State.STOPPED;
                 }
                 break;

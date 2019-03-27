@@ -14,8 +14,6 @@ public class Lifter extends Subsystem {
 
     // constants for power
     private static final double STOP_POWER = 0.0;
-    // private static final double TUCKED_POWER = -0.1;
-    private static final double RAISING_POWER = 0.2;
     private static final double LIFTING_POWER = 0.7; // used 0.7 for comp robot; used 1.0 for initial testing; reducing
                                                      // power to save mechanism
 
@@ -73,17 +71,15 @@ public class Lifter extends Subsystem {
     }
 
     public void zero() {
-        motorLeftA.setSelectedSensorPosition(0); // start at 0
-        motorRightA.setSelectedSensorPosition(0); // start at 0
+        motorLeftA.setSelectedSensorPosition(STARTING_POS);
+        motorRightA.setSelectedSensorPosition(STARTING_POS);
 
         stop();
 
         SmartDashboard.putString("Lifter Debug", "Zero");
-
     }
 
     public void update() {
-
         // Stop if not being commanded to move
         if (Math.abs(m_targetSpeed) < 0.05) {
             stop();
@@ -146,16 +142,6 @@ public class Lifter extends Subsystem {
         if (!IsAtSetpoint()) {
             // Set parameters so that "update()" will climb
             setTargetMotorSpeed(Lifter.LIFTING_POWER);
-            this.m_activelyLifting = true;
-        }
-    }
-
-    public void RaiseOffFloor(int desiredPosition) {
-        // Received a command to raise the feet a little more.
-        m_desiredPosition = desiredPosition;
-        if (!IsAtSetpoint()) {
-            // Set parameters so that "update()" will climb
-            setTargetMotorSpeed(Lifter.RAISING_POWER);
             this.m_activelyLifting = true;
         }
     }
