@@ -17,7 +17,7 @@ public class CycleElement {
 
     public CycleElement(PatternID patternID, double phaseTime, double durationTimeout) {
         m_patternID = patternID;
-        m_phaseTime = phaseTime;
+        m_phaseTime = phaseTime;// TODO: remove this variable
         m_durationTimeout = durationTimeout;
     }
 

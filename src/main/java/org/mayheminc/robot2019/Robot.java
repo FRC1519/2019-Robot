@@ -197,6 +197,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		wrist.setDesiredAngle(wrist.getAngleInDegrees());
 		wrist.relaxMotors();
+
+		// show the default lights.
+		lights.update();
 	}
 
 	public void autonomousInit() {
@@ -204,6 +207,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// TODO: do we want autonomous in high gear instead this year?
 		// force low gear
 		shifter.setGear(Shifter.LOW_GEAR);
+
+		lights.setDefault(LedPatternFactory.defaultAuto);
 
 		// turn off the compressor
 		// KBS: Not sure we really want to do this -- we did this in 2016 to ensure the
@@ -290,6 +295,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// before doing anything else in teleop, kill any existing commands
 		// TODO: consider if this is still desirable in 2019 with the "sandstorm" period
 		Scheduler.getInstance().removeAll();
+
+		lights.setDefault(LedPatternFactory.defaultTeleOp);
 
 		// turn on the compressor (may have been off in autonomous)
 		compressor.start();

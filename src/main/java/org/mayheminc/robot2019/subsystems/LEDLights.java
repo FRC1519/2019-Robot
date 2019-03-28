@@ -87,36 +87,43 @@ public class LEDLights extends Subsystem {
 
     private final Spark m_blinkin = new Spark(RobotMap.BLINKIN_LEDS_PWM); // create a default and active "CycleList" of
                                                                           // up to 5 CycleElements each
-    private CyclePattern m_defaultCycleList;
-    private CyclePattern m_activeCycleList;
+    private CyclePattern m_defaultCycleList; // this pattern will cycle through when there is not active pattern
+    private CyclePattern m_activeCycleList; // this pattern will cycle through for the pattern time.
 
-    private double m_cycleElementStartTime;
-    private double m_cyclePatternStartTime;
+    private double m_cycleElementStartTime; // the time the current cycle element started
+    private double m_cyclePatternStartTime; // the time the active pattern started.
 
     CycleElement m_currentElement;
 
+    public static CyclePattern defaultPattern = new CyclePattern() {
+        {
+            add(new CycleElement(PatternID.LAWN_GREEN, 0, 0.5));
+            add(new CycleElement(PatternID.HOT_PINK, 0, 0.5));
+        }
+    };
+
     public LEDLights() {
-        // the constructor defines the "default" pattern ID
+        // assign the default pattern
+        setDefault(defaultPattern);
 
-        // m_currentPatternID = PatternID.LAWN_GREEN;
-        // m_currentPatternID = PatternID.HOT_PINK;
+        // start the default patterns.
+        processDefaultPattern();
+    }
 
-        // set(m_currentPatternID);
-
-        m_defaultCycleList = new CyclePattern();
-        m_defaultCycleList.setTimeout(1.0);
-
-        m_defaultCycleList.add(new CycleElement(PatternID.LAWN_GREEN, 0, 0.5));
-        m_defaultCycleList.add(new CycleElement(PatternID.HOT_PINK, 0, 0.5));
+    public void setDefault(CyclePattern newPattern) {
+        m_defaultCycleList = newPattern;
     }
 
     public void set(CyclePattern newPattern) {
         m_activeCycleList = newPattern;
+        m_cyclePatternStartTime = Timer.getFPGATimestamp();
         m_cycleElementStartTime = -1000; // set to an absurd time so the next update will cause a change.
     }
 
-    public void setElement(CycleElement ele) {
+    private void setElement(CycleElement ele) {
         m_blinkin.set(ele.getPatternID().getVal());
+
+        // remember the element to sending to the SmartDashboard.
         m_currentElement = ele;
     }
 
@@ -124,51 +131,52 @@ public class LEDLights extends Subsystem {
     }
 
     public void updateSmartDashboard() {
-        // SmartDashboard.putNumber("Blinkin Pattern ID", m_currentPatternID.getVal());
-        // SmartDashboard.putString("Blinkin Pattern Name",
-        // m_currentPatternID.getName());
+        SmartDashboard.putNumber("Blinkin Element ID", m_currentElement.getPatternID().getVal());
+        SmartDashboard.putString("Blinkin Element Name", m_currentElement.getPatternID().getName());
     }
 
     public void update() {
 
-        // double now = Timer.getFPGATimestamp();
-
         // if there is an active pattern...
         if (m_activeCycleList != null) {
-            ProcessActivePattern();
+            processActivePattern();
         }
         // fall back to the default pattern...
         else {
-            ProcessDefaultPattern();
+            processDefaultPattern();
         }
     }
 
-    private void ProcessActivePattern() {
+    private void processActivePattern() {
         double now = Timer.getFPGATimestamp();
 
         // if the active pattern is done...
         if (now - m_cyclePatternStartTime > m_activeCycleList.getTimeout()) {
             m_activeCycleList = null;
-            ProcessDefaultPattern();
-        } else {
-            CycleElement ele = m_activeCycleList.peek();
-
-            // if the current element is done, rotate.
-            if (now - m_cycleElementStartTime > ele.getDurationTimeout()) {
-                m_activeCycleList.Rotate();
-                setElement(m_activeCycleList.peek());
-            }
+            processDefaultPattern();
+        } else { // the active pattern is still running...
+            processPattern(m_activeCycleList);
         }
     }
 
-    private void ProcessDefaultPattern() {
-        CycleElement ele = m_defaultCycleList.peek();
+    private void processDefaultPattern() {
+        processPattern(m_defaultCycleList);
+    }
+
+    /**
+     * Look at the head element of the pattern. If it has been the head too long,
+     * rotate it to the back. Set the new head as the blinkin element.
+     * 
+     * @param pattern
+     */
+    private void processPattern(CyclePattern pattern) {
+        CycleElement ele = pattern.peek();
         double now = Timer.getFPGATimestamp();
 
         if (now - m_cycleElementStartTime > ele.getDurationTimeout()) {
-            m_defaultCycleList.Rotate();
-            setElement(m_defaultCycleList.peek());
+            pattern.Rotate();
+            setElement(pattern.peek());
+            m_cycleElementStartTime = now;
         }
-
     }
 }

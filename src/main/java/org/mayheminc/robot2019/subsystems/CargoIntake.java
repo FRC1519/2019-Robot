@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.RobotMap;
 import org.mayheminc.util.MayhemTalonSRX;
 
@@ -58,6 +59,8 @@ public class CargoIntake extends Subsystem {
                     // fall back to a hold power for the ball.
                     this.setPower(CargoIntake.HOLD_POWER);
                     m_autoStopCount = 0;
+
+                    Robot.lights.set(LedPatternFactory.cargoBall);
                 }
             } else {
                 m_autoStopCount = 0;

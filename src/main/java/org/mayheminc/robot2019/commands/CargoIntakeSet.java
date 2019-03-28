@@ -9,6 +9,7 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
+import org.mayheminc.robot2019.subsystems.LedPatternFactory;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
@@ -35,6 +36,8 @@ public class CargoIntakeSet extends Command {
   protected void initialize() {
     Robot.cargoIntake.setPower(m_power);
     DriverStation.reportError("CargoIntake Run", false);
+
+    Robot.lights.setDefault(LedPatternFactory.test1);
   }
 
   @Override

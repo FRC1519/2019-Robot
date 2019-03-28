@@ -26,6 +26,7 @@ public class CyclePattern {
 
     public void add(CycleElement e) {
         m_List.add(e);
+        m_timeLength += e.getDurationTimeout();
     }
 
     public CycleElement peek() {
