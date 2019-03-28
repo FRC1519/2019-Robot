@@ -12,18 +12,11 @@ import org.mayheminc.robot2019.subsystems.LEDLights.PatternID;
 public class CycleElement {
 
     private PatternID m_patternID;
-    private double m_phaseTime;
     private double m_durationTimeout;
 
-    public CycleElement(PatternID patternID, double phaseTime, double durationTimeout) {
+    public CycleElement(PatternID patternID, double durationTimeout) {
         m_patternID = patternID;
-        m_phaseTime = phaseTime;// TODO: remove this variable
         m_durationTimeout = durationTimeout;
-    }
-
-    // only needed methods are a get and set for each instance variable.
-    public double getPhaseTime() {
-        return m_phaseTime;
     }
 
     public double getDurationTimeout() {
@@ -32,17 +25,5 @@ public class CycleElement {
 
     public PatternID getPatternID() {
         return m_patternID;
-    }
-
-    public void setPhaseTime(double phaseTime) {
-        m_phaseTime = phaseTime;
-    }
-
-    public void setDurationTimeout(double durationTimeout) {
-        m_durationTimeout = durationTimeout;
-    }
-
-    public void setPatternID(PatternID patternID) {
-        m_patternID = patternID;
     }
 }

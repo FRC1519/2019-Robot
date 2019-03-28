@@ -1,12 +1,9 @@
 package org.mayheminc.robot2019.subsystems;
 
-import org.mayheminc.robot2019.Robot;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.util.ArrayList;
 
 import org.mayheminc.robot2019.RobotMap;
 
@@ -97,8 +94,8 @@ public class LEDLights extends Subsystem {
 
     public static CyclePattern defaultPattern = new CyclePattern() {
         {
-            add(new CycleElement(PatternID.LAWN_GREEN, 0, 0.5));
-            add(new CycleElement(PatternID.HOT_PINK, 0, 0.5));
+            add(new CycleElement(PatternID.LAWN_GREEN, 0.5));
+            add(new CycleElement(PatternID.HOT_PINK, 0.5));
         }
     };
 

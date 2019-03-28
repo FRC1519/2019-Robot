@@ -1,7 +1,6 @@
 package org.mayheminc.robot2019.subsystems;
 
 import org.mayheminc.robot2019.Robot;
-// import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -25,6 +24,7 @@ public class HatchPanelPickUp extends Subsystem {
         this.solenoid.set(m_pos);
 
         Robot.eventServer.output((m_pos) ? "HatchOpen.wav" : "HatchClose.wav");
+        Robot.lights.set(LedPatternFactory.hatchPanel);
     }
 
     public void updateSmartDashboard() {
