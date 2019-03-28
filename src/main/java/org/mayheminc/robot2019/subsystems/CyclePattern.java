@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * A CyclePattern is a list of Cycle Elements with a timeout.
  */
 public class CyclePattern {
-    private ArrayList<CycleElement> m_List;
+    private ArrayList<CycleElement> m_List = new ArrayList<CycleElement>();
     double m_timeLength;
 
     public void setTimeout(double d) {

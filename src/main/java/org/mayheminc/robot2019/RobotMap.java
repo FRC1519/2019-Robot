@@ -29,6 +29,7 @@ public class RobotMap {
 	public static final int HATCH_PANEL_SOLENOID = 1;
 	public static final int SHOULDER_BRAKE_SOLENOID = 2;
 	public static final int LIFTER_SOLENOID = 3;
+	public static final int TARGETING_LIGHTS_SOLENOID = 4;
 
 	// PWM Devices
 	public static final int BLINKIN_LEDS_PWM = 0;

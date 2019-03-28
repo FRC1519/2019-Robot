@@ -53,6 +53,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static Lifter lifter = new Lifter();
 	public static LiftCylinders liftCylinders = new LiftCylinders();
 	public static LEDLights lights = new LEDLights();
+	public static TargetingLights targetingLights = new TargetingLights();
 
 	// allocate the "virtual" subsystems; wait to construct these until robotInit()
 	public static Autonomous autonomous;
@@ -172,6 +173,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// // reset the blackbox.
 		// blackbox.reset();
+
+		targetingLights.set(false);
 	}
 
 	public void disabledPeriodic() {
@@ -243,6 +246,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		DriverStation.reportError(
 				"AutonomousTimeRemaining from autonomousInit = " + Robot.autonomousTimeRemaining() + "\n", false);
+
+		targetingLights.set(true);
 	}
 
 	public static double autonomousTimeRemaining() {
@@ -304,6 +309,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		DriverStation.reportError("Entering Teleop.\n", false);
 
 		shifter.setGear(Shifter.HIGH_GEAR);
+
+		targetingLights.set(true);
 	}
 
 	/**
