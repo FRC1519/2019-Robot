@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.*;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import org.mayheminc.robot2019.subsystems.Targeting;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -56,6 +57,11 @@ public class Drive extends Subsystem {
 	private double m_initialWheelDistance;
 	private int m_iterationsSinceRotationCommanded = 0;
 	private int m_iterationsSinceMovementCommanded = 0;
+
+	private boolean autoAlign = false;
+
+	// Targeting
+	private double TARGET_ALIGNED = -0.4;
 
 	/***********************************
 	 * INITIALIZATION
@@ -385,6 +391,14 @@ public class Drive extends Subsystem {
 		setMotorPower(leftSideThrottle, rightSideThrottle);
 	}
 
+	public void setAutoAlignTrue() {
+		autoAlign = true;
+	}
+
+	public void setAutoAlignFalse() {
+		autoAlign = false;
+	}
+
 	public void speedRacerDrive(double throttle, double rawSteeringX, boolean quickTurn) {
 		double leftPower, rightPower;
 		double rotation = 0;
@@ -399,56 +413,67 @@ public class Drive extends Subsystem {
 		} else {
 			throttleSign = -1;
 		}
+		if (autoAlign) {
+			rawSteeringX = Robot.targeting.amountToTurn();
+			// double bus2_distance = SmartDashboard.getNumber("2", -1);
+			// double bus3_distance = SmartDashboard.getNumber("3", -1);
+			// // They might be backwards
+			// double angle_offset = Math.tanh(bus2_distance - bus3_distance);
+			// double av_distance = Math.abs(bus2_distance - bus3_distance);
 
-		if (rawSteeringX == 0.0) {
-			// no turn being commanded, drive straight or stay still
-			m_iterationsSinceRotationCommanded++;
-			if (throttle == 0.0) {
-				// no motion commanded, stay still
-				m_iterationsSinceMovementCommanded++;
-				rotation = 0.0;
-				m_desiredHeading = getHeading(); // whenever motionless, set desired heading to current heading
-				// reset the PID controller loop now that we have a new desired heading
-				m_HeadingPid.reset();
-				m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
-			} else {
-				// driving straight
-				if ((m_iterationsSinceRotationCommanded == LOOPS_GYRO_DELAY)
-						|| (m_iterationsSinceMovementCommanded >= LOOPS_GYRO_DELAY)) {
-					// DriverStation.reportError("drive 1", false);
-					// exactly five iterations with no commanded turn,
-					// get current heading as desired heading
-					m_desiredHeading = getHeading();
+			// double x_raw = SmartDashboard.getNumber("targetX", -1);
+			// double offSetOfX = Math.abs(x_raw - TARGET_ALIGNED);
+		} else {
+			if (rawSteeringX == 0.0) {
+				// no turn being commanded, drive straight or stay still
+				m_iterationsSinceRotationCommanded++;
+				if (throttle == 0.0) {
+					// no motion commanded, stay still
+					m_iterationsSinceMovementCommanded++;
+					rotation = 0.0;
+					m_desiredHeading = getHeading(); // whenever motionless, set desired heading to current heading
 					// reset the PID controller loop now that we have a new desired heading
 					m_HeadingPid.reset();
 					m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
-					rotation = 0.0;
-				} else if (m_iterationsSinceRotationCommanded < LOOPS_GYRO_DELAY) {
-					// DriverStation.reportError("drive 2", false);
-					// just start driving straight without special heading maintenance
-					rotation = 0.0;
-				} else if (m_iterationsSinceRotationCommanded > LOOPS_GYRO_DELAY) {
-					// DriverStation.reportError("drive 3", false);
-					// after more then five iterations since commanded turn, maintain the target
-					// heading
-					rotation = maintainHeading();
+				} else {
+					// driving straight
+					if ((m_iterationsSinceRotationCommanded == LOOPS_GYRO_DELAY)
+							|| (m_iterationsSinceMovementCommanded >= LOOPS_GYRO_DELAY)) {
+						// DriverStation.reportError("drive 1", false);
+						// exactly five iterations with no commanded turn,
+						// get current heading as desired heading
+						m_desiredHeading = getHeading();
+						// reset the PID controller loop now that we have a new desired heading
+						m_HeadingPid.reset();
+						m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
+						rotation = 0.0;
+					} else if (m_iterationsSinceRotationCommanded < LOOPS_GYRO_DELAY) {
+						// DriverStation.reportError("drive 2", false);
+						// just start driving straight without special heading maintenance
+						rotation = 0.0;
+					} else if (m_iterationsSinceRotationCommanded > LOOPS_GYRO_DELAY) {
+						// DriverStation.reportError("drive 3", false);
+						// after more then five iterations since commanded turn, maintain the target
+						// heading
+						rotation = maintainHeading();
+					}
+					m_iterationsSinceMovementCommanded = 0;
 				}
-				m_iterationsSinceMovementCommanded = 0;
-			}
-		} else {
-			// commanding a turn, reset iterationsSinceRotationCommanded
-			m_iterationsSinceRotationCommanded = 0;
-			m_iterationsSinceMovementCommanded = 0;
-
-			if (quickTurn) {
-				// want a high-rate turn (also allows "spin" behavior)
-				rotation = rawSteeringX * throttleSign * QUICK_TURN_GAIN;
 			} else {
-				// want a standard rate turn (scaled by the throttle)
-				rotation = adjustedSteeringX * STD_TURN_GAIN; // set the turn to the throttle-adjusted steering input
+				// commanding a turn, reset iterationsSinceRotationCommanded
+				m_iterationsSinceRotationCommanded = 0;
+				m_iterationsSinceMovementCommanded = 0;
+
+				if (quickTurn) {
+					// want a high-rate turn (also allows "spin" behavior)
+					rotation = rawSteeringX * throttleSign * QUICK_TURN_GAIN;
+				} else {
+					// want a standard rate turn (scaled by the throttle)
+					rotation = adjustedSteeringX * STD_TURN_GAIN; // set the turn to the throttle-adjusted steering
+																	// input
+				}
 			}
 		}
-
 		// power to each wheel is a combination of the throttle and rotation
 		leftPower = throttle + rotation;
 		rightPower = throttle - rotation;
