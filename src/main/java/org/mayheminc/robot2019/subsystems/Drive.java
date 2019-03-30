@@ -417,7 +417,6 @@ public class Drive extends Subsystem {
 			// adjustedSteeringX = 0;
 
 			double visionRotation = Robot.targeting.amountToTurn();
-			SmartDashboard.putNumber("visionRotation", visionRotation);
 
 			final double VISION_MULTIPLIER = 2.0;
 			rotation = visionRotation * VISION_MULTIPLIER;
