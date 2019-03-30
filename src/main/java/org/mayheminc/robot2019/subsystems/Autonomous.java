@@ -23,6 +23,7 @@ public class Autonomous extends Subsystem {
 			/* 3 */ new StartLeftHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
 			/* 4 */ new StartRightHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
 			/* 5 */ new StartRightHAB2HPtoShipRight(), // drive off the level two, with HP for Right Side of Ship
+			/* 6 */ new StartRightHAB2HPtoRocketFront() // drive off level two with HP for Rocket Front
 	};
 
 	private static int programNumber = 0; // 0 = Do nothing

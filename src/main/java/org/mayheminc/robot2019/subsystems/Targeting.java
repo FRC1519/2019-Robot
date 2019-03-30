@@ -28,6 +28,7 @@ public class Targeting extends Subsystem {
   private double m_trueCenter;
   private double m_angleError;
   private double m_trueAngleError;
+
   private final static double FOV_CAMEAR_DEGRE = 78;
 
   public void update() {
