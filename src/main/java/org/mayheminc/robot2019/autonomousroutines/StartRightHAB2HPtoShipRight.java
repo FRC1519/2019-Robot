@@ -34,12 +34,14 @@ public class StartRightHAB2HPtoShipRight extends CommandGroup {
     // Get the arm into postion while heading downfield alongside the cargo ship
     addParallel(new HatchPanelLow());
     addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
-    addSequential(new DriveStraightOnHeading(0.9, 110, 0)); // head straight downfield
+    addSequential(new DriveStraightOnHeading(0.9, 116, 0)); // head straight downfield
 
-    // Turn towards the side of the cargo ship; intentionally overshoot the target
-    // angle a bit
-    addSequential(new DriveStraightOnHeading(0.8, 72, -100));
+    // Turn towards the side of the cargo ship; -90 degrees is perfect "in theory",
+    // but we need to aim to overshoot the target angle a bit to end up on track.
+    addSequential(new DriveStraightOnHeading(0.6, 66, -110));
 
     // stop now to let the drivers take over!
+
+    // (first thing they should do is release the hatch panel)
   }
 }

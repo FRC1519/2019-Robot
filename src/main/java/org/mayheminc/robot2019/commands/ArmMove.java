@@ -101,10 +101,9 @@ public class ArmMove extends Command {
 				// Compute how much further the wrist needs to rotate than the shoulder
 				double wristExtraDistance = m_deltaWristInternalAngle - m_deltaShoulderAngle;
 
-				// give the wrist a head start of 1 second per 90 degrees
-				// TODO: Consider decreasing "head start" rate (say 1 second per 135 degrees)
+				// give the wrist a head start of 1 second per 120 degrees
 				m_subCommand = new ArmMoveWithWristHeadStart(m_targetShoulderAngle, m_targetWristAngle,
-						wristExtraDistance / 90.0);
+						wristExtraDistance / 120.0);
 			}
 		}
 

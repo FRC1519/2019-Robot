@@ -31,15 +31,15 @@ public class Shoulder extends Subsystem {
     public static final double HORIZONTAL_ANGLE = 0.0;
 
     public static final double CARGO_ROCKET_HIGH_ANGLE = 65.0;
-    public static final double CARGO_ROCKET_MID_ANGLE = 16.0;
+    public static final double CARGO_ROCKET_MID_ANGLE = 14.0;
     public static final double CARGO_ROCKET_LOW_ANGLE = -30.0;
     public static final double CARGO_CARGO_SHIP_ANGLE = 18.0;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -42;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -38.0;
     public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 42.0;
     public static final double HP_ROCKET_MID_ANGLE = -6.0;
-    public static final double HP_ROCKET_LOW_ANGLE = -68.0;
+    public static final double HP_ROCKET_LOW_ANGLE = -62.0;
     public static final double HP_FLOOR_PICKUP_ANGLE = -35.0;
     public static final double HP_LOADING_STATION_ANGLE = -65.0;
 
