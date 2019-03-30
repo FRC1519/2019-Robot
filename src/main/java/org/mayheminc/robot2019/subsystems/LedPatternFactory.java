@@ -7,8 +7,6 @@
 
 package org.mayheminc.robot2019.subsystems;
 
-import java.util.ArrayList;
-
 import org.mayheminc.robot2019.subsystems.LEDLights.PatternID;
 
 /**

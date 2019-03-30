@@ -17,11 +17,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Targeting extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private double TARGET_ALIGNED = -0.4;
+  private double TARGET_ALIGNED = 0.4;
 
   public double amountToTurn() {
     double x_raw = SmartDashboard.getNumber("targetX", -1);
     double offSetOfX = x_raw - TARGET_ALIGNED;
+    if (x_raw <= -1.0) {
+      offSetOfX = 0;
+    }
     return offSetOfX;
   }
 

@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.*;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import org.mayheminc.robot2019.subsystems.Targeting;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -61,7 +60,7 @@ public class Drive extends Subsystem {
 	private boolean autoAlign = false;
 
 	// Targeting
-	private double TARGET_ALIGNED = -0.4;
+	// private double TARGET_ALIGNED = -0.4;
 
 	/***********************************
 	 * INITIALIZATION
@@ -414,7 +413,17 @@ public class Drive extends Subsystem {
 			throttleSign = -1;
 		}
 		if (autoAlign) {
-			rawSteeringX = Robot.targeting.amountToTurn();
+			DriverStation.reportWarning("Auto align was called in drive base", false);
+			// adjustedSteeringX = 0;
+
+			double visionRotation = Robot.targeting.amountToTurn();
+			SmartDashboard.putNumber("visionRotation", visionRotation);
+
+			final double VISION_MULTIPLIER = 2.0;
+			rotation = visionRotation * VISION_MULTIPLIER;
+
+			// throttle = 0.2;
+
 			// double bus2_distance = SmartDashboard.getNumber("2", -1);
 			// double bus3_distance = SmartDashboard.getNumber("3", -1);
 			// // They might be backwards

@@ -9,10 +9,11 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class autoAlign extends Command {
-  public autoAlign() {
+public class AutoAlign extends Command {
+  public AutoAlign() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -21,6 +22,7 @@ public class autoAlign extends Command {
   @Override
   protected void initialize() {
     Robot.drive.setAutoAlignTrue();
+    DriverStation.reportWarning("Auto align was called", false);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -31,18 +33,20 @@ public class autoAlign extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    Robot.drive.setAutoAlignFalse();
+
     return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.drive.setAutoAlignFalse();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.drive.setAutoAlignFalse();
   }
 }
