@@ -392,10 +392,15 @@ public class Drive extends Subsystem {
 
 	public void setAutoAlignTrue() {
 		autoAlign = true;
+		// reset the PID controller loop for steering now that we are auto-aligning
+		m_HeadingPid.reset();
+		m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
 	}
 
 	public void setAutoAlignFalse() {
 		autoAlign = false;
+		m_HeadingPid.reset();
+		m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
 	}
 
 	public void speedRacerDrive(double throttle, double rawSteeringX, boolean quickTurn) {
@@ -418,7 +423,7 @@ public class Drive extends Subsystem {
 
 			// double visionRotation = Robot.targeting.amountToTurn();
 			m_desiredHeading = Robot.targeting.desiredHeading();
-			rawSteeringX = 0;
+			rawSteeringX = 0.0;
 
 			// RD - read the maintain heading to adjust the steering of the robot.
 			rotation = maintainHeading();
@@ -437,6 +442,7 @@ public class Drive extends Subsystem {
 			// double x_raw = SmartDashboard.getNumber("targetX", -1);
 			// double offSetOfX = Math.abs(x_raw - TARGET_ALIGNED);
 		} else {
+			// not using camera targeting right now
 			if (rawSteeringX == 0.0) {
 				// no turn being commanded, drive straight or stay still
 				m_iterationsSinceRotationCommanded++;
@@ -456,6 +462,7 @@ public class Drive extends Subsystem {
 						// exactly five iterations with no commanded turn,
 						// get current heading as desired heading
 						m_desiredHeading = getHeading();
+
 						// reset the PID controller loop now that we have a new desired heading
 						m_HeadingPid.reset();
 						m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
@@ -482,12 +489,8 @@ public class Drive extends Subsystem {
 					rotation = rawSteeringX * throttleSign * QUICK_TURN_GAIN;
 				} else {
 					// want a standard rate turn (scaled by the throttle)
-					if (autoAlign) {
-						rotation = 0;
-					} else {
-						rotation = adjustedSteeringX * STD_TURN_GAIN; // set the turn to the throttle-adjusted steering
-						// input
-					}
+					rotation = adjustedSteeringX * STD_TURN_GAIN; // set the turn to the throttle-adjusted steering
+					// input
 
 				}
 			}
@@ -678,6 +681,7 @@ public class Drive extends Subsystem {
 	public void resetLoopsOnTarget() {
 	}
 
+	// final double CAMERA_LAG = 0.200;
 	final double CAMERA_LAG = 0.2;
 
 	public void updateHistory() {

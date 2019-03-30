@@ -41,7 +41,7 @@ public class Shoulder extends Subsystem {
     public static final double HP_ROCKET_MID_ANGLE = -6.0;
     public static final double HP_ROCKET_LOW_ANGLE = -62.0;
     public static final double HP_FLOOR_PICKUP_ANGLE = -35.0;
-    public static final double HP_LOADING_STATION_ANGLE = -65.0;
+    public static final double HP_LOADING_STATION_ANGLE = -64.0;
 
     private static final double ANGLE_TOLERANCE = 3.0; // hoping for one degree!!! (very optimistic, about 0.5 inches)
     private static final double BRAKE_RELEASE_TIME_SEC = 0.0; // seems like no delay needed

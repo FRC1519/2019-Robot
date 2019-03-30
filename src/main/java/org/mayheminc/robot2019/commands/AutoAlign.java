@@ -23,6 +23,7 @@ public class AutoAlign extends Command {
   protected void initialize() {
     Robot.drive.setAutoAlignTrue();
     DriverStation.reportWarning("Auto align was called", false);
+    Robot.targetingLights.set(true);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -41,6 +42,7 @@ public class AutoAlign extends Command {
   @Override
   protected void end() {
     Robot.drive.setAutoAlignFalse();
+    Robot.targetingLights.set(false);
   }
 
   // Called when another command which requires one or more of the same
@@ -48,5 +50,6 @@ public class AutoAlign extends Command {
   @Override
   protected void interrupted() {
     Robot.drive.setAutoAlignFalse();
+    Robot.targetingLights.set(false);
   }
 }

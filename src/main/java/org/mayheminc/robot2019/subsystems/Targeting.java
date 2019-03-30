@@ -20,14 +20,20 @@ public class Targeting extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private double TARGET_ALIGNED = 0.4;
-  private double CENTER_EQ_M = 0.1925;
-  private double CENTER_EQ_B = 0.5719;
+  // Below valls are for centered arm
+  // private double CENTER_EQ_M = -0.1925;
+  // private double CENTER_EQ_B = 0.5719;
+  // Below valls are for arm off 2 inches to left
+  private double CENTER_EQ_M = -0.2964;
+  private double CENTER_EQ_B = 0.5871;
   private double m_x_raw;
   private double m_y_raw;
   private double m_x_Error;
   private double m_trueCenter;
   private double m_angleError;
   private double m_trueAngleError;
+  private double m_desiredHeading;
+
   private final static double FOV_CAMEAR_DEGRE = 78;
 
   public void update() {
@@ -35,17 +41,27 @@ public class Targeting extends Subsystem {
     m_y_raw = SmartDashboard.getNumber("targetY", -1);
     SmartDashboard.putNumber("amountToTurn", amountToTurn());
 
-    // Calculate ture center and x error
-    if (m_x_raw <= -1.0) {
+    // if the x value is less than zero, we can't see the target
+    if (m_x_raw < 0.0) {
+      // can't see the target, act like we are aligned
       m_x_Error = 0;
     } else {
-      // Calculate the true center using the height
+      // we can see the target now, so
+      // calculate the true center as a function of the height
       m_trueCenter = (CENTER_EQ_M * m_y_raw) + CENTER_EQ_B;
+
+      // compute the "x error" based upon the trueCenter
       m_x_Error = m_x_raw - m_trueCenter;
+
       // Find the angle error
-      m_angleError = FOV_CAMEAR_DEGRE * m_x_Error;
-      // Find true angle error using the history
-      m_trueAngleError = m_angleError + Robot.drive.getHeadingForCapturedImage();
+      m_trueAngleError = FOV_CAMEAR_DEGRE * m_x_Error;
+
+      // Convert angleError into a desired heading, using the heading history
+      m_desiredHeading = m_trueAngleError + Robot.drive.getHeadingForCapturedImage();
+
+      SmartDashboard.putNumber("True Center", m_trueCenter);
+      SmartDashboard.putNumber("True Angle Error", m_trueAngleError);
+      SmartDashboard.putNumber("Vision Desired Heading", m_desiredHeading);
     }
 
   }
@@ -64,7 +80,7 @@ public class Targeting extends Subsystem {
   }
 
   public double desiredHeading() {
-    return m_trueAngleError;
+    return m_desiredHeading;
   }
 
   @Override
