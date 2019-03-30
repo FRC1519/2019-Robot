@@ -416,10 +416,11 @@ public class Drive extends Subsystem {
 			DriverStation.reportWarning("Auto align was called in drive base", false);
 			// adjustedSteeringX = 0;
 
-			double visionRotation = Robot.targeting.amountToTurn();
+			// double visionRotation = Robot.targeting.amountToTurn();
+			m_desiredHeading = Robot.targeting.desiredHeading();
 
-			final double VISION_MULTIPLIER = 2.0;
-			rotation = visionRotation * VISION_MULTIPLIER;
+			// final double VISION_MULTIPLIER = 2.0;
+			// rotation = visionRotation * VISION_MULTIPLIER;
 
 			// throttle = 0.2;
 
@@ -477,8 +478,13 @@ public class Drive extends Subsystem {
 					rotation = rawSteeringX * throttleSign * QUICK_TURN_GAIN;
 				} else {
 					// want a standard rate turn (scaled by the throttle)
-					rotation = adjustedSteeringX * STD_TURN_GAIN; // set the turn to the throttle-adjusted steering
-																	// input
+					if (autoAlign) {
+						rotation = 0;
+					} else {
+						rotation = adjustedSteeringX * STD_TURN_GAIN; // set the turn to the throttle-adjusted steering
+						// input
+					}
+
 				}
 			}
 		}
