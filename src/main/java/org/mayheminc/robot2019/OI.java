@@ -204,9 +204,11 @@ public class OI {
 		// PAD**************************************
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new StartCargoRightToLoadingStation());
-		DRIVER_PAD_BLUE_BUTTON.whileHeld(new Wait(0));
+		DRIVER_PAD_BLUE_BUTTON.whileHeld(new AutoAlign());
 		// DRIVER_PAD_YELLOW_BUTTON.whileHeld(new
 		// LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
+
+		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign());
 
 		DRIVER_PAD_YELLOW_BUTTON.whenPressed(new AutoClimb() /* AutoClimb() */ );
 
