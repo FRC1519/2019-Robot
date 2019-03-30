@@ -55,7 +55,7 @@ public class CargoIntake extends Subsystem {
             if (m_motor.getOutputCurrent() > 4.0) {
                 // count to 10...
                 m_autoStopCount++;
-                if (m_autoStopCount > 20) {
+                if (m_autoStopCount > 10) {
                     // fall back to a hold power for the ball.
                     this.setPower(CargoIntake.HOLD_POWER);
                     m_autoStopCount = 0;

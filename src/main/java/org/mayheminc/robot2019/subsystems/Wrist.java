@@ -81,7 +81,7 @@ public class Wrist extends Subsystem {
         motor.config_kF(0, 0.0, 0);
 
         motor.setNeutralMode(NeutralMode.Coast);
-        motor.setInverted(true);
+        motor.setInverted(false);
         motor.setSensorPhase(true);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
         motor.configPeakOutputVoltage(+12.0, -12.0);
