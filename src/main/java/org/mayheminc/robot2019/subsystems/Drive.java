@@ -418,6 +418,10 @@ public class Drive extends Subsystem {
 
 			// double visionRotation = Robot.targeting.amountToTurn();
 			m_desiredHeading = Robot.targeting.desiredHeading();
+			rawSteeringX = 0;
+
+			// RD - read the maintain heading to adjust the steering of the robot.
+			rotation = maintainHeading();
 
 			// final double VISION_MULTIPLIER = 2.0;
 			// rotation = visionRotation * VISION_MULTIPLIER;
