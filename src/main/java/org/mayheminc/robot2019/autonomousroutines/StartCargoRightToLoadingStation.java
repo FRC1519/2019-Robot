@@ -17,12 +17,12 @@ public class StartCargoRightToLoadingStation extends CommandGroup {
   public StartCargoRightToLoadingStation() {
     // addSequential(new ZeroGyro(-90.0));
 
-    addSequential(new DriveStraightOnHeading(-0.7, 50, -170)); // Drive 50 inches backwards to face the loading station
+    addSequential(new DriveStraightOnHeading(-0.8, 50, -170)); // Drive 50 inches backwards to face the loading station
 
-    addSequential(new DriveStraightOnHeading(0.5, 10, 160)); // Drive towards the loading station
-    addSequential(new DriveStraightOnHeading(0.8, 250, 160)); // Drive towards the loading station
+    addSequential(new DriveStraightOnHeading(0.6, 20, 160)); // Drive towards the loading station
+    addSequential(new DriveStraightOnHeading(0.9, 210, 160)); // Drive towards the loading station
 
-    addSequential(new DriveStraightOnHeading(0.8, 200, 180)); // Drive towards the loading station
+    addSequential(new DriveStraightOnHeading(0.9, 180, 180)); // Drive towards the loading station
 
   }
 }

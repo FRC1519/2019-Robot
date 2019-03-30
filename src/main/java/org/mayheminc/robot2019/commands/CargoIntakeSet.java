@@ -37,7 +37,7 @@ public class CargoIntakeSet extends Command {
     Robot.cargoIntake.setPower(m_power);
     DriverStation.reportError("CargoIntake Run", false);
 
-    Robot.lights.setDefault(LedPatternFactory.test1);
+    Robot.lights.set(LedPatternFactory.cargoBallTrying);
   }
 
   @Override

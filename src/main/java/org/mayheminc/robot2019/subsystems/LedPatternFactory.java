@@ -7,8 +7,6 @@
 
 package org.mayheminc.robot2019.subsystems;
 
-import java.util.ArrayList;
-
 import org.mayheminc.robot2019.subsystems.LEDLights.PatternID;
 
 /**
@@ -25,22 +23,30 @@ public class LedPatternFactory {
 
     public static CyclePattern defaultTeleOp = new CyclePattern() {
         {
-            add(new CycleElement(PatternID.RED, 0.5));
-            add(new CycleElement(PatternID.BLACK, 0.5));
+            add(new CycleElement(PatternID.BLUE_GREEN, 0.5));
+            add(new CycleElement(PatternID.AQUA, 0.5));
+            add(new CycleElement(PatternID.SKY_BLUE, 0.5));
         }
     };
 
-    public static CyclePattern cargoBall = new CyclePattern() {
+    public static CyclePattern cargoBallTrying = new CyclePattern() {
         {
-            add(new CycleElement(PatternID.ORANGE, 0.4));
-            add(new CycleElement(PatternID.WHITE, 0.2));
-            this.m_timeLength = 2.0;
+            add(new CycleElement(PatternID.ORANGE, 1.0));
+            this.m_timeLength = 3.0;
+        }
+    };
+
+    public static CyclePattern cargoBallGotIt = new CyclePattern() {
+        {
+            add(new CycleElement(PatternID.BLACK, 0.125));
+            add(new CycleElement(PatternID.ORANGE, 0.125));
+            this.m_timeLength = 1.5;
         }
     };
 
     public static CyclePattern hatchPanel = new CyclePattern() {
         {
-            add(new CycleElement(PatternID.YELLOW, 0.125));
+            add(new CycleElement(PatternID.GOLD, 0.125));
             add(new CycleElement(PatternID.BLACK, 0.125));
             this.m_timeLength = 1.0;
         }
