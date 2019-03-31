@@ -264,8 +264,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 */
 	public void autonomousPeriodic() {
 
-		// update all sensors in the robot
+		// update all sensors in the robot, including the targeting subsystem
 		updateSensors();
+		targeting.update();
 
 		// Scheduler.getInstance().run(); called in periodic().
 
@@ -293,7 +294,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		wrist.update();
 		lights.update();
 		cargoIntake.update();
-		targeting.update();
 	}
 
 	public void teleopInit() {
@@ -355,8 +355,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// Scheduler.getInstance().run(); called in periodic
 
-		// update all sensors in the robot
+		// update all sensors in the robot, including targeting subsystem
 		updateSensors();
+		targeting.update();
 
 		// drive the robot based upon joystick inputs, unless an "auto" command is
 		// driving
@@ -374,7 +375,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		wrist.update();
 		lights.update();
 		cargoIntake.update();
-		targeting.update();
 	}
 
 	public static boolean getBrownoutMode() {
