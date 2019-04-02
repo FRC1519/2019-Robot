@@ -29,8 +29,6 @@ public class Targeting extends Subsystem {
   private double CENTER_EQ_M = -0.2964;
   private double CENTER_EQ_B = 0.5871;
 
-  private double m_x_raw;
-  private double m_y_raw;
   private double m_x_Error;
   private double m_trueCenter;
   private double m_angleError;
@@ -43,6 +41,8 @@ public class Targeting extends Subsystem {
   private double x_raw;
   private double y_raw;
   private double x_Error;
+  private double m_x_raw;
+  private double m_y_raw;
 
   private final static double FOV_CAMEAR_DEGRE = 78;
 
@@ -55,6 +55,7 @@ public class Targeting extends Subsystem {
 
     for (double a : m_x_raw_array) {
       // If we get an invalid number ignore it.
+      SmartDashboard.putNumber("m_x_raw_array_TEST", a);
       if (a == -1) {
         m_x_Error = 2;
         // if x
@@ -73,6 +74,7 @@ public class Targeting extends Subsystem {
           yNow = y_raw;
         }
       }
+      i++;
     }
     m_x_raw = xNow;
     m_y_raw = yNow;
