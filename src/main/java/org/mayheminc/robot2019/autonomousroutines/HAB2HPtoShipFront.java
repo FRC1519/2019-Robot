@@ -14,30 +14,32 @@ import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
+import org.mayheminc.robot2019.subsystems.Autonomous;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
 
-public class StartLeftHAB2HPtoShipLeft extends CommandGroup {
+public class HAB2HPtoShipFront extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public StartLeftHAB2HPtoShipLeft() {
+  public HAB2HPtoShipFront(Autonomous.StartOn startSide) {
 
     // Zero the Gyro at the start of autonomous
     addSequential(new ZeroGyro(0.0));
 
     // Drive off the hab level 2 and wait a second to stop bouncing around
-    addSequential(new DriveStraightOnHeading(0.9, 96, 0)); // Drive 60 inches at a heading of zero degrees
+    addSequential(new DriveStraightOnHeading(0.9, 96, Autonomous.chooseAngle(startSide, 0.0))); // Drive 60 inches at a
+                                                                                                // heading of zero
+                                                                                                // degrees
     addSequential(new Wait(1.0));
 
     // Head for the cargo ship
-    addSequential(new DriveStraightOnHeading(0.7, 48, -60)); // Drive three more feet turning left.
+    addSequential(new DriveStraightOnHeading(0.7, 42, Autonomous.chooseAngle(startSide, 270.0))); // Drive three more
+                                                                                                  // feet turning left.
 
-    // Get the arm into postion while heading downfield alongside the cargo ship
+    // Get the arm into postion while lining to put the hatch panel on the ship.
     addParallel(new HatchPanelLow());
-    addSequential(new DriveStraightOnHeading(0.7, 48, 0)); // head straight downfield
+    addSequential(new DriveStraightOnHeading(0.7, 48, Autonomous.chooseAngle(startSide, 0.0)));
 
-    // Turn towards the side of the cargo ship
-    addSequential(new DriveStraightOnHeading(0.7, 60, +90));
     addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
 
     // stop now to let the driver's take over!

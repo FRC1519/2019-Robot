@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import org.mayheminc.robot2019.subsystems.Autonomous;
 
-public class StartLeftHAB2HPtoShipFront extends CommandGroup {
+public class StartLeftHAB2HPtoShipSide extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public StartLeftHAB2HPtoShipFront() {
+  public StartLeftHAB2HPtoShipSide() {
 
-    // Call the shared HAB2HPtoShipFront routine, specifying we are on the left side
-    addSequential(new HAB2HPtoShipFront(Autonomous.StartOn.LEFT));
+    // Call the shared HAB2HPtoShipSide routine, specifying we are on the left side
+    addSequential(new HAB2HPtoShipSide(Autonomous.StartOn.LEFT));
 
   }
 }

@@ -203,7 +203,7 @@ public class OI {
 		// *******************************DRIVER
 		// PAD**************************************
 
-		DRIVER_PAD_RED_BUTTON.whileHeld(new StartCargoRightToLoadingStation());
+		DRIVER_PAD_RED_BUTTON.whileHeld(new ShipSideToLoadingStation(Autonomous.StartOn.RIGHT));
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new AutoAlign());
 		// DRIVER_PAD_YELLOW_BUTTON.whileHeld(new
 		// LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
@@ -211,8 +211,7 @@ public class OI {
 		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign());
 
 		DRIVER_PAD_YELLOW_BUTTON.whenPressed(new AutoClimb() /* AutoClimb() */ );
-
-		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0) /* AutoClimb() */ );
+		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0) /* do nothing */ );
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());

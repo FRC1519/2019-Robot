@@ -20,12 +20,15 @@ public class Targeting extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private double TARGET_ALIGNED = 0.4;
+
   // Below valls are for centered arm
   // private double CENTER_EQ_M = -0.1925;
   // private double CENTER_EQ_B = 0.5719;
+
   // Below valls are for arm off 2 inches to left
   private double CENTER_EQ_M = -0.2964;
   private double CENTER_EQ_B = 0.5871;
+
   private double m_x_raw;
   private double m_y_raw;
   private double m_x_Error;
