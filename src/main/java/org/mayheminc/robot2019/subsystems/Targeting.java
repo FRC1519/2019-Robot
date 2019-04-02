@@ -37,6 +37,7 @@ public class Targeting extends Subsystem {
   private final static double FOV_CAMEAR_DEGRE = 78;
 
   public void update() {
+    m_x_raw_array = SmartDashboard.getNumberArray(key, defaultValue)
     m_x_raw = SmartDashboard.getNumber("targetX", -1);
     m_y_raw = SmartDashboard.getNumber("targetY", -1);
     SmartDashboard.putNumber("amountToTurn", amountToTurn());
