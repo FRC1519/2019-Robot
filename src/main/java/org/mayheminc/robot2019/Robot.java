@@ -207,6 +207,14 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 	public void autonomousInit() {
 
+		/// establish starting robot state for autonomous on all subsystems that need it
+
+		// zero the drive base gyro at current position
+		drive.zeroHeadingGyro(0.0);
+
+		// ensure the hatch panel grabber is "holding" the hatch panel
+		hatchPanelPickUp.set(HatchPanelPickUp.GRABBER_EXPANDED);
+
 		// TODO: do we want autonomous in high gear instead this year?
 		// force low gear
 		shifter.setGear(Shifter.LOW_GEAR);
@@ -230,9 +238,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// "Zero" the elevator, presuming it is down due to gravity
 		// "Zero" the turret, presuming it is pointing straight forward
 		// "Zero" the arm/pivot, which will initiate finding zero by using hard stop
-
-		// zero the drive base gyro at current position
-		drive.zeroHeadingGyro(0.0);
 
 		// start the autonomous period without a human driver
 		m_humanDriverInAuto = false;

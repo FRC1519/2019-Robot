@@ -9,6 +9,7 @@ package org.mayheminc.robot2019.subsystems;
 
 import org.mayheminc.robot2019.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,53 +35,82 @@ public class Targeting extends Subsystem {
   private double m_angleError;
   private double m_trueAngleError;
   private double m_desiredHeading;
-  private double[] m_x_raw_array;
+  private double[] m_target_array;
   private double errorNow = 1;
   private double xNow;
   private double yNow;
   private double x_raw;
   private double y_raw;
-  private double x_Error;
+  private double m_xError;
   private double m_x_raw;
   private double m_y_raw;
-
-  private final static double FOV_CAMEAR_DEGRE = 78;
+  private double[] ARRAY_OF_NEG_ONE = { -1.0 };
+  private final static double FOV_CAMERA_IN_DEGREES = 78.0;
 
   public void update() {
-    m_x_raw_array = SmartDashboard.getNumberArray("target", new double[] { -1 });
-    // m_x_raw = SmartDashboard.getNumber("targetX", -1);
-    // m_y_raw = SmartDashboard.getNumber("targetY", -1);
-
     int i = 0;
+    double tempX = 0.0;
+    double tempY = 0.0;
+    double tempTrueCenter = 0.0;
+    double tempXError = 0.0;
 
-    for (double a : m_x_raw_array) {
-      // If we get an invalid number ignore it.
-      SmartDashboard.putNumber("m_x_raw_array_TEST", a);
-      if (a == -1) {
-        m_x_Error = 2;
-        // if x
-      } else if (i == 0 || i % 2 == 0) {
-        x_raw = a;
-        // if y
-      } else {
-        y_raw = a;
-        // calculate the true center as a function of the height
-        m_trueCenter = (CENTER_EQ_M * a) + CENTER_EQ_B;
-        // compute the "x error" based upon the trueCenter
-        m_x_Error = x_raw - m_trueCenter;
-        if (Math.abs(m_x_Error) < errorNow) {
-          errorNow = m_x_Error;
-          xNow = x_raw;
-          yNow = y_raw;
+    double bestXError = 1.0;
+
+    // Update all of the targeting information, as follows:
+    // 1 - Determine if we have any valid data in the array.
+    // If not, set the "error" to zero, so that the robot thinks
+    // it is on target.
+    // 2 - Look through the valid data in the array to find the
+    // target closest to the "trueCenter"
+    // 3 - Use the selected target to compute the needed information
+
+    // get the latest output from the targeting camera
+    m_target_array = SmartDashboard.getNumberArray("target", ARRAY_OF_NEG_ONE);
+
+    if (m_target_array == null || m_target_array.length == 0) {
+      // this means the key is found, but is empty
+      bestXError = 0.0;
+    } else if (m_target_array[0] < 0.0) {
+      // this means the array has no valid data. Set m_xError = 0.0
+      bestXError = 0.0;
+    } else {
+      // 2 - Look through the valid data in the array to find the
+      // target closest to the "trueCenter"
+
+      for (double a : m_target_array) {
+        SmartDashboard.putNumber("m_target_array_TEST", a);
+        // check for invalid data
+        if (a < 0.0 || a > 1.0) {
+          // this should never happen. Print an error if it does.
+          DriverStation.reportError("Invalid Data in target array (" + a + ") \n", false);
+        } else if (i % 2 == 0) { // true for data elements 0, 2, 4, etc.
+          // this is the x value
+          tempX = a;
+          // if y
+        } else { // this is data element 1, 3, 5, etc.
+          tempY = a;
+
+          // now that we have an x, y pair, determine if this is
+          // the target nearest to the "dynamic center"
+
+          // calculate the true center as a function of the height
+          tempTrueCenter = (CENTER_EQ_M * tempY) + CENTER_EQ_B;
+
+          // compute the "x error" based upon the trueCenter
+          tempXError = tempX - tempTrueCenter;
+          if (Math.abs(tempXError) < Math.abs(bestXError)) {
+            bestXError = tempXError;
+          }
         }
+        i++;
       }
-      i++;
     }
-    m_x_raw = xNow;
-    m_y_raw = yNow;
+
+    // at this point in the code, the "selected" target should be in the "best"
+    // variables
 
     // Find the angle error
-    m_trueAngleError = FOV_CAMEAR_DEGRE * m_x_Error;
+    m_trueAngleError = FOV_CAMERA_IN_DEGREES * bestXError;
 
     // Convert angleError into a desired heading, using the heading history
     m_desiredHeading = m_trueAngleError + Robot.drive.getHeadingForCapturedImage();
@@ -89,14 +119,6 @@ public class Targeting extends Subsystem {
     SmartDashboard.putNumber("True Angle Error", m_trueAngleError);
     SmartDashboard.putNumber("Vision Desired Heading", m_desiredHeading);
     SmartDashboard.putNumber("amountToTurn", amountToTurn());
-
-    // // if the x value is less than zero, we can't see the target
-    // if (m_x_raw < 0.0) {
-    // // can't see the target, act like we are aligned
-    // m_x_Error = 0;
-    // } else {
-    // // we can see the target now, so
-
   }
 
   public double amountToTurn() {
