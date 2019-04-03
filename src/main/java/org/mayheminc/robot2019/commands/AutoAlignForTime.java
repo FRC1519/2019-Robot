@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DriveStraightForTime extends Command {
+public class AutoAlignForTime extends Command {
 
 	double m_targetPower;
 	double m_startTime;
@@ -18,7 +18,7 @@ public class DriveStraightForTime extends Command {
 	 * @param arg_targetPower +/- motor power [-1.0, +1.0]
 	 * @param arg_distance    Time is in seconds
 	 */
-	public DriveStraightForTime(double arg_targetSpeed, double timeInSeconds) {
+	public AutoAlignForTime(double arg_targetSpeed, double timeInSeconds) {
 		requires(Robot.drive);
 		m_desiredTime = timeInSeconds;
 		m_targetPower = arg_targetSpeed;
@@ -27,6 +27,8 @@ public class DriveStraightForTime extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		m_startTime = Timer.getFPGATimestamp();
+		// Set auto align to true so we auto align when speedRacerDrive is called
+		Robot.drive.setAutoAlignTrue();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -44,9 +46,11 @@ public class DriveStraightForTime extends Command {
 	// Called once after isFinished returns true
 	protected void end() {
 		Robot.drive.stop();
+		Robot.drive.setAutoAlignFalse();
 	}
 
 	protected void interrupted() {
 		Robot.drive.stop();
+		Robot.drive.setAutoAlignFalse();
 	}
 }
