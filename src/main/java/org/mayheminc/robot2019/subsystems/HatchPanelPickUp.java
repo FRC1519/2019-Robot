@@ -10,18 +10,18 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class HatchPanelPickUp extends Subsystem {
 
-    public static final boolean GRABBER_CONTRACTED = false;
-    public static final boolean GRABBER_EXPANDED = true;
+    public static final boolean GRABBER_CONTRACTED = true;
+    public static final boolean GRABBER_EXPANDED = false;
 
     boolean m_pos;
-    Solenoid solenoid = new Solenoid(RobotMap.HATCH_PANEL_SOLENOID);
+    Solenoid m_solenoid = new Solenoid(RobotMap.HATCH_PANEL_SOLENOID);
 
     public void initDefaultCommand() {
     }
 
     public void set(boolean b) {
         m_pos = b;
-        this.solenoid.set(m_pos);
+        m_solenoid.set(m_pos);
 
         Robot.eventServer.output((m_pos) ? "HatchOpen.wav" : "HatchClose.wav");
         Robot.lights.set(LedPatternFactory.hatchPanel);

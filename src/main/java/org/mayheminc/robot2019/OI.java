@@ -248,8 +248,8 @@ public class OI {
 		OPERATOR_PAD_BUTTON_FOUR.whenPressed(new CargoHigh());
 
 		// BUTTONS FIVE AND SEVEN ARE For Operating the hatch panel
-		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(false));
-		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(true));
+		OPERATOR_PAD_BUTTON_FIVE.whenPressed(new HatchPanelSet(HatchPanelPickUp.GRABBER_EXPANDED));
+		OPERATOR_PAD_BUTTON_SEVEN.whenPressed(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
 
 		OPERATOR_PAD_BUTTON_SIX.whileHeld(new CargoIntakeSet(CargoIntake.INTAKE_HARD_POWER));
 		OPERATOR_PAD_BUTTON_EIGHT.whileHeld(new CargoIntakeSet(CargoIntake.OUTTAKE_SOFT_POWER));
