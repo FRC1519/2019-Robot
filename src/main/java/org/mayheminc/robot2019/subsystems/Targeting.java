@@ -31,7 +31,6 @@ public class Targeting extends Subsystem {
   private double CENTER_EQ_B = 0.5871;
 
   private double m_x_Error;
-  private double m_trueCenter;
   private double m_angleError;
   private double m_trueAngleError;
   private double m_desiredHeading;
@@ -153,7 +152,6 @@ public class Targeting extends Subsystem {
     // Convert angleError into a desired heading, using the heading history
     m_desiredHeading = m_trueAngleError + Robot.drive.getHeadingForCapturedImage();
 
-    SmartDashboard.putNumber("True Center", m_trueCenter);
     SmartDashboard.putNumber("True Angle Error", m_trueAngleError);
     SmartDashboard.putNumber("m_bestY", m_bestY);
     SmartDashboard.putNumber("Vision Desired Heading", m_desiredHeading);
@@ -162,11 +160,6 @@ public class Targeting extends Subsystem {
 
   public double amountToTurn() {
     return m_x_Error;
-  }
-
-  public double centerFromHight() {
-    // Calculate the true center from height
-    return m_trueCenter;
   }
 
   public double angleError() {
