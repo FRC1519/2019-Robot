@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Targeting extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private double TARGET_ALIGNED = 0.4;
+  private double Y_WHEN_TARGET_AT_WALL = 0.65; // Worked fine and 0.70
 
   // Below valls are for centered arm
   // private double CENTER_EQ_M = -0.1925;
@@ -36,16 +36,15 @@ public class Targeting extends Subsystem {
   private double m_trueAngleError;
   private double m_desiredHeading;
   private double[] m_target_array;
-  private double errorNow = 1;
-  private double xNow;
-  private double yNow;
-  private double x_raw;
-  private double y_raw;
-  private double m_xError;
-  private double m_x_raw;
-  private double m_y_raw;
   private double[] ARRAY_OF_NEG_ONE = { -1.0 };
   private final static double FOV_CAMERA_IN_DEGREES = 78.0;
+  private double m_bestY = 0.5;
+
+  public enum TargetPosition {
+    LEFT_MOST, CENTER_MOST, RIGHT_MOST
+  };
+
+  private TargetPosition m_mode = TargetPosition.CENTER_MOST;
 
   public void update() {
     int i = 0;
@@ -53,7 +52,6 @@ public class Targeting extends Subsystem {
     double tempY = 0.0;
     double tempTrueCenter = 0.0;
     double tempXError = 0.0;
-
     double bestXError = 1.0;
 
     // Update all of the targeting information, as follows:
@@ -74,40 +72,80 @@ public class Targeting extends Subsystem {
       // this means the array has no valid data. Set m_xError = 0.0
       bestXError = 0.0;
     } else {
-      // 2 - Look through the valid data in the array to find the
-      // target closest to the "trueCenter"
+      // We have a valid data array.
+      // There are three different situations:
+      // a - We want the left-most target
+      // b - We want the "centered" target
+      // c - We want the right-most target
 
-      for (double a : m_target_array) {
-        SmartDashboard.putNumber("m_target_array_TEST", a);
-        // check for invalid data
-        if (a < 0.0 || a > 1.0) {
-          // this should never happen. Print an error if it does.
-          DriverStation.reportError("Invalid Data in target array (" + a + ") \n", false);
-        } else if (i % 2 == 0) { // true for data elements 0, 2, 4, etc.
-          // this is the x value
-          tempX = a;
-          // if y
-        } else { // this is data element 1, 3, 5, etc.
-          tempY = a;
+      // Handle each of them separately;
+      // we need the results in "bestXError" and "bestY"
 
-          // now that we have an x, y pair, determine if this is
-          // the target nearest to the "dynamic center"
+      if (/* want left-most */ m_mode == TargetPosition.LEFT_MOST) {
+        // Case A: (we want to use the left-most target)
+        m_bestY = m_target_array[1];
 
-          // calculate the true center as a function of the height
-          tempTrueCenter = (CENTER_EQ_M * tempY) + CENTER_EQ_B;
+        // calculate the true center as a function of the height
+        tempTrueCenter = (CENTER_EQ_M * m_bestY) + CENTER_EQ_B;
 
-          // compute the "x error" based upon the trueCenter
-          tempXError = tempX - tempTrueCenter;
-          if (Math.abs(tempXError) < Math.abs(bestXError)) {
-            bestXError = tempXError;
+        // compute the "x error" based upon the trueCenter
+        bestXError = m_target_array[0] - tempTrueCenter;
+      } else if (/* want center */ m_mode == TargetPosition.CENTER_MOST) {
+        // Case B:
+        // Look through the valid data in the array to find the
+        // target closest to the "trueCenter"
+
+        for (double a : m_target_array) {
+          // check for invalid data
+          if (a < 0.0 || a > 1.0) {
+            // this should never happen. Print an error if it does.
+            DriverStation.reportError("Invalid Data in target array (" + a + ") \n", false);
+          } else if (i % 2 == 0) { // true for data elements 0, 2, 4, etc.
+            // this is the x value
+            tempX = a;
+            // if y
+          } else { // this is data element 1, 3, 5, etc.
+            tempY = a;
+
+            // now that we have an x, y pair, determine if this is
+            // the target nearest to the "dynamic center"
+
+            // calculate the true center as a function of the height
+            tempTrueCenter = (CENTER_EQ_M * tempY) + CENTER_EQ_B;
+
+            // compute the "x error" based upon the trueCenter
+            tempXError = tempX - tempTrueCenter;
+            if (Math.abs(tempXError) < Math.abs(bestXError)) {
+              bestXError = tempXError;
+              m_bestY = tempY;
+            }
           }
+          i++;
         }
-        i++;
+      } else if (m_mode == TargetPosition.RIGHT_MOST) {
+        // Case C
+
+        // use "length trick" to find the last pair of points
+        m_bestY = m_target_array[m_target_array.length - 1];
+
+        // calculate the true center as a function of the height
+        tempTrueCenter = (CENTER_EQ_M * m_bestY) + CENTER_EQ_B;
+
+        // compute the "x error" based upon the trueCenter
+        bestXError = m_target_array[m_target_array.length - 2] - tempTrueCenter;
+
+      } else {
+        // If something goes bad set varables to default values
+
+        DriverStation.reportError("Invalid TargetPosition in Targeting.update(): " + m_mode + "\n", false);
+
+        m_bestY = 0.5;
+        bestXError = 0.0;
       }
     }
 
     // at this point in the code, the "selected" target should be in the "best"
-    // variables
+    // variables of "bestXError" and "m_bestY"
 
     // Find the angle error
     m_trueAngleError = FOV_CAMERA_IN_DEGREES * bestXError;
@@ -117,6 +155,7 @@ public class Targeting extends Subsystem {
 
     SmartDashboard.putNumber("True Center", m_trueCenter);
     SmartDashboard.putNumber("True Angle Error", m_trueAngleError);
+    SmartDashboard.putNumber("m_bestY", m_bestY);
     SmartDashboard.putNumber("Vision Desired Heading", m_desiredHeading);
     SmartDashboard.putNumber("amountToTurn", amountToTurn());
   }
@@ -136,6 +175,16 @@ public class Targeting extends Subsystem {
 
   public double desiredHeading() {
     return m_desiredHeading;
+  }
+
+  public boolean atWall() {
+    // we are at the wall when the target is lower in the field of view (bigger Y)
+    // than the "at the wall" threshold
+    return (m_bestY >= Y_WHEN_TARGET_AT_WALL);
+  }
+
+  public void setMode(TargetPosition modeToSet) {
+    m_mode = modeToSet;
   }
 
   @Override

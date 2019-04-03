@@ -56,11 +56,13 @@ public class Wrist extends Subsystem {
     private double m_gravityCompensation; // computed "Gravity Compensation" factor, based upon current angle of arm
     private double m_feedForward; // computed "Feed Forward" term, in %vbus, based upon current angle of arm
 
+    private double m_percentOutput = 0.0; // percent output to use when in robot_manual mode
+
     private enum WristMode {
-        MANUAL, RELAXED, AUTO_WORLD, AUTO_INTERNAL
+        ROBOT_MANUAL, DRIVER, RELAXED, AUTO_WORLD, AUTO_INTERNAL
     };
 
-    private WristMode m_mode = WristMode.MANUAL; // start off in manual mode
+    private WristMode m_mode = WristMode.DRIVER; // start off in manual mode
 
     public Wrist() {
         // initial calcs for computing kP...
@@ -99,7 +101,16 @@ public class Wrist extends Subsystem {
         setInternalPosition(ZERO_POS);
 
         // TODO: should zeroing instead relax the wrist motor?
-        m_mode = WristMode.MANUAL;
+        m_mode = WristMode.DRIVER;
+    }
+
+    public void setPercentOutput(double percentOutput) {
+        m_percentOutput = percentOutput;
+        m_mode = WristMode.ROBOT_MANUAL;
+    }
+
+    public boolean isSpiked() {
+        return motor.getOutputCurrent() > 4.0;
     }
 
     public void relaxMotors() {
@@ -198,8 +209,11 @@ public class Wrist extends Subsystem {
         SmartDashboard.putNumber("Wrist Current Pos", getCurrentPosition());
         SmartDashboard.putNumber("Wrist Current Degrees", m_angleInDegrees);
         switch (m_mode) {
-        case MANUAL:
-            SmartDashboard.putString("Wrist Mode", "MANUAL");
+        case ROBOT_MANUAL:
+            SmartDashboard.putString("Wrist Mode", "ROBOT_MANUAL");
+            break;
+        case DRIVER:
+            SmartDashboard.putString("Wrist Mode", "DRIVER");
             break;
         case RELAXED:
             SmartDashboard.putString("Wrist Mode", "RELAXED");
@@ -232,11 +246,14 @@ public class Wrist extends Subsystem {
         // if the operator is moving the joystick for manual control, ensure manual mode
 
         if (Robot.oi.getOperatorRightY() != 0.0) {
-            this.m_mode = WristMode.MANUAL;
+            this.m_mode = WristMode.DRIVER;
         }
 
         switch (this.m_mode) {
-        case MANUAL:
+        case ROBOT_MANUAL:
+            motor.set(ControlMode.PercentOutput, m_percentOutput, DemandType.ArbitraryFeedForward, m_feedForward);
+            break;
+        case DRIVER:
             motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY(), DemandType.ArbitraryFeedForward,
                     m_feedForward);
             break;

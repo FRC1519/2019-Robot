@@ -9,6 +9,7 @@ package org.mayheminc.robot2019.autonomousroutines;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import org.mayheminc.robot2019.commands.AutoAlignUntilAtWall;
 import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
@@ -16,6 +17,7 @@ import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.subsystems.Autonomous;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
+import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
 public class HAB2HPtoShipFront extends CommandGroup {
   /**
@@ -41,6 +43,8 @@ public class HAB2HPtoShipFront extends CommandGroup {
     addSequential(new DriveStraightOnHeading(0.7, 48, Autonomous.chooseAngle(startSide, 0.0)));
 
     addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+
+    addSequential(new AutoAlignUntilAtWall(0.5, 1, TargetPosition.CENTER_MOST));
 
     // stop now to let the driver's take over!
   }
