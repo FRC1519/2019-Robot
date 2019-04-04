@@ -67,6 +67,7 @@ public class Targeting extends Subsystem {
     if (m_target_array == null || m_target_array.length == 0) {
       // this means the key is found, but is empty
       bestXError = 0.0;
+
     } else if (m_target_array[0] < 0.0) {
       // this means the array has no valid data. Set m_xError = 0.0
       bestXError = 0.0;
@@ -82,7 +83,7 @@ public class Targeting extends Subsystem {
 
       if (/* want left-most */ m_mode == TargetPosition.LEFT_MOST) {
         // Case A: (we want to use the left-most target)
-        m_bestY = m_target_array[1];
+        m_bestY = m_target_array[1]; // get the y-value
 
         // calculate the true center as a function of the height
         tempTrueCenter = (CENTER_EQ_M * m_bestY) + CENTER_EQ_B;

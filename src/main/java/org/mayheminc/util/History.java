@@ -1,7 +1,12 @@
 package org.mayheminc.util;
 
+import org.mayheminc.robot2019.subsystems.Drive;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class History {
-    private static final int HISTORY_SIZE = 20;
+    private static final int HISTORY_SIZE = 50;
 
     private double time[] = new double[HISTORY_SIZE];
     private double azimuth[] = new double[HISTORY_SIZE];
@@ -13,6 +18,7 @@ public class History {
     }
 
     public void add(double t, double az) {
+
         time[index] = t;
         azimuth[index] = az;
 
@@ -25,6 +31,12 @@ public class History {
     public double getAzForTime(double t) {
         double az = azimuth[index];
         int i = index - 1;
+        int count = 0;
+
+        // if (t < 0) {
+        // DriverStation.reportError("Negative time in history", false);
+        // return 0.0; // no negative times.
+        // }
 
         while (i != index) {
             if (i < 0) {
@@ -37,6 +49,12 @@ public class History {
             }
 
             i--;
+            count++;
+            if (count > HISTORY_SIZE) {
+                DriverStation.reportError("Looking too far back", false);
+                az = azimuth[index];
+                break;
+            }
         }
 
         return az;

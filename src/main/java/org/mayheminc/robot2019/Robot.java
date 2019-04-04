@@ -127,7 +127,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		eventServer.add(new TMinusEvent("T-Minus 3", 3));
 		eventServer.add(new TMinusEvent("T-Minus 2", 2));
 		eventServer.add(new TMinusEvent("T-Minus 1", 1));
-		eventServer.start();
+		// eventServer.start();
 
 		// initialize the subsystems that need it
 		drive.init();
@@ -373,13 +373,21 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		updateSmartDashboard(DONT_UPDATE_AUTO_SETUP_FIELDS);
 
+		// System.out.println("Teleop Periodic 6");
 		drive.updateHistory();
+		// System.out.println("Teleop Periodic 7");
 		lifter.update();
+		// System.out.println("Teleop Periodic 8");
 		shoulder.update();
+		// System.out.println("Teleop Periodic 9");
 		wrist.update();
+		// System.out.println("Teleop Periodic 10");
 		lights.update();
+		// System.out.println("Teleop Periodic 11");
 		cargoIntake.update();
+		// System.out.println("Teleop Periodic 12");
 		targeting.update();
+		// System.out.println("Teleop Periodic 13");
 	}
 
 	public static boolean getBrownoutMode() {
