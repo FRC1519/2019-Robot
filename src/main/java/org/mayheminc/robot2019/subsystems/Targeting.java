@@ -30,7 +30,6 @@ public class Targeting extends Subsystem {
   private double CENTER_EQ_M = -0.2964;
   private double CENTER_EQ_B = 0.5871;
 
-  private double m_x_Error;
   private double m_angleError;
   private double m_trueAngleError;
   private double m_desiredHeading;
@@ -38,6 +37,7 @@ public class Targeting extends Subsystem {
   private double[] ARRAY_OF_NEG_ONE = { -1.0 };
   private final static double FOV_CAMERA_IN_DEGREES = 78.0;
   private double m_bestY = 0.5;
+  private double m_bestX = 0.0;
 
   public enum TargetPosition {
     LEFT_MOST, CENTER_MOST, RIGHT_MOST
@@ -89,7 +89,8 @@ public class Targeting extends Subsystem {
         tempTrueCenter = (CENTER_EQ_M * m_bestY) + CENTER_EQ_B;
 
         // compute the "x error" based upon the trueCenter
-        bestXError = m_target_array[0] - tempTrueCenter;
+        m_bestX = m_target_array[0];
+        bestXError = m_bestX - tempTrueCenter;
       } else if (/* want center */ m_mode == TargetPosition.CENTER_MOST) {
         // Case B:
         // Look through the valid data in the array to find the
@@ -117,6 +118,7 @@ public class Targeting extends Subsystem {
             tempXError = tempX - tempTrueCenter;
             if (Math.abs(tempXError) < Math.abs(bestXError)) {
               bestXError = tempXError;
+              m_bestX = tempX;
               m_bestY = tempY;
             }
           }
@@ -132,7 +134,8 @@ public class Targeting extends Subsystem {
         tempTrueCenter = (CENTER_EQ_M * m_bestY) + CENTER_EQ_B;
 
         // compute the "x error" based upon the trueCenter
-        bestXError = m_target_array[m_target_array.length - 2] - tempTrueCenter;
+        m_bestX = m_target_array[m_target_array.length - 2];
+        bestXError = m_bestX - tempTrueCenter;
 
       } else {
         // If something goes bad set varables to default values
@@ -140,6 +143,7 @@ public class Targeting extends Subsystem {
         DriverStation.reportError("Invalid TargetPosition in Targeting.update(): " + m_mode + "\n", false);
 
         m_bestY = 0.5;
+        m_bestX = 0.0;
         bestXError = 0.0;
       }
     }
@@ -154,13 +158,9 @@ public class Targeting extends Subsystem {
     m_desiredHeading = m_trueAngleError + Robot.drive.getHeadingForCapturedImage();
 
     SmartDashboard.putNumber("True Angle Error", m_trueAngleError);
+    SmartDashboard.putNumber("m_bestX", m_bestX);
     SmartDashboard.putNumber("m_bestY", m_bestY);
     SmartDashboard.putNumber("Vision Desired Heading", m_desiredHeading);
-    SmartDashboard.putNumber("amountToTurn", amountToTurn());
-  }
-
-  public double amountToTurn() {
-    return m_x_Error;
   }
 
   public double angleError() {

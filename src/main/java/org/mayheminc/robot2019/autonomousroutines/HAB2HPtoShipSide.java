@@ -38,12 +38,12 @@ public class HAB2HPtoShipSide extends CommandGroup {
     // Head for the cargo ship, but mostly by aiming at the rocket for now
     // NOTE: Heading was 40.0 as of 2 April 2019
 
-    addSequential(new DriveStraightOnHeading(0.9, 72, Autonomous.chooseAngle(startSide, 60.0)));
+    addSequential(new DriveStraightOnHeading(0.7, 84, Autonomous.chooseAngle(startSide, 60.0)));
 
     // Get the arm into postion while heading downfield alongside the cargo ship
     addParallel(new HatchPanelLow());
     addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
-    addSequential(new DriveStraightOnHeading(0.9, 150, Autonomous.chooseAngle(startSide, 0.0)));
+    addSequential(new DriveStraightOnHeading(0.7, 150, Autonomous.chooseAngle(startSide, 0.0)));
 
     // Turn towards the side of the cargo ship; 270 degrees is perfect "in theory",
     // but we need to aim to overshoot the target angle a bit to get there quickly.
