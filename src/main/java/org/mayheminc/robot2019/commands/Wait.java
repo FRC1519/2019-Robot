@@ -11,8 +11,6 @@ public class Wait extends Command {
     Timer m_Timer = new Timer();
     double m_endTime;
 
-    static int m_count = 0;
-
     public Wait() {
         this(0);
     }
@@ -26,8 +24,6 @@ public class Wait extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
         m_Timer.start();
-        SmartDashboard.putNumber("Wait", m_count);
-        m_count++;
     }
 
     // Called repeatedly when this Command is scheduled to run

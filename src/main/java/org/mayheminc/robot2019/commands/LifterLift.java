@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LifterLift extends Command {
-  static int m_countEnd = 0;
-  static int m_countInterrupted = 0;
   private int m_desiredCounts = 0;
 
   public LifterLift(int desiredCounts) {
@@ -44,8 +42,6 @@ public class LifterLift extends Command {
   @Override
   protected void end() {
     Robot.lifter.stop();
-    SmartDashboard.putNumber("LifterLift End", m_countEnd);
-    m_countEnd++;
   }
 
   // Called when another command which requires one or more of the same
@@ -53,7 +49,5 @@ public class LifterLift extends Command {
   @Override
   protected void interrupted() {
     Robot.lifter.stop();
-    SmartDashboard.putNumber("LifterLift Interrupt", m_countInterrupted);
-    m_countInterrupted++;
   }
 }

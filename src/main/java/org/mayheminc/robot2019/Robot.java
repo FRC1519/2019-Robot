@@ -299,6 +299,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		lights.update();
 		cargoIntake.update();
 		targeting.update();
+		targetingLights.update();
 	}
 
 	public void teleopInit() {
@@ -388,6 +389,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// System.out.println("Teleop Periodic 12");
 		targeting.update();
 		// System.out.println("Teleop Periodic 13");
+		targetingLights.update();
 	}
 
 	public static boolean getBrownoutMode() {

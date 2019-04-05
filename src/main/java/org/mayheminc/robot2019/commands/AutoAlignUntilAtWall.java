@@ -36,6 +36,7 @@ public class AutoAlignUntilAtWall extends Command {
 		Robot.drive.setAutoAlignTrue();
 		// Setting the target to align to
 		Robot.targeting.setMode(m_whichTarget);
+		Robot.targetingLights.set(true);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -54,10 +55,12 @@ public class AutoAlignUntilAtWall extends Command {
 	protected void end() {
 		Robot.drive.stop();
 		Robot.drive.setAutoAlignFalse();
+		Robot.targetingLights.set(false);
 	}
 
 	protected void interrupted() {
 		Robot.drive.stop();
 		Robot.drive.setAutoAlignFalse();
+		Robot.targetingLights.set(false);
 	}
 }
