@@ -40,7 +40,7 @@ public class Targeting extends Subsystem {
   private double[] m_target_array;
   private double[] ARRAY_OF_NEG_ONE = { -1.0 };
   private final static double FOV_CAMERA_IN_DEGREES = 78.0;
-  private double m_bestY = 0.5;
+  private double m_bestY = 0.0;
   private double m_bestX = 0.0;
 
   public enum TargetPosition {
@@ -71,10 +71,13 @@ public class Targeting extends Subsystem {
     if (m_target_array == null || m_target_array.length == 0) {
       // this means the key is found, but is empty
       bestXError = 0.0;
-
+      m_bestX = 0.0;
+      m_bestY = 0.0;
     } else if (m_target_array[0] < 0.0) {
       // this means the array has no valid data. Set m_xError = 0.0
       bestXError = 0.0;
+      m_bestX = 0.0;
+      m_bestY = 0.0;
     } else {
       // We have a valid data array.
       // There are three different situations:
@@ -146,7 +149,7 @@ public class Targeting extends Subsystem {
 
         DriverStation.reportError("Invalid TargetPosition in Targeting.update(): " + m_mode + "\n", false);
 
-        m_bestY = 0.5;
+        m_bestY = 0.0;
         m_bestX = 0.0;
         bestXError = 0.0;
       }

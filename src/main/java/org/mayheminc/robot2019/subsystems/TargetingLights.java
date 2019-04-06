@@ -21,7 +21,10 @@ public class TargetingLights extends Subsystem {
     Solenoid lightPower = new Solenoid(RobotMap.TARGETING_LIGHTS_SOLENOID);
     double m_offStartTimer;
 
-    private final double TARGET_LIGHTS_OFF_TIME = 3.0;
+    public static final boolean LIGHTS_ON = true;
+    public static final boolean LIGHTS_OFF = false;
+
+    private final double TARGET_LIGHTS_OFF_TIME = 2.0;
 
     @Override
     protected void initDefaultCommand() {

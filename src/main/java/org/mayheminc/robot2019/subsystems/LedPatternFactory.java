@@ -52,6 +52,13 @@ public class LedPatternFactory {
         }
     };
 
+    public static CyclePattern wristReZeroLive = new CyclePattern() {
+        {
+            add(new CycleElement(PatternID.RED, 0.125));
+            this.m_timeLength = 1.5;
+        }
+    };
+
     public static CyclePattern test1 = new CyclePattern() {
         {
             add(new CycleElement(PatternID.RED, 1.0));

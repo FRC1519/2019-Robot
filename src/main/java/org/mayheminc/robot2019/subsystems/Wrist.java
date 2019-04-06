@@ -43,7 +43,7 @@ public class Wrist extends Subsystem {
 
     private static final double ANGLE_TOLERANCE = 10.0;
 
-    private final MayhemTalonSRX motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
+    private final MayhemTalonSRX m_motor = new MayhemTalonSRX(RobotMap.WRIST_TALON);
 
     private int m_currentPosition = 0;
     private double m_desiredAngle = STARTING_POSITION_DEGREES;
@@ -57,6 +57,8 @@ public class Wrist extends Subsystem {
     private double m_feedForward; // computed "Feed Forward" term, in %vbus, based upon current angle of arm
 
     private double m_percentOutput = 0.0; // percent output to use when in robot_manual mode
+    private int m_highCurrentDuration = 0;
+    private boolean m_isHighCurrent = false;
 
     private enum WristMode {
         ROBOT_MANUAL, DRIVER, RELAXED, AUTO_WORLD, AUTO_INTERNAL
@@ -69,35 +71,35 @@ public class Wrist extends Subsystem {
         // If we want 50% wrist power when 30 degrees from target,
         // 30 degrees is 341 ticks.
         // kP = (0.50 * 1023) / 341 = 1.50
-        motor.config_kP(0, 3.0, 0); // based upon Ken's initial calcs, above
+        m_motor.config_kP(0, 3.0, 0); // based upon Ken's initial calcs, above
 
         // typical value of about 1/100 of kP for starting tuning
-        motor.config_kI(0, 0.0, 0);
+        m_motor.config_kI(0, 0.0, 0);
 
         // typical value of about 10x to 100x of kP for starting tuning
-        motor.config_kD(0, 0.0, 0);
+        m_motor.config_kD(0, 0.0, 0);
 
         // practically always set kF to 0 for position control
         // for things like gravity compensation, use the "arbitrary feed forward" that
         // can be specified with the "4-parameter" TalonSRX.set() method
-        motor.config_kF(0, 0.0, 0);
+        m_motor.config_kF(0, 0.0, 0);
 
-        motor.setNeutralMode(NeutralMode.Coast);
-        motor.setInverted(false);
-        motor.setSensorPhase(true);
-        motor.configNominalOutputVoltage(+0.0f, -0.0f);
-        motor.configPeakOutputVoltage(+12.0, -12.0);
-        motor.configClosedloopRamp(0.05); // limit neutral to full to 0.05 seconds
+        m_motor.setNeutralMode(NeutralMode.Coast);
+        m_motor.setInverted(false);
+        m_motor.setSensorPhase(true);
+        m_motor.configNominalOutputVoltage(+0.0f, -0.0f);
+        m_motor.configPeakOutputVoltage(+12.0, -12.0);
+        m_motor.configClosedloopRamp(0.05); // limit neutral to full to 0.05 seconds
 
         // TODO: Need to verify motion magic parameters for wrist below
-        motor.configMotionCruiseVelocity(100); // measured velocity of ~100K at 85%; set cruise to that
-        motor.configMotionAcceleration(250); // acceleration of 2x velocity allows cruise to be attained in 1/2 second
-        motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        m_motor.configMotionCruiseVelocity(100); // measured velocity of ~100K at 85%; set cruise to that
+        m_motor.configMotionAcceleration(250); // acceleration of 2x velocity allows cruise to be attained in 1/2 second
+        m_motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
     }
 
     public void zero() {
         // zero the position.
-        motor.setSelectedSensorPosition(ZERO_POS);
+        m_motor.setSelectedSensorPosition(ZERO_POS);
         setInternalPosition(ZERO_POS);
 
         // TODO: should zeroing instead relax the wrist motor?
@@ -109,13 +111,13 @@ public class Wrist extends Subsystem {
         m_mode = WristMode.ROBOT_MANUAL;
     }
 
-    public boolean isSpiked() {
-        return motor.getOutputCurrent() > 4.0;
+    public boolean isHighCurrent() {
+        return m_isHighCurrent;
     }
 
     public void relaxMotors() {
         m_mode = WristMode.RELAXED;
-        motor.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
+        m_motor.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
     }
 
     // Note that this setDesiredAngle is relative to the ground!!!
@@ -183,7 +185,7 @@ public class Wrist extends Subsystem {
     // Update all sensor values and compute all terms which depend solely upon
     // sensor values
     public void updateSensors() {
-        m_currentPosition = motor.getPosition();
+        m_currentPosition = m_motor.getPosition();
         m_internalAngleInDegrees = positionToInternalDegrees(m_currentPosition);
 
         // to get "floor-relative" angles, need to add shoulder angle
@@ -230,11 +232,13 @@ public class Wrist extends Subsystem {
         // SmartDashboard.putNumber("Wrist Gravity Compensation",
         // m_gravityCompensation);
         // SmartDashboard.putNumber("Wrist FeedForward", m_feedForward);
-        SmartDashboard.putNumber("Wrist Voltage", motor.getOutputVoltage());
-        SmartDashboard.putNumber("Wrist Amps A", motor.getOutputCurrent());
+        SmartDashboard.putNumber("Wrist Voltage", m_motor.getOutputVoltage());
+        SmartDashboard.putNumber("Wrist Amps A", m_motor.getOutputCurrent());
         // SmartDashboard.putNumber("Wrist Joystick", Robot.oi.getOperatorRightY());
         // SmartDashboard.putNumber("Wrist Velocity",
         // motor.getSelectedSensorVelocity());
+
+        SmartDashboard.putBoolean("Wrist isLowCurrent", !m_isHighCurrent);
     }
 
     // public void setManualMode(boolean b) {
@@ -251,24 +255,41 @@ public class Wrist extends Subsystem {
 
         switch (this.m_mode) {
         case ROBOT_MANUAL:
-            motor.set(ControlMode.PercentOutput, m_percentOutput, DemandType.ArbitraryFeedForward, m_feedForward);
+            m_motor.set(ControlMode.PercentOutput, m_percentOutput, DemandType.ArbitraryFeedForward, m_feedForward);
             break;
         case DRIVER:
-            motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY(), DemandType.ArbitraryFeedForward,
+            m_motor.set(ControlMode.PercentOutput, Robot.oi.getOperatorRightY(), DemandType.ArbitraryFeedForward,
                     m_feedForward);
             break;
         case RELAXED:
-            motor.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
+            m_motor.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward, 0.0);
             break;
         case AUTO_WORLD:
-            this.motor.set(ControlMode.MotionMagic, degreesToPosition(m_desiredAngle), DemandType.ArbitraryFeedForward,
-                    m_feedForward);
+            this.m_motor.set(ControlMode.MotionMagic, degreesToPosition(m_desiredAngle),
+                    DemandType.ArbitraryFeedForward, m_feedForward);
             break;
         case AUTO_INTERNAL:
-            this.motor.set(ControlMode.MotionMagic, m_desiredPosition, DemandType.ArbitraryFeedForward, m_feedForward);
+            this.m_motor.set(ControlMode.MotionMagic, m_desiredPosition, DemandType.ArbitraryFeedForward,
+                    m_feedForward);
             break;
         default:
             break;
         }
+
+        // if the current is high...
+        if (m_motor.getOutputCurrent() > 4.0) {
+            // keep count of how long it has been high
+            m_highCurrentDuration++;
+
+            // if high for too long, set "isHighCurrent" to true
+            if (m_highCurrentDuration >= 10) {
+                m_isHighCurrent = true;
+            }
+        } else {
+            // current not high at this moment, reset the counter
+            m_highCurrentDuration = 0;
+            m_isHighCurrent = false;
+        }
+
     }
 }

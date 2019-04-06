@@ -10,7 +10,6 @@ package org.mayheminc.robot2019.commands;
 import org.mayheminc.robot2019.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LifterLift extends Command {
   private int m_desiredCounts = 0;

@@ -8,6 +8,7 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.TargetingLights;
 import org.mayheminc.robot2019.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -33,6 +34,10 @@ public class HatchPanelLow extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+
+    // since we are using hatch panels, turn the targeting lights on
+    addParallel(new TargetingLightsSet(TargetingLights.LIGHTS_ON));
+
     addSequential(new ArmMove(Shoulder.HP_ROCKET_LOW_ANGLE, Wrist.HP_ROCKET_LOW_ANGLE));
 
   }

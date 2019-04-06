@@ -1,9 +1,6 @@
 package org.mayheminc.util;
 
-import org.mayheminc.robot2019.subsystems.Drive;
-
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class History {
     private static final int HISTORY_SIZE = 50;

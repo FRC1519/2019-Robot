@@ -8,6 +8,7 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.TargetingLights;
 import org.mayheminc.robot2019.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -33,6 +34,10 @@ public class CargoShip extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+
+    // since we are using cargo, we shouldn't need the targeting lights for a while
+    addParallel(new TargetingLightsSet(TargetingLights.LIGHTS_OFF));
+
     addSequential(new ArmMove(Shoulder.CARGO_CARGO_SHIP_ANGLE, Wrist.CARGO_CARGO_SHIP_ANGLE));
   }
 }

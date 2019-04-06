@@ -26,6 +26,9 @@ public class ShipSideToLoadingStation extends CommandGroup {
    */
   public ShipSideToLoadingStation(Autonomous.StartOn startSide) {
 
+    // drive straight backwards for about a foot to get free of hatch on cargo ship
+    addSequential(new DriveStraightOnHeading(-0.4, 12, Autonomous.chooseAngle(startSide, 270.0)));
+
     // drive backwards and turn to face towards the loading station
     addSequential(new DriveStraightOnHeading(-0.5, 50, Autonomous.chooseAngle(startSide, 190.0)));
 

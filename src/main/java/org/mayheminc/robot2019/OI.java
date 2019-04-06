@@ -205,8 +205,6 @@ public class OI {
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new ShipSideToLoadingStation(Autonomous.StartOn.RIGHT));
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new AutoAlign());
-		// DRIVER_PAD_YELLOW_BUTTON.whileHeld(new
-		// LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
 
 		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign());
 
@@ -219,7 +217,10 @@ public class OI {
 		DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.whileHeld(new ShifterHoldGear(Shifter.LOW_GEAR));
 
 		DRIVER_PAD_BACK_BUTTON.whenPressed(new Wait(0));
-		DRIVER_PAD_START_BUTTON.whenPressed(new Wait(0));
+		DRIVER_PAD_START_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
+
+		// DRIVER_PAD_YELLOW_BUTTON.whileHeld(new
+		// LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
 
 		// ******************************* DRIVER STICK
 		// ***********************************
@@ -259,7 +260,8 @@ public class OI {
 		OPERATOR_PAD_D_PAD_RIGHT.whenPressed(new HatchPanelMid());
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new HatchPanelHigh());
 
-		OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift(Lifter.LIFTED_POS));
+		// OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift(Lifter.LIFTED_POS));
+		OPERATOR_PAD_BUTTON_NINE.whileHeld(new WristReZeroLive());
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new CargoShip());
 
 		OPERATOR_PAD_BUTTON_ELEVEN.whenPressed(new Wait(0));

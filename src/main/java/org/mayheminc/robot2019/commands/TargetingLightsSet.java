@@ -1,28 +1,22 @@
 package org.mayheminc.robot2019.commands;
 
-import edu.wpi.first.wpilibj.Timer;
+import org.mayheminc.robot2019.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class Wait extends Command {
-    Timer m_Timer = new Timer();
-    double m_endTime;
+public class TargetingLightsSet extends Command {
+    private boolean m_onOrOff;
 
-    public Wait() {
-        this(0);
-    }
-
-    public Wait(double endTime) {
+    public TargetingLightsSet(boolean arg_onOrOff) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-        m_endTime = endTime;
+        m_onOrOff = arg_onOrOff;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        m_Timer.start();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -31,15 +25,17 @@ public class Wait extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return m_Timer.hasPeriodPassed(m_endTime);
+        return true;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+        Robot.targetingLights.set(m_onOrOff);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+        Robot.targetingLights.set(m_onOrOff);
     }
 }

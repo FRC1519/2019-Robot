@@ -19,7 +19,9 @@ public class Lifter extends Subsystem {
 
     // constants for positions
     private static final int STARTING_POS = 0;
-    public static final int LIFTED_POS = 900000; // determined empirically on bag night
+    public static final int LIFTED_POS = 950000; // determined empirically on bag night; was 900000; increased to 950000
+                                                 // at PineTree
+
     private static final int EXTRA_FOR_RAISED_POS = 150000;
     public static final int RAISED_AFTER_LIFTED = LIFTED_POS + EXTRA_FOR_RAISED_POS;
 
