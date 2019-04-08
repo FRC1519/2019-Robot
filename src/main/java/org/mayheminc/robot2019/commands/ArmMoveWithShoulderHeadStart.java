@@ -12,13 +12,23 @@ import org.mayheminc.robot2019.subsystems.Wrist;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ArmMoveWithShoulderHeadStart extends CommandGroup {
+
   /**
-   * Move the shoulder and wrist at the same time. The command is done when both
-   * the wrist and shoulder are done moving.
+   * Move the shoulder and the wrist simultaneously, but with giving the shoulder
+   * head start. The command is done when both the wrist and shoulder are done
+   * moving.
+   * 
+   * @param targetShoulderAngle Target angle for shoulder position in degrees,
+   *                            from "world" perspective
+   * @param targetWristAngle    Target angle for wrist position in degrees, from
+   *                            "world" perspective
+   * @param headStartInSecs     Duration of a head start for the shoulder, in
+   *                            seconds.
    */
-  public ArmMoveWithShoulderHeadStart(double shoulderAngle, double wristAngle) {
-    addParallel(new ShoulderSetAngle(shoulderAngle));
-    addSequential(new Wait(0.2));
-    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(shoulderAngle, wristAngle)));
+  public ArmMoveWithShoulderHeadStart(double targetShoulderAngle, double targetWristAngle, double headStartInSecs) {
+    addParallel(new ShoulderSetAngle(targetShoulderAngle));
+
+    addSequential(new Wait(headStartInSecs));
+    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle)));
   }
 }

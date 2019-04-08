@@ -13,11 +13,16 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class ArmMoveWithWristFirst extends CommandGroup {
   /**
-   * Move the shoulder and wrist at the same time. The command is done when both
-   * the wrist and shoulder are done moving.
+   * Move the wrist first and then the shoulder. The command is done when both the
+   * wrist and shoulder are done moving.
+   * 
+   * @param targetShoulderAngle Target angle for shoulder position in degrees,
+   *                            from "world" perspective
+   * @param targetWristAngle    Target angle for wrist position in degrees, from
+   *                            "world" perspective
    */
-  public ArmMoveWithWristFirst(double shoulderAngle, double wristAngle) {
-    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(shoulderAngle, wristAngle)));
-    addSequential(new ShoulderSetAngle(shoulderAngle));
+  public ArmMoveWithWristFirst(double targetShoulderAngle, double targetWristAngle) {
+    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle)));
+    addSequential(new ShoulderSetAngle(targetShoulderAngle));
   }
 }

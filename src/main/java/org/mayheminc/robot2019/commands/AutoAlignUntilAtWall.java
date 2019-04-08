@@ -13,20 +13,22 @@ public class AutoAlignUntilAtWall extends Command {
 
 	double m_targetPower;
 	double m_startTime;
-	double m_desiredTime;
+	double m_maxTime;
 	Targeting.TargetPosition m_whichTarget = Targeting.TargetPosition.CENTER_MOST;
 
 	/**
+	 * Auto-align the robot at the specified power until at the wall, subject to a
+	 * timeout.
 	 * 
-	 * @param arg_targetPower +/- motor power [-1.0, +1.0]
-	 * @param arg_distance    Time is in seconds
+	 * @param targetPower +/- motor power [-1.0, +1.0]
+	 * @param maxTime     Maximum time (in seconds) for alignment.
+	 * @param target      Which target (Left, Center, or Right) to use to align
 	 */
-	public AutoAlignUntilAtWall(double arg_targetSpeed, double timeInSeconds, Targeting.TargetPosition target) {
+	public AutoAlignUntilAtWall(double targetPower, double maxTime, Targeting.TargetPosition whichTarget) {
 		requires(Robot.drive);
-		m_desiredTime = timeInSeconds;
-		m_targetPower = arg_targetSpeed;
-		m_whichTarget = target;
-
+		m_maxTime = maxTime;
+		m_targetPower = targetPower;
+		m_whichTarget = whichTarget;
 	}
 
 	// Called just before this Command runs the first time
@@ -46,9 +48,9 @@ public class AutoAlignUntilAtWall extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		double diff = Timer.getFPGATimestamp() - m_startTime;
-		diff = Math.abs(diff);
-		return (diff >= m_desiredTime) || Robot.targeting.atWall();
+		double elapsedTime = Timer.getFPGATimestamp() - m_startTime;
+		elapsedTime = Math.abs(elapsedTime);
+		return (elapsedTime >= m_maxTime) || Robot.targeting.atWall();
 	}
 
 	// Called once after isFinished returns true

@@ -11,17 +11,21 @@ public class AutoAlignForTime extends Command {
 
 	double m_targetPower;
 	double m_startTime;
-	double m_desiredTime;
+	double m_maxTime;
 
 	/**
+	 * Auto-align the robot at the specified power, subject to a timeout.
 	 * 
-	 * @param arg_targetPower +/- motor power [-1.0, +1.0]
-	 * @param arg_distance    Time is in seconds
+	 * @param targetPower +/- motor power [-1.0, +1.0]
+	 * @param maxTime     Maximum time (in seconds) for alignment.
+	 * @param target      Which target (Left, Center, or Right) to use to align
 	 */
-	public AutoAlignForTime(double arg_targetSpeed, double timeInSeconds) {
+
+	// TODO: add a "target" parameter as in "AutoAlignUntilAtWall.java"
+	public AutoAlignForTime(double targetPower, double maxTime) {
 		requires(Robot.drive);
-		m_desiredTime = timeInSeconds;
-		m_targetPower = arg_targetSpeed;
+		m_targetPower = targetPower;
+		m_maxTime = maxTime;
 	}
 
 	// Called just before this Command runs the first time
@@ -41,7 +45,7 @@ public class AutoAlignForTime extends Command {
 	protected boolean isFinished() {
 		double diff = Timer.getFPGATimestamp() - m_startTime;
 		diff = Math.abs(diff);
-		return (diff >= m_desiredTime);
+		return (diff >= m_maxTime);
 	}
 
 	// Called once after isFinished returns true

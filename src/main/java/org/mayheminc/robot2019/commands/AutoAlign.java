@@ -13,6 +13,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class AutoAlign extends Command {
+
+  /*
+   * AutoAlign the robot, presuming that the robot is being driven forwards and
+   * backwards by the driver.
+   */
   public AutoAlign() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -22,7 +27,6 @@ public class AutoAlign extends Command {
   @Override
   protected void initialize() {
     Robot.drive.setAutoAlignTrue();
-    DriverStation.reportWarning("Auto align was called", false);
     Robot.targetingLights.set(true);
   }
 
@@ -34,7 +38,6 @@ public class AutoAlign extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-
     return false;
   }
 

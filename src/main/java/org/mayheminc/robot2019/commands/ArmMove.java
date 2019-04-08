@@ -22,18 +22,38 @@ public class ArmMove extends Command {
 	Command m_subCommand = null;
 
 	double m_timeout;
-	Timer timer = new Timer();
+	Timer m_timer = new Timer();
 
 	private static double DEFAULT_TIMEOUT = 3000.0; // default timeout of 3 seconds
 
-	public ArmMove(double arg_targetShoulderAngle, double arg_targetWristAngle) {
-		this(arg_targetShoulderAngle, arg_targetWristAngle, DEFAULT_TIMEOUT);
+	/**
+	 * Move the arm to a specified position, with no time limit. The command returns
+	 * only after the arm has moved to the desired position.
+	 * 
+	 * @param targetShoulderAngle Target angle for shoulder position in degrees,
+	 *                            from "world" perspective
+	 * @param targetWristAngle    Target angle for wrist position in degrees, from
+	 *                            "world" perspective
+	 */
+	public ArmMove(double targetShoulderAngle, double targetWristAngle) {
+		this(targetShoulderAngle, targetWristAngle, DEFAULT_TIMEOUT);
 	}
 
-	public ArmMove(double arg_targetShoulderAngle, double arg_targetWristAngle, double timeLimit) {
+	/**
+	 * Move the arm to a specified position, with a time limit. The command returns
+	 * upon the first of either the arm having moved to the desired position or the
+	 * time limit having been reached.
+	 * 
+	 * @param targetShoulderAngle Target angle for shoulder position in degrees,
+	 *                            from "world" perspective
+	 * @param targetWristAngle    Target angle for wrist position in degrees, from
+	 *                            "world" perspective
+	 * @param timeLimit           Time limit for the command, in seconds
+	 */
+	public ArmMove(double targetShoulderAngle, double targetWristAngle, double timeLimit) {
 		m_timeout = timeLimit;
-		m_targetShoulderAngle = arg_targetShoulderAngle;
-		m_targetWristAngle = arg_targetWristAngle;
+		m_targetShoulderAngle = targetShoulderAngle;
+		m_targetWristAngle = targetWristAngle;
 		m_targetWristInternalAngle = Wrist.computeInternalAngle(m_targetShoulderAngle, m_targetWristAngle);
 	}
 
@@ -54,8 +74,8 @@ public class ArmMove extends Command {
 		m_deltaWristInternalAngle = Math.abs(m_startingWristInternalAngle - m_targetWristInternalAngle);
 
 		// prepare the timeout
-		timer.reset();
-		timer.start();
+		m_timer.reset();
+		m_timer.start();
 
 		// Basic approach: at initialization, decide the strategy.
 		// There are three basic strategies from which to choose:
@@ -78,8 +98,8 @@ public class ArmMove extends Command {
 				m_subCommand = new ArmMoveSimultaneous(m_targetShoulderAngle, m_targetWristAngle);
 			} else {
 				// always safe to move shoulder up first and then move the wrist second
-				// just need to give the shoulder a little bit of a head start
-				m_subCommand = new ArmMoveWithShoulderHeadStart(m_targetShoulderAngle, m_targetWristAngle);
+				// just need to give the shoulder a little bit (0.2 seconds) of a head start
+				m_subCommand = new ArmMoveWithShoulderHeadStart(m_targetShoulderAngle, m_targetWristAngle, 0.2);
 			}
 		} else {
 			// moving the shoulder down
@@ -121,6 +141,8 @@ public class ArmMove extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
 		// Return when all of the subsidiary commands that were created have completed
+
+		// TODO: Timeout feature not actually implemented yet!!!
 		return m_subCommand.isCompleted();
 	}
 
