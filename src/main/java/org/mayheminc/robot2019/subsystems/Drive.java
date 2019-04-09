@@ -395,12 +395,14 @@ public class Drive extends Subsystem {
 		// reset the PID controller loop for steering now that we are auto-aligning
 		m_HeadingPid.reset();
 		m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
+		Robot.lights.set(LedPatternFactory.autoAlignTrying);
 	}
 
 	public void setAutoAlignFalse() {
 		autoAlign = false;
 		m_HeadingPid.reset();
 		m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
+		Robot.lights.set(LedPatternFactory.autoAlignGotIt);
 	}
 
 	public void speedRacerDrive(double throttle, double rawSteeringX, boolean quickTurn) {

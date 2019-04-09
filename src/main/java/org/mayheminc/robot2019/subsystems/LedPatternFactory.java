@@ -29,6 +29,21 @@ public class LedPatternFactory {
         }
     };
 
+    public static CyclePattern autoAlignTrying = new CyclePattern() {
+        {
+            add(new CycleElement(PatternID.VIOLET, 1.0));
+            this.m_timeLength = 6.0;
+        }
+    };
+
+    public static CyclePattern autoAlignGotIt = new CyclePattern() {
+        {
+            add(new CycleElement(PatternID.BLACK, 0.125));
+            add(new CycleElement(PatternID.VIOLET, 0.125));
+            this.m_timeLength = 1.5;
+        }
+    };
+
     public static CyclePattern cargoBallTrying = new CyclePattern() {
         {
             add(new CycleElement(PatternID.ORANGE, 1.0));

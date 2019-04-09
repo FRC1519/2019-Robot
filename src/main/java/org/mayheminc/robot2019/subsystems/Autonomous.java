@@ -20,12 +20,14 @@ public class Autonomous extends Subsystem {
 			/* 0 */ new StayStill(), // do nothing
 			/* 1 */ new StraightOffHAB2(), // drive straight off HAB2 platform and stop
 			/* 2 */ new StartLeftHAB2HPtoRocketFront(), // drive off level two with HP for Rocket Front
-			/* 3 */ new StartLeftHAB2HPtoShipSide(), // drive off the level two, with HP for Left Side of Ship
-			/* 4 */ new StartLeftHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
-			/* 5 */ new StartRightHAB2HPtoShipFront(), // drive off the level two, with HP for Front of Ship
-			/* 6 */ new StartRightHAB2HPtoShipSide(), // drive off the level two, with HP for Right Side of Ship
-			/* 7 */ new StartRightHAB2HPtoRocketFront(), // drive off level two with HP for Rocket Front
-			/* 8 */ new TestAutoAlign() // This is just to test auto align.
+			/* 3 */ new StartLeftHAB2HPtoShipSide(), // drive off level two, with HP for Left Side of Ship
+			/* 4 */ new StartLeftHAB2HPtoShipSideBackwards(), // BACK off level two, with HP for Left Side of Ship
+			/* 5 */ new StartLeftHAB2HPtoShipFront(), // drive off level two, with HP for Front of Ship
+			/* 6 */ new StartRightHAB2HPtoShipFront(), // drive off level two, with HP for Front of Ship
+			/* 7 */ new StartRightHAB2HPtoShipSideBackwards(), // BACK off level two, with HP for Right Side of Ship
+			/* 8 */ new StartRightHAB2HPtoShipSide(), // drive off level two, with HP for Right Side of Ship
+			/* 9 */ new StartRightHAB2HPtoRocketFront(), // drive off level two with HP for Rocket Front
+			/* 10 */ new TestAutoAlign() // This is just to test auto align.
 	};
 
 	private static int programNumber = 0; // 0 = Do nothing
