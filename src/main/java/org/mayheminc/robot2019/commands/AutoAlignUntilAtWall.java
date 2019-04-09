@@ -43,7 +43,7 @@ public class AutoAlignUntilAtWall extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		Robot.drive.speedRacerDrive(m_targetPower, 0, false);
+		Robot.drive.speedRacerDrive(Robot.targeting.getRecomentedSpeed(), 0, false);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

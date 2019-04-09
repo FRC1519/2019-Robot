@@ -12,6 +12,7 @@ import org.mayheminc.robot2019.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import sun.net.www.content.text.plain;
 
 /**
  * Add your docs here.
@@ -172,6 +173,19 @@ public class Targeting extends Subsystem {
 
   public double desiredHeading() {
     return m_desiredHeading;
+  }
+
+  public double getRecomentedSpeed() {
+    // Returns a speed based upon the Y value
+    double speed;
+    if (m_bestY < 0.449) {
+      speed = 0.3;
+    } else if (0.449 <= m_bestY && m_bestY <= 0.480) {
+      speed = 0.7;
+    } else if (0.480 < m_bestY) {
+      speed = 1.0;
+    }
+    return speed;
   }
 
   public boolean atWall() {

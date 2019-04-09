@@ -11,6 +11,7 @@ import org.mayheminc.robot2019.Robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
 public class AutoAlign extends Command {
 
@@ -28,6 +29,7 @@ public class AutoAlign extends Command {
   protected void initialize() {
     Robot.drive.setAutoAlignTrue();
     Robot.targetingLights.set(true);
+    Robot.targeting.setMode(TargetPosition.CENTER_MOST);
   }
 
   // Called repeatedly when this Command is scheduled to run
