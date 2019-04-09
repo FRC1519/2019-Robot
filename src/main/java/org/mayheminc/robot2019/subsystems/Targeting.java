@@ -34,8 +34,6 @@ public class Targeting extends Subsystem {
   private double CENTER_EQ_M = -0.2762;
   private double CENTER_EQ_B = 0.5563;
 
-  private double m_angleError;
-  private double m_trueAngleError;
   private double m_desiredHeading;
   private double[] m_target_array;
   private double[] ARRAY_OF_NEG_ONE = { -1.0 };
@@ -44,19 +42,14 @@ public class Targeting extends Subsystem {
   private double m_bestX = 0.0;
 
   public enum TargetPosition {
-    LEFT_MOST, CENTER_MOST, RIGHT_MOST
+    LEFT_MOST, CENTER_MOST, RIGHT_MOST, CENTER_OF_RIGHT_CARGO_SHIP, CENTER_OF_LEFT_CARGO_SHIP
   };
 
   private TargetPosition m_mode = TargetPosition.CENTER_MOST;
 
   public void update() {
-    int i = 0;
-    double tempX = 0.0;
-    double tempY = 0.0;
-    double tempTrueCenter = 0.0;
-    double tempXError = 0.0;
-    double bestXError = 1.0;
 
+    double[] centerMostTargetArray;
     // Update all of the targeting information, as follows:
     // 1 - Determine if we have any valid data in the array.
     // If not, set the "error" to zero, so that the robot thinks
@@ -70,14 +63,14 @@ public class Targeting extends Subsystem {
 
     if (m_target_array == null || m_target_array.length == 0) {
       // this means the key is found, but is empty
-      bestXError = 0.0;
       m_bestX = 0.0;
       m_bestY = 0.0;
+      m_desiredHeading = Robot.drive.getHeadingForCapturedImage();
     } else if (m_target_array[0] < 0.0) {
       // this means the array has no valid data. Set m_xError = 0.0
-      bestXError = 0.0;
       m_bestX = 0.0;
       m_bestY = 0.0;
+      m_desiredHeading = Robot.drive.getHeadingForCapturedImage();
     } else {
       // We have a valid data array.
       // There are three different situations:
@@ -87,91 +80,94 @@ public class Targeting extends Subsystem {
 
       // Handle each of them separately;
       // we need the results in "bestXError" and "bestY"
-
-      if (/* want left-most */ m_mode == TargetPosition.LEFT_MOST) {
+      switch (m_mode) {
+      case LEFT_MOST: {
         // Case A: (we want to use the left-most target)
+        m_bestX = m_target_array[0]; // get the x-value
         m_bestY = m_target_array[1]; // get the y-value
-
-        // calculate the true center as a function of the height
-        tempTrueCenter = (CENTER_EQ_M * m_bestY) + CENTER_EQ_B;
-
-        // compute the "x error" based upon the trueCenter
-        m_bestX = m_target_array[0];
-        bestXError = m_bestX - tempTrueCenter;
-      } else if (/* want center */ m_mode == TargetPosition.CENTER_MOST) {
+        // Set m_desiredHeading
+        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+        break;
+      }
+      case CENTER_MOST: {
         // Case B:
-        // Look through the valid data in the array to find the
-        // target closest to the "trueCenter"
-
-        for (double a : m_target_array) {
-          // check for invalid data
-          if (a < 0.0 || a > 1.0) {
-            // this should never happen. Print an error if it does.
-            DriverStation.reportError("Invalid Data in target array (" + a + ") \n", false);
-          } else if (i % 2 == 0) { // true for data elements 0, 2, 4, etc.
-            // this is the x value
-            tempX = a;
-            // if y
-          } else { // this is data element 1, 3, 5, etc.
-            tempY = a;
-
-            // now that we have an x, y pair, determine if this is
-            // the target nearest to the "dynamic center"
-
-            // calculate the true center as a function of the height
-            tempTrueCenter = (CENTER_EQ_M * tempY) + CENTER_EQ_B;
-
-            // compute the "x error" based upon the trueCenter
-            tempXError = tempX - tempTrueCenter;
-            if (Math.abs(tempXError) < Math.abs(bestXError)) {
-              bestXError = tempXError;
-              m_bestX = tempX;
-              m_bestY = tempY;
-            }
-          }
-          i++;
-        }
-      } else if (m_mode == TargetPosition.RIGHT_MOST) {
+        // Find the centermost target
+        centerMostTargetArray = findTheCenterMostTarget();
+        m_desiredHeading = centerMostTargetArray[0];
+        m_bestX = centerMostTargetArray[1];
+        m_bestY = centerMostTargetArray[2];
+        break;
+      }
+      case RIGHT_MOST: {
         // Case C
 
         // use "length trick" to find the last pair of points
-        m_bestY = m_target_array[m_target_array.length - 1];
-
-        // calculate the true center as a function of the height
-        tempTrueCenter = (CENTER_EQ_M * m_bestY) + CENTER_EQ_B;
-
-        // compute the "x error" based upon the trueCenter
         m_bestX = m_target_array[m_target_array.length - 2];
-        bestXError = m_bestX - tempTrueCenter;
+        m_bestY = m_target_array[m_target_array.length - 1];
+        // Set m_desiredHeading
+        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+        break;
+      }
+      case CENTER_OF_RIGHT_CARGO_SHIP: {
+        // If we see at least 3 targets
+        if (6 <= m_target_array.length) {
+          // Use the second target from the left
+          m_bestX = m_target_array[2];
+          m_bestY = m_target_array[3];
+          // Set m_desiredHeading
+          m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+          // If we are trying to drive too much down field drive strait at the cargo ship.
+          // We don't want to go into the opposing side in auto!
+          // if (m_desiredHeading > -60) {
+          // m_desiredHeading = -90;
+          // }
 
-      } else {
+        } else {
+          // Find the centermost target
+          centerMostTargetArray = findTheCenterMostTarget();
+          m_desiredHeading = centerMostTargetArray[0];
+          m_bestX = centerMostTargetArray[1];
+          m_bestY = centerMostTargetArray[2];
+        }
+        break;
+      }
+      case CENTER_OF_LEFT_CARGO_SHIP: {
+        // If we see at least 3 targets
+        if (6 <= m_target_array.length) {
+          // Use the second target from the Right
+          m_bestX = m_target_array[m_target_array.length - 3];
+          m_bestY = m_target_array[m_target_array.length - 2];
+          // Set m_desiredHeading
+          m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+          // If we are trying to drive too much down field drive strait at the cargo ship.
+          // We don't want to go into the opposing side in auto!
+          // if (m_desiredHeading > 60) {
+          // m_desiredHeading = 90;
+          // }
+
+        } else {
+          // Find the centermost target
+          centerMostTargetArray = findTheCenterMostTarget();
+          m_desiredHeading = centerMostTargetArray[0];
+          m_bestX = centerMostTargetArray[1];
+          m_bestY = centerMostTargetArray[2];
+        }
+        break;
+      }
+      default: {
         // If something goes bad set varables to default values
-
         DriverStation.reportError("Invalid TargetPosition in Targeting.update(): " + m_mode + "\n", false);
-
         m_bestY = 0.0;
         m_bestX = 0.0;
-        bestXError = 0.0;
+        m_desiredHeading = Robot.drive.getHeadingForCapturedImage();
+        break;
+      }
       }
     }
 
     // at this point in the code, the "selected" target should be in the "best"
-    // variables of "bestXError" and "m_bestY"
-
-    // Find the angle error
-    m_trueAngleError = FOV_CAMERA_IN_DEGREES * bestXError;
-
-    // Convert angleError into a desired heading, using the heading history
-    m_desiredHeading = m_trueAngleError + Robot.drive.getHeadingForCapturedImage();
-
-    SmartDashboard.putNumber("True Angle Error", m_trueAngleError);
     SmartDashboard.putNumber("m_bestX", m_bestX);
     SmartDashboard.putNumber("m_bestY", m_bestY);
-    SmartDashboard.putNumber("Vision Desired Heading", m_desiredHeading);
-  }
-
-  public double angleError() {
-    return m_angleError;
   }
 
   public double desiredHeading() {
@@ -185,7 +181,78 @@ public class Targeting extends Subsystem {
   }
 
   public void setMode(TargetPosition modeToSet) {
+    // Set the mode e.g. LEFT_MOST, CENTER_MOST, RIGHT_MOST,
+    // CENTER_OF_RIGHT_CARGO_SHIP, CENTER_OF_LEFT_CARGO_SHIP
     m_mode = modeToSet;
+  }
+
+  public double findDesiredHeading(double X, double Y) {
+    // Calulate angle error based on an X,Y
+    double trueAngleError;
+    double TrueCenter;
+    double XError;
+    double desiredHeading;
+    // calculate the true center as a function of the height
+    TrueCenter = (CENTER_EQ_M * Y) + CENTER_EQ_B;
+    // compute the "x error" based upon the trueCenter
+    XError = X - TrueCenter;
+    // Find the angle error
+    trueAngleError = FOV_CAMERA_IN_DEGREES * XError;
+    // Convert angleError into a desired heading, using the heading history
+    desiredHeading = trueAngleError + Robot.drive.getHeadingForCapturedImage();
+    // Update SmartDashboard
+    SmartDashboard.putNumber("True Angle Error", trueAngleError);
+    SmartDashboard.putNumber("Vision Desired Heading", desiredHeading);
+    return desiredHeading;
+  }
+
+  private double[] findTheCenterMostTarget() {
+    double bestXError = 1.0;
+    double tempTrueCenter = 0.0;
+    int i = 0;
+    double tempX = 0.0;
+    double tempY = 0.0;
+    double tempXError = 0.0;
+    double desiredHeading;
+    double bestX = 0.0;
+    double bestY = 0.0;
+    // Look through the valid data in the array to find the
+    // target closest to the "trueCenter"
+
+    for (double a : m_target_array) {
+      // check for invalid data
+      if (a < 0.0 || a > 1.0) {
+        // this should never happen. Print an error if it does.
+        DriverStation.reportError("Invalid Data in target array (" + a + ") \n", false);
+      } else if (i % 2 == 0) { // true for data elements 0, 2, 4, etc.
+        // this is the x value
+        tempX = a;
+        // if y
+      } else { // this is data element 1, 3, 5, etc.
+        tempY = a;
+
+        // now that we have an x, y pair, determine if this is
+        // the target nearest to the "dynamic center"
+
+        // calculate the true center as a function of the height
+        tempTrueCenter = (CENTER_EQ_M * tempY) + CENTER_EQ_B;
+
+        // compute the "x error" based upon the trueCenter
+        tempXError = tempX - tempTrueCenter;
+
+        if (Math.abs(tempXError) < Math.abs(bestXError)) {
+          bestXError = tempXError;
+          bestX = tempX;
+          bestY = tempY;
+        }
+      }
+      i++;
+    }
+    // Find the Desired heading baised on the x, y
+    desiredHeading = findDesiredHeading(bestX, bestY);
+    // Create the array to return
+    double[] returnArray = { desiredHeading, bestX, bestY };
+    return returnArray;
   }
 
   @Override
