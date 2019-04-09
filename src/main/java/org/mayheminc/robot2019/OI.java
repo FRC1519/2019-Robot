@@ -203,7 +203,7 @@ public class OI {
 		// *******************************DRIVER
 		// PAD**************************************
 
-		DRIVER_PAD_RED_BUTTON.whileHeld(new ShipSideToLoadingStation(Autonomous.StartOn.RIGHT));
+		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0) /* do nothing */ );
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new AutoAlign());
 
 		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign());

@@ -15,6 +15,7 @@ import org.mayheminc.robot2019.commands.DriveSetShifter;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.HatchPanelSet;
+import org.mayheminc.robot2019.commands.PrintAutonomousTimeRemaining;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.subsystems.Autonomous;
@@ -66,6 +67,7 @@ public class HAB2HPtoShipSide extends CommandGroup {
     // release the hatch panel
     addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
     addSequential(new Wait(0.3));
+    addParallel(new PrintAutonomousTimeRemaining("Placed HP #1"));
 
     // now run the routine to get a hatch panel from the loading station
     addSequential(new ShipSideToLoadingStation(startSide));

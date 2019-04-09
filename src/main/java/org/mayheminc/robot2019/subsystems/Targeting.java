@@ -27,12 +27,12 @@ public class Targeting extends Subsystem {
   // private double CENTER_EQ_B = 0.5719;
 
   // Below values are for arm off 2 inches to left on the practice robot
-  // private double CENTER_EQ_M = -0.2964;
-  // private double CENTER_EQ_B = 0.5871;
+  private double CENTER_EQ_M = -0.2964;
+  private double CENTER_EQ_B = 0.5871;
 
   // Below values are for competition robot based upon PineTree data
-  private double CENTER_EQ_M = -0.2762;
-  private double CENTER_EQ_B = 0.5563;
+  // private double CENTER_EQ_M = -0.2762;
+  // private double CENTER_EQ_B = 0.5563;
 
   private double m_angleError;
   private double m_trueAngleError;
