@@ -12,7 +12,7 @@ import org.mayheminc.robot2019.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import sun.net.www.content.text.plain;
+// import sun.net.www.content.text.plain;
 
 /**
  * Add your docs here.
@@ -117,7 +117,8 @@ public class Targeting extends Subsystem {
           m_bestY = m_target_array[3];
           // Set m_desiredHeading
           m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
-          // If we are trying to drive too much down field drive strait at the cargo ship.
+          // If we are trying to drive too much down field drive straight at the cargo
+          // ship.
           // We don't want to go into the opposing side in auto!
           // if (m_desiredHeading > -60) {
           // m_desiredHeading = -90;
@@ -175,15 +176,23 @@ public class Targeting extends Subsystem {
     return m_desiredHeading;
   }
 
-  public double getRecomentedSpeed() {
+  public double getRecommendedSpeed() {
     // Returns a speed based upon the Y value
     double speed;
-    if (m_bestY < 0.449) {
+
+    if (m_bestY < 0.1) {
+      // can't see the target, set speed to something real slow
+      speed = 0.2;
+    } else if (m_bestY > 0.6) {
+      // less than approx 18" from target
       speed = 0.3;
-    } else if (0.449 <= m_bestY && m_bestY <= 0.480) {
-      speed = 0.7;
-    } else if (0.480 < m_bestY) {
-      speed = 1.0;
+    } else if (0.45 <= m_bestY && m_bestY <= 0.60) {
+      // approx 18" to 48" from target
+      speed = 0.5;
+    } else {
+      // 0.1 < m_bestY < 0.45
+      // more than 48" from target
+      speed = 0.9;
     }
     return speed;
   }
@@ -238,7 +247,7 @@ public class Targeting extends Subsystem {
       if (a < 0.0 || a > 1.0) {
         // this should never happen. Print an error if it does.
         DriverStation.reportError("Invalid Data in target array (" + a + ") \n", false);
-      } else if (i % 2 == 0) { // true for data elements 0, 2, 4, etc.
+      } else if ((i % 2) == 0) { // true for data elements 0, 2, 4, etc.
         // this is the x value
         tempX = a;
         // if y

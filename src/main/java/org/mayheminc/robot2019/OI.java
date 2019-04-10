@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.mayheminc.robot2019.commands.*;
 import org.mayheminc.robot2019.autonomousroutines.*;
 import org.mayheminc.robot2019.subsystems.*;
+import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -204,9 +205,9 @@ public class OI {
 		// PAD**************************************
 
 		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0) /* do nothing */ );
-		DRIVER_PAD_BLUE_BUTTON.whileHeld(new AutoAlign());
+		DRIVER_PAD_BLUE_BUTTON.whileHeld(new AutoAlign(TargetPosition.CENTER_MOST));
 
-		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign());
+		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign(TargetPosition.CENTER_MOST));
 
 		DRIVER_PAD_YELLOW_BUTTON.whenPressed(new AutoClimb() /* AutoClimb() */ );
 		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait(0) /* do nothing */ );

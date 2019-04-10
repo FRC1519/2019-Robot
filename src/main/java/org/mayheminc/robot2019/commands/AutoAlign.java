@@ -11,6 +11,7 @@ import org.mayheminc.robot2019.Robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
 public class AutoAlign extends Command {
@@ -19,9 +20,12 @@ public class AutoAlign extends Command {
    * AutoAlign the robot, presuming that the robot is being driven forwards and
    * backwards by the driver.
    */
-  public AutoAlign() {
+  TargetPosition m_whichTarget;
+
+  public AutoAlign(TargetPosition whichTarget) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    m_whichTarget = whichTarget;
   }
 
   // Called just before this Command runs the first time
@@ -29,7 +33,7 @@ public class AutoAlign extends Command {
   protected void initialize() {
     Robot.drive.setAutoAlignTrue();
     Robot.targetingLights.set(true);
-    Robot.targeting.setMode(TargetPosition.CENTER_MOST);
+    Robot.targeting.setMode(m_whichTarget);
   }
 
   // Called repeatedly when this Command is scheduled to run

@@ -9,9 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class AutoAlignUntilAtWall extends Command {
+public class AutoAlignWithSlowdownUntilAtWall extends Command {
 
-	double m_targetPower;
 	double m_startTime;
 	double m_maxTime;
 	Targeting.TargetPosition m_whichTarget = Targeting.TargetPosition.CENTER_MOST;
@@ -24,10 +23,9 @@ public class AutoAlignUntilAtWall extends Command {
 	 * @param maxTime     Maximum time (in seconds) for alignment.
 	 * @param target      Which target (Left, Center, or Right) to use to align
 	 */
-	public AutoAlignUntilAtWall(double targetPower, double maxTime, Targeting.TargetPosition whichTarget) {
+	public AutoAlignWithSlowdownUntilAtWall(double maxTime, Targeting.TargetPosition whichTarget) {
 		requires(Robot.drive);
 		m_maxTime = maxTime;
-		m_targetPower = targetPower;
 		m_whichTarget = whichTarget;
 	}
 
@@ -43,8 +41,9 @@ public class AutoAlignUntilAtWall extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		// Robot.drive.speedRacerDrive(Robot.targeting.getRecomentedSpeed(), 0, false);
-		Robot.drive.speedRacerDrive(m_targetPower, 0, false);
+		// Robot.drive.speedRacerDrive(m_targetPower, 0, false);
+		Robot.drive.speedRacerDrive(Robot.targeting.getRecommendedSpeed(), 0, false);
+
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

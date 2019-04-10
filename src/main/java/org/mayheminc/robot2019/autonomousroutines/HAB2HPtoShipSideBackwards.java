@@ -43,34 +43,37 @@ public class HAB2HPtoShipSideBackwards extends CommandGroup {
         addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
 
         // Head for the cargo ship, by taking a long diagonal backwards path until
-        // beyond the rocket
-        // guessing at 15 feet of driving distance.
-        addSequential(new DriveStraightOnHeading(-0.8, 270, Autonomous.chooseAngle(startSide, 200.0)));
+        // beyond the rocket -- approx 25 feet of driving distance.
+
+        // angle was at 294 inches and 205.0 degrees at practice field when working well
+        addSequential(new DriveStraightOnHeading(-0.8, 264, Autonomous.chooseAngle(startSide, 200.0)));
 
         // go back into low gear for the sharper turns and auto alignment
         addParallel(new DriveSetShifter(Shifter.LOW_GEAR));
-        // addSequential(new Wait(2.0));
 
         // Turn towards the side of the cargo ship; 270 degrees is perfect "in theory",
         // but we need to aim to overshoot the target angle a bit to get there quickly.
+        addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 290.0)));
 
-        addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 270.0)));
-
-        addSequential(new DriveStraightOnHeading(0.8, 24, Autonomous.chooseAngle(startSide, 270.0)));
-
-        // addSequential(new Wait(2.0));
+        // addSequential(new DriveStraightOnHeading(0.8, 24,
+        // Autonomous.chooseAngle(startSide, 270.0)));
+        addSequential(new DriveStraightOnHeading(0.2, 4, Autonomous.chooseAngle(startSide, 270.0)));
+        addSequential(new DriveStraightOnHeading(0.7, 20, Autonomous.chooseAngle(startSide, 270.0)));
 
         // Use "AutoAlign" at 40% speed for the last 1.5 seconds to drive to the hatch
-        addSequential(new AutoAlignUntilAtWall(0.5, 2.0,
-                ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_MOST : TargetPosition.CENTER_MOST)));
+        addSequential(new AutoAlignUntilAtWall(0.7, 2.0,
+                ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
+                        : TargetPosition.CENTER_OF_LEFT_CARGO_SHIP)));
 
         // release the hatch panel
         addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
-        addSequential(new Wait(0.0));
+        addSequential(new Wait(0.2));
         addParallel(new PrintAutonomousTimeRemaining("Placed HP #1"));
 
         // now run the routine to get a hatch panel from the loading station
         addSequential(new ShipSideToLoadingStationFast(startSide));
 
+        // now run the routine to deliver a hatch panel on to the cargo ship
+        addSequential(new LoadingStationToCargoShipFast(startSide));
     }
 }

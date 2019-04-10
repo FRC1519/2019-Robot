@@ -306,7 +306,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// before doing anything else in teleop, kill any existing commands
 		// TODO: consider if this is still desirable in 2019 with the "sandstorm" period
-		Scheduler.getInstance().removeAll();
+		// Scheduler.getInstance().removeAll();
 
 		lights.setDefault(LedPatternFactory.defaultTeleOp);
 

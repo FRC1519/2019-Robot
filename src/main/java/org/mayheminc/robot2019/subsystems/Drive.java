@@ -44,6 +44,8 @@ public class Drive extends Subsystem {
 	// NavX parameters
 	private double m_desiredHeading = 0.0;
 	private boolean m_useHeadingCorrection = true;
+	private static final double HEADING_PID_P_FOR_HIGH_GEAR = 0.030;
+	private static final double HEADING_PID_P_FOR_LOW_GEAR = HEADING_PID_P_FOR_HIGH_GEAR / 2.0;
 	private static final double kToleranceDegreesPIDControl = 0.2;
 
 	// Drive parameters
@@ -86,7 +88,9 @@ public class Drive extends Subsystem {
 		// correction.
 		m_HeadingError = new PIDHeadingError();
 		m_HeadingCorrection = new PIDHeadingCorrection();
-		m_HeadingPid = new PIDController(0.030, 0.000, 0.04, m_HeadingError, m_HeadingCorrection); // P was 0.015
+		m_HeadingPid = new PIDController(HEADING_PID_P_FOR_HIGH_GEAR, 0.000, 0.04, m_HeadingError, m_HeadingCorrection); // P
+																															// was
+																															// 0.015
 		m_HeadingPid.setInputRange(-180.0f, 180.0f);
 		m_HeadingPid.setContinuous(true); // treats the input range as "continous" with wrap-around
 		m_HeadingPid.setOutputRange(-.50, .50); // set the maximum power to correct twist
@@ -251,6 +255,17 @@ public class Drive extends Subsystem {
 
 	public void setHeadingCorrectionMode(boolean useHeadingCorrection) {
 		m_useHeadingCorrection = useHeadingCorrection;
+	}
+
+	private void resetAndEnableHeadingPID() {
+		if (Robot.shifter.getGear() == Shifter.HIGH_GEAR) {
+			m_HeadingPid.setP(HEADING_PID_P_FOR_HIGH_GEAR);
+		} else {
+			// low gear
+			m_HeadingPid.setP(HEADING_PID_P_FOR_LOW_GEAR);
+		}
+		m_HeadingPid.reset();
+		m_HeadingPid.enable();
 	}
 
 	static private final double STATIONARY = 0.1;
@@ -420,7 +435,7 @@ public class Drive extends Subsystem {
 			throttleSign = -1;
 		}
 		if (autoAlign) {
-			DriverStation.reportWarning("Auto align was called in drive base", false);
+			// DriverStation.reportWarning("Auto align was called in drive base", false);
 			// adjustedSteeringX = 0;
 
 			// double visionRotation = Robot.targeting.amountToTurn();

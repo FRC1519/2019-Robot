@@ -49,8 +49,9 @@ public class HAB2HPtoShipSide extends CommandGroup {
 
     // below distance was 150.0 before Pine Tree; was 174.0 for first practice match
     // changed to 180 inches after first practice match; changed to 183 inches after
-    // q41
-    addSequential(new DriveStraightOnHeading(0.7, 183, Autonomous.chooseAngle(startSide, 0.0)));
+    // q41.
+    // at practice field before NECMP changed to 130.0
+    addSequential(new DriveStraightOnHeading(0.7, 130, Autonomous.chooseAngle(startSide, 0.0)));
 
     // Turn towards the side of the cargo ship; 270 degrees is perfect "in theory",
     // but we need to aim to overshoot the target angle a bit to get there quickly.
