@@ -28,13 +28,16 @@ public class Shoulder extends Subsystem {
     private static final double HORIZONTAL_HOLD_OUTPUT = 0.08; // found this empirically - may need to adjust based upon
                                                                // wrist position
 
+    // Note: 1 degree of arm travel is about 0.75" of perimeter. (42" x 3.14 * 2 =~
+    // 0.75" )
+
     public static final double HORIZONTAL_ANGLE = 0.0;
 
     public static final double CARGO_ROCKET_HIGH_ANGLE = 65.0;
     public static final double CARGO_ROCKET_MID_ANGLE = 14.0;
     public static final double CARGO_ROCKET_LOW_ANGLE = -30.0;
     public static final double CARGO_CARGO_SHIP_ANGLE = 18.0;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -38.0;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -36.0; // was -38 during NECMP practice matches
     public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 42.0;

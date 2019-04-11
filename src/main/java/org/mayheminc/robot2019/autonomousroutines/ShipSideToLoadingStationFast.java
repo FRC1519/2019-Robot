@@ -8,7 +8,6 @@
 package org.mayheminc.robot2019.autonomousroutines;
 
 import org.mayheminc.robot2019.commands.AutoAlignUntilAtWall;
-import org.mayheminc.robot2019.commands.AutoAlignWithSlowdownUntilAtWall;
 import org.mayheminc.robot2019.commands.DriveSetShifter;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelSet;

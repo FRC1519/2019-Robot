@@ -9,6 +9,7 @@ package org.mayheminc.robot2019.autonomousroutines;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+import org.mayheminc.robot2019.commands.AutoAlignForTime;
 import org.mayheminc.robot2019.commands.AutoAlignUntilAtWall;
 import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
 import org.mayheminc.robot2019.commands.DriveSetShifter;
@@ -55,15 +56,19 @@ public class HAB2HPtoShipSideBackwards extends CommandGroup {
 
         // Turn towards the side of the cargo ship; 270 degrees is perfect "in theory",
         // but we need to aim to overshoot the target angle a bit to get there quickly.
-        addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 290.0)));
+        addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 270.0)));
 
         // addSequential(new DriveStraightOnHeading(0.8, 24,
         // Autonomous.chooseAngle(startSide, 270.0)));
         addSequential(new DriveStraightOnHeading(0.2, 4, Autonomous.chooseAngle(startSide, 270.0)));
         addSequential(new DriveStraightOnHeading(0.7 - 0.3, 20, Autonomous.chooseAngle(startSide, 270.0)));
 
-        // Use "AutoAlign" at 40% speed for the last 1.5 seconds to drive to the hatch
-        addSequential(new AutoAlignUntilAtWall(0.7 - 0.35, 2.0,
+        // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
+        addSequential(
+                new AutoAlignForTime(0.5, 0.7, ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
+                        : TargetPosition.CENTER_OF_LEFT_CARGO_SHIP)));
+
+        addSequential(new AutoAlignUntilAtWall(0.35, 1.8,
                 ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
                         : TargetPosition.CENTER_OF_LEFT_CARGO_SHIP)));
 
