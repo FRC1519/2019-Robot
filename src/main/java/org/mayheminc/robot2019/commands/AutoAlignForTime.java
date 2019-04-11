@@ -52,12 +52,12 @@ public class AutoAlignForTime extends Command {
 	protected void end() {
 		Robot.drive.stop();
 		Robot.drive.setAutoAlignFalse();
-		Robot.targetingLights.set(false);
+		// Robot.targetingLights.set(false);
 	}
 
 	protected void interrupted() {
 		Robot.drive.stop();
 		Robot.drive.setAutoAlignFalse();
-		Robot.targetingLights.set(false);
+		// Robot.targetingLights.set(false);
 	}
 }

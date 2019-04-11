@@ -50,7 +50,7 @@ public class AutoAlign extends Command {
   @Override
   protected void end() {
     Robot.drive.setAutoAlignFalse();
-    Robot.targetingLights.set(false);
+    // Robot.targetingLights.set(false);
   }
 
   // Called when another command which requires one or more of the same
@@ -58,6 +58,6 @@ public class AutoAlign extends Command {
   @Override
   protected void interrupted() {
     Robot.drive.setAutoAlignFalse();
-    Robot.targetingLights.set(false);
+    // Robot.targetingLights.set(false);
   }
 }
