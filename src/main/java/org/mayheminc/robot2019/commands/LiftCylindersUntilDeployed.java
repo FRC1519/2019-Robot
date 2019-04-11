@@ -39,7 +39,7 @@ public class LiftCylindersUntilDeployed extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return ((Robot.drive.getPitch() - m_startingAngle) < -7.0);
+    return ((Robot.drive.getPitch() - m_startingAngle) < -4.0); // was -7.0 at Pine Tree
   }
 
   // Called once after isFinished returns true
