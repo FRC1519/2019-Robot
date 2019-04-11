@@ -10,10 +10,12 @@ package org.mayheminc.robot2019.autonomousroutines;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
+import org.mayheminc.robot2019.commands.DriveSetShifter;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
+import org.mayheminc.robot2019.subsystems.Shifter;
 
 public class StraightOffHAB2 extends CommandGroup {
   /**
@@ -22,6 +24,7 @@ public class StraightOffHAB2 extends CommandGroup {
   public StraightOffHAB2() {
 
     // Zero the Gyro at the start of autonomous
+    addParallel(new DriveSetShifter(Shifter.LOW_GEAR));
     addSequential(new ZeroGyro(0.0));
 
     // Drive off the hab level 2 and wait a second to stop bouncing around
@@ -33,5 +36,7 @@ public class StraightOffHAB2 extends CommandGroup {
 
     addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
     // stop now to let the driver's take over!
+
+    addSequential(new DriveSetShifter(Shifter.HIGH_GEAR));
   }
 }

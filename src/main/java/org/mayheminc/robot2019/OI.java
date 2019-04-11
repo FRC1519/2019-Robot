@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.mayheminc.robot2019.commands.*;
-import org.mayheminc.robot2019.autonomousroutines.*;
 import org.mayheminc.robot2019.subsystems.*;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 

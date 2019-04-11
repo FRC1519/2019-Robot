@@ -45,11 +45,13 @@ public class HAB2HPtoShipSideBackwards extends CommandGroup {
         // Head for the cargo ship, by taking a long diagonal backwards path until
         // beyond the rocket -- approx 25 feet of driving distance.
 
-        // angle was at 294 inches and 205.0 degrees at practice field when working well
-        addSequential(new DriveStraightOnHeading(-0.8, 264, Autonomous.chooseAngle(startSide, 200.0)));
+        // distance was at 294 inches and 205.0 degrees at practice field when working
+        // well before final speedup
+        // last trials at practice field before NECMP were 264 and 200.0
+        addSequential(new DriveStraightOnHeading(-0.8, 288, Autonomous.chooseAngle(startSide, 200.0)));
 
         // go back into low gear for the sharper turns and auto alignment
-        addParallel(new DriveSetShifter(Shifter.LOW_GEAR));
+        addParallel(new DriveSetShifter(Shifter.HIGH_GEAR)); // had previously been LOW_GEAR
 
         // Turn towards the side of the cargo ship; 270 degrees is perfect "in theory",
         // but we need to aim to overshoot the target angle a bit to get there quickly.
@@ -58,10 +60,10 @@ public class HAB2HPtoShipSideBackwards extends CommandGroup {
         // addSequential(new DriveStraightOnHeading(0.8, 24,
         // Autonomous.chooseAngle(startSide, 270.0)));
         addSequential(new DriveStraightOnHeading(0.2, 4, Autonomous.chooseAngle(startSide, 270.0)));
-        addSequential(new DriveStraightOnHeading(0.7, 20, Autonomous.chooseAngle(startSide, 270.0)));
+        addSequential(new DriveStraightOnHeading(0.7 - 0.3, 20, Autonomous.chooseAngle(startSide, 270.0)));
 
         // Use "AutoAlign" at 40% speed for the last 1.5 seconds to drive to the hatch
-        addSequential(new AutoAlignUntilAtWall(0.7, 2.0,
+        addSequential(new AutoAlignUntilAtWall(0.7 - 0.35, 2.0,
                 ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
                         : TargetPosition.CENTER_OF_LEFT_CARGO_SHIP)));
 

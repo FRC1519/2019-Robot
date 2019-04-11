@@ -37,13 +37,14 @@ public class LoadingStationToCargoShipFast extends CommandGroup {
 
     // Head for the cargo ship, by taking a long diagonal backwards path until
     // beyond the rocket guessing at 15 feet of driving distance.
-    addSequential(new DriveStraightOnHeading(-0.8, 256, Autonomous.chooseAngle(startSide, 170.0)));
+    // angle was 170.0 before NECMP
+    addSequential(new DriveStraightOnHeading(-0.8, 256, Autonomous.chooseAngle(startSide, 167.0)));
 
     // was 84.0 inches for "normal batteries"
-    addSequential(new DriveStraightOnHeading(-0.8, 78, Autonomous.chooseAngle(startSide, 180.0)));
+    addSequential(new DriveStraightOnHeading(-0.8, 78 - 12, Autonomous.chooseAngle(startSide, 180.0)));
 
     // go back into low gear for the sharper turns and auto alignment
-    addParallel(new DriveSetShifter(Shifter.LOW_GEAR));
+    addParallel(new DriveSetShifter(Shifter.HIGH_GEAR)); // had previously been LOW_GEAR
 
     // Turn towards the side of the cargo ship; 270 degrees is perfect "in theory",
     // but we need to aim to overshoot the target angle a bit to get there quickly.
@@ -52,10 +53,10 @@ public class LoadingStationToCargoShipFast extends CommandGroup {
     // addSequential(new DriveStraightOnHeading(0.8, 24,
     // Autonomous.chooseAngle(startSide, 270.0)));
     addSequential(new DriveStraightOnHeading(0.2, 8, Autonomous.chooseAngle(startSide, 270.0)));
-    addSequential(new DriveStraightOnHeading(0.6, 16, Autonomous.chooseAngle(startSide, 270.0)));
+    addSequential(new DriveStraightOnHeading(0.6 - 0.2, 16, Autonomous.chooseAngle(startSide, 270.0)));
 
     // Use "AutoAlign" at 40% speed for the last 1.5 seconds to drive to the hatch
-    addSequential(new AutoAlignUntilAtWall(0.5, 2.0,
+    addSequential(new AutoAlignUntilAtWall(0.5 - 0.15, 2.0,
         ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST)));
 
     // release the hatch panel

@@ -55,6 +55,7 @@ public class ShipSideToLoadingStation extends CommandGroup {
 
     // back up a little bit to pull the hatch panel from the wall
     addSequential(new DriveStraightOnHeading(-0.8, 12, Autonomous.chooseAngle(startSide, 180.0)));
+    addSequential(new DriveSetShifter(Shifter.HIGH_GEAR));
 
   }
 }

@@ -10,11 +10,13 @@ package org.mayheminc.robot2019.autonomousroutines;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
+import org.mayheminc.robot2019.commands.DriveSetShifter;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.subsystems.Autonomous;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
+import org.mayheminc.robot2019.subsystems.Shifter;
 
 public class HAB2HPtoRocketFront extends CommandGroup {
   /**
@@ -23,6 +25,7 @@ public class HAB2HPtoRocketFront extends CommandGroup {
   public HAB2HPtoRocketFront(Autonomous.StartOn startSide) {
 
     // Zero the Gyro at the start of autonomous
+    addParallel(new DriveSetShifter(Shifter.LOW_GEAR));
     addSequential(new ZeroGyro(0.0));
 
     // Drive off the hab level 2
@@ -45,6 +48,7 @@ public class HAB2HPtoRocketFront extends CommandGroup {
     // addSequential(new DriveStraightOnHeading(0.6, 66, -110));
 
     // stop now to let the drivers take over!
+    addSequential(new DriveSetShifter(Shifter.HIGH_GEAR));
 
     // (first thing they should do is release the hatch panel)
   }

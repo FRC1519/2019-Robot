@@ -217,7 +217,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// TODO: do we want autonomous in high gear instead this year?
 		// force low gear
-		shifter.setGear(Shifter.LOW_GEAR);
+		// shifter.setGear(Shifter.LOW_GEAR);
 
 		lights.setDefault(LedPatternFactory.defaultAuto);
 

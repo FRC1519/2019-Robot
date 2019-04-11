@@ -143,8 +143,9 @@ public class Drive extends Subsystem {
 		SmartDashboard.putString("Trace", "Zero Heading Gyro");
 
 		// restart the PID controller loop
-		m_HeadingPid.reset();
-		m_HeadingPid.enable();
+		resetAndEnableHeadingPID();
+		// m_HeadingPid.reset();
+		// m_HeadingPid.enable();
 	}
 
 	public void initDefaultCommand() {
@@ -408,15 +409,17 @@ public class Drive extends Subsystem {
 	public void setAutoAlignTrue() {
 		autoAlign = true;
 		// reset the PID controller loop for steering now that we are auto-aligning
-		m_HeadingPid.reset();
-		m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
+		resetAndEnableHeadingPID();
+		// m_HeadingPid.reset();
+		// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 		Robot.lights.set(LedPatternFactory.autoAlignTrying);
 	}
 
 	public void setAutoAlignFalse() {
 		autoAlign = false;
-		m_HeadingPid.reset();
-		m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
+		resetAndEnableHeadingPID();
+		// m_HeadingPid.reset();
+		// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 		Robot.lights.set(LedPatternFactory.autoAlignGotIt);
 	}
 
@@ -469,8 +472,9 @@ public class Drive extends Subsystem {
 					rotation = 0.0;
 					m_desiredHeading = getHeading(); // whenever motionless, set desired heading to current heading
 					// reset the PID controller loop now that we have a new desired heading
-					m_HeadingPid.reset();
-					m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
+					resetAndEnableHeadingPID();
+					// m_HeadingPid.reset();
+					// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 				} else {
 					// driving straight
 					if ((m_iterationsSinceRotationCommanded == LOOPS_GYRO_DELAY)
@@ -481,8 +485,9 @@ public class Drive extends Subsystem {
 						m_desiredHeading = getHeading();
 
 						// reset the PID controller loop now that we have a new desired heading
-						m_HeadingPid.reset();
-						m_HeadingPid.enable(); // need to re-enable the PID controller after a reset()
+						resetAndEnableHeadingPID();
+						// m_HeadingPid.reset();
+						// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 						rotation = 0.0;
 					} else if (m_iterationsSinceRotationCommanded < LOOPS_GYRO_DELAY) {
 						// DriverStation.reportError("drive 2", false);
@@ -557,8 +562,9 @@ public class Drive extends Subsystem {
 		if (Math.abs(m_HeadingError.m_Error) > 10.0) {
 			if (!m_HeadingPidPreventWindup) {
 				m_HeadingPid.setI(0.0);
-				m_HeadingPid.reset(); // clear the wind-up.
-				m_HeadingPid.enable(); // the reset turns it off. Turn it on.
+				resetAndEnableHeadingPID();
+				// m_HeadingPid.reset(); // clear the wind-up.
+				// m_HeadingPid.enable(); // the reset turns it off. Turn it on.
 				m_HeadingPidPreventWindup = true;
 			}
 		} else {
@@ -737,8 +743,9 @@ public class Drive extends Subsystem {
 		m_iterationsSinceRotationCommanded = 50; // RJD: I think this should be the constnat.
 
 		// reset the heading control loop for the new heading
-		m_HeadingPid.reset();
-		m_HeadingPid.enable();
+		resetAndEnableHeadingPID();
+		// m_HeadingPid.reset();
+		// m_HeadingPid.enable();
 	}
 
 }

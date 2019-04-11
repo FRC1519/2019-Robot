@@ -31,15 +31,20 @@ public class ShipSideToLoadingStationFast extends CommandGroup {
     addSequential(new DriveStraightOnHeading(-0.5, 6, Autonomous.chooseAngle(startSide, 270.0)));
 
     // drive backwards and turn to face towards the loading station
-    addSequential(new DriveStraightOnHeading(-0.4, 36, Autonomous.chooseAngle(startSide, 180.0)));
+
+    // angle below had been 180.0 on practice robot before NECMP (in low gear)
+    addSequential(new DriveStraightOnHeading(-0.4, 36, Autonomous.chooseAngle(startSide, 157.0)));
 
     // drive forwards towards the loading station at high speed in low gear to
     // enable sharp turn
-    addSequential(new DriveStraightOnHeading(1.0, 20, Autonomous.chooseAngle(startSide, 157.0)));
+    // angle below had been 157.0 on practice robot before NECMP (in low gear)
+    addSequential(new DriveStraightOnHeading(0.9, 20, Autonomous.chooseAngle(startSide, 155.0)));
 
     // drive to just in front of the loading station at higher speed
     addParallel(new DriveSetShifter(Shifter.HIGH_GEAR));
-    addSequential(new DriveStraightOnHeading(0.9, 120, Autonomous.chooseAngle(startSide, 157.0)));
+
+    // angle below had been 157.0 on practice robot before NECMP
+    addSequential(new DriveStraightOnHeading(0.9, 120, Autonomous.chooseAngle(startSide, 155.0)));
 
     // straighten out for the last few feet to line up with the loading station
     addSequential(new DriveStraightOnHeading(0.9, 72 /* was 180 */, Autonomous.chooseAngle(startSide, 180.0)));

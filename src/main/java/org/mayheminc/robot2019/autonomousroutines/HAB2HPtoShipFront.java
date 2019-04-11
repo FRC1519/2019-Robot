@@ -11,12 +11,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import org.mayheminc.robot2019.commands.AutoAlignUntilAtWall;
 import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
+import org.mayheminc.robot2019.commands.DriveSetShifter;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.subsystems.Autonomous;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
+import org.mayheminc.robot2019.subsystems.Shifter;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
 public class HAB2HPtoShipFront extends CommandGroup {
@@ -26,6 +28,7 @@ public class HAB2HPtoShipFront extends CommandGroup {
   public HAB2HPtoShipFront(Autonomous.StartOn startSide) {
 
     // Zero the Gyro at the start of autonomous
+    addParallel(new DriveSetShifter(Shifter.LOW_GEAR));
     addSequential(new ZeroGyro(0.0));
 
     // Drive off the hab level 2 and wait a second to stop bouncing around
@@ -47,5 +50,7 @@ public class HAB2HPtoShipFront extends CommandGroup {
     addSequential(new AutoAlignUntilAtWall(0.5, 1, TargetPosition.CENTER_MOST));
 
     // stop now to let the driver's take over!
+    addSequential(new DriveSetShifter(Shifter.HIGH_GEAR));
+
   }
 }
