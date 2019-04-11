@@ -50,19 +50,18 @@ public class LoadingStationToCargoShipFast extends CommandGroup {
     // addSequential(new DriveStraightOnHeading(0.8, 24,
     // Autonomous.chooseAngle(startSide, 270.0)));
     addSequential(new DriveStraightOnHeading(0.2, 8, Autonomous.chooseAngle(startSide, 270.0)));
-    addSequential(new DriveStraightOnHeading(0.6 - 0.2, 16, Autonomous.chooseAngle(startSide, 270.0)));
+    addSequential(new DriveStraightOnHeading(0.5, 8, Autonomous.chooseAngle(startSide, 270.0)));
 
     // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
-    addSequential(
-        new AutoAlignForTime(0.5, 0.7, ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
-            : TargetPosition.CENTER_OF_LEFT_CARGO_SHIP)));
+    addSequential(new AutoAlignForTime(0.35, 0.7,
+        ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST)));
 
-    addSequential(new AutoAlignUntilAtWall(0.35, 1.8,
+    addSequential(new AutoAlignUntilAtWall(0.30, 1.8,
         ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST)));
 
     // release the hatch panel
     // addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
-    // addSequential(new Wait(0.2));
+    // addSequential(new Wait(0.3));
     addSequential(new PrintAutonomousTimeRemaining("Placed HP #2"));
 
     // drive straight backwards for about a foot to get free of hatch on cargo ship

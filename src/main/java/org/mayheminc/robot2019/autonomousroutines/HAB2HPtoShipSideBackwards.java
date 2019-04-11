@@ -60,21 +60,21 @@ public class HAB2HPtoShipSideBackwards extends CommandGroup {
 
         // addSequential(new DriveStraightOnHeading(0.8, 24,
         // Autonomous.chooseAngle(startSide, 270.0)));
-        addSequential(new DriveStraightOnHeading(0.2, 4, Autonomous.chooseAngle(startSide, 270.0)));
-        addSequential(new DriveStraightOnHeading(0.7 - 0.3, 20, Autonomous.chooseAngle(startSide, 270.0)));
+        addSequential(new DriveStraightOnHeading(0.2, 8, Autonomous.chooseAngle(startSide, 270.0)));
+        addSequential(new DriveStraightOnHeading(0.5, 8, Autonomous.chooseAngle(startSide, 270.0)));
 
         // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
-        addSequential(
-                new AutoAlignForTime(0.5, 0.7, ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
+        addSequential(new AutoAlignForTime(0.35, 0.7,
+                ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
                         : TargetPosition.CENTER_OF_LEFT_CARGO_SHIP)));
 
-        addSequential(new AutoAlignUntilAtWall(0.35, 1.8,
+        addSequential(new AutoAlignUntilAtWall(0.30, 1.8,
                 ((startSide == StartOn.RIGHT) ? TargetPosition.CENTER_OF_RIGHT_CARGO_SHIP
                         : TargetPosition.CENTER_OF_LEFT_CARGO_SHIP)));
 
         // release the hatch panel
         addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
-        addSequential(new Wait(0.2));
+        addSequential(new Wait(0.3));
         addParallel(new PrintAutonomousTimeRemaining("Placed HP #1"));
 
         // now run the routine to get a hatch panel from the loading station

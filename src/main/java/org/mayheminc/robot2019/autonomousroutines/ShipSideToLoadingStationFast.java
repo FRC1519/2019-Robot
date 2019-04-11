@@ -52,7 +52,7 @@ public class ShipSideToLoadingStationFast extends CommandGroup {
     // or at least the deceleration
 
     // Use "AutoAlign" at half speed for the last couple seconds to get to the hatch
-    addSequential(new AutoAlignUntilAtWall(0.6, 4.0, Targeting.TargetPosition.CENTER_MOST)); // was 0.6, 1.7 seconds
+    addSequential(new AutoAlignUntilAtWall(0.6, 3.0, Targeting.TargetPosition.CENTER_MOST)); // was 0.6, 1.7 seconds
 
     // addSequential(new AutoAlignWithSlowdownUntilAtWall(4.0,
     // Targeting.TargetPosition.CENTER_MOST)); // was 0.6, 1.7
