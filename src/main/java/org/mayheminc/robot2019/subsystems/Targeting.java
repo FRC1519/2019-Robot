@@ -35,6 +35,12 @@ public class Targeting extends Subsystem {
   private double CENTER_EQ_M = -0.2762;
   private double CENTER_EQ_B = 0.5563;
 
+  // After computing a desired heading, add a "fudge" offset to correct
+  // empirically measured error. Found to be approx -1 degree (to shift aim 1" to
+  // the left) during NECMP Thursday AM practice field session, for competition
+  // robot.
+  private static final double HEADING_CORRECTION_OFFSET = -1.0;
+
   private double m_desiredHeading;
   private double[] m_target_array;
   private double[] ARRAY_OF_NEG_ONE = { -1.0 };
@@ -173,7 +179,7 @@ public class Targeting extends Subsystem {
   }
 
   public double desiredHeading() {
-    return m_desiredHeading;
+    return m_desiredHeading + HEADING_CORRECTION_OFFSET;
   }
 
   public double getRecommendedSpeed() {

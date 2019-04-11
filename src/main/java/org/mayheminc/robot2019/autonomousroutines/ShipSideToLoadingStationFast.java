@@ -44,10 +44,10 @@ public class ShipSideToLoadingStationFast extends CommandGroup {
     addParallel(new DriveSetShifter(Shifter.HIGH_GEAR));
 
     // angle below had been 157.0 on practice robot before NECMP
-    addSequential(new DriveStraightOnHeading(0.9, 120, Autonomous.chooseAngle(startSide, 155.0)));
+    addSequential(new DriveStraightOnHeading(0.9, 144, Autonomous.chooseAngle(startSide, 155.0)));
 
     // straighten out for the last few feet to line up with the loading station
-    addSequential(new DriveStraightOnHeading(0.9, 72 /* was 180 */, Autonomous.chooseAngle(startSide, 180.0)));
+    addSequential(new DriveStraightOnHeading(0.9, 60 /* was 180 */, Autonomous.chooseAngle(startSide, 180.0)));
 
     // TODO: consider modifying AutoAlign to use range to determine speed of drive,
     // or at least the deceleration

@@ -38,7 +38,7 @@ public class Shoulder extends Subsystem {
     public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 42.0;
-    public static final double HP_ROCKET_MID_ANGLE = -4.0;
+    public static final double HP_ROCKET_MID_ANGLE = -2.0; // was -4.0 at Pine Tree; higher for NECMP vision
     public static final double HP_ROCKET_LOW_ANGLE = -62.0;
     public static final double HP_FLOOR_PICKUP_ANGLE = -35.0;
     public static final double HP_LOADING_STATION_ANGLE = -64.0;
