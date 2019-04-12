@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.*;
 
 import org.mayheminc.robot2019.commands.RunAutonomous;
 import org.mayheminc.robot2019.subsystems.*;
+import org.mayheminc.util.SchedulerManager;
 import org.mayheminc.util.Utils;
 import org.mayheminc.util.EventServer.*;
 
@@ -137,6 +138,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		DriverStation.reportWarning("Constructed auto command.\n", false);
 		SmartDashboard.putString("Auto Prog", "Done.");
 		Autonomous.updateSmartDashboard();
+
+		// SchedulerManager.constructInstance();
 	}
 
 	/**
@@ -151,6 +154,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// run the scheduler on every main loop so that commands execute
 		Scheduler.getInstance().run();
+
+		//SchedulerManager.getInstance().updateTelemetry();
 	}
 
 	/**

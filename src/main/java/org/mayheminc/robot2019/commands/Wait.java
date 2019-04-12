@@ -15,6 +15,7 @@ public class Wait extends Command {
     }
 
     public Wait(double endTime) {
+        super("Wait " + endTime + " seconds");
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         m_endTime = endTime;
