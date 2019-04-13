@@ -39,7 +39,11 @@ public class Targeting extends Subsystem {
   // empirically measured error. Found to be approx -1 degree (to shift aim 1" to
   // the left) during NECMP Thursday AM practice field session, for competition
   // robot.
-  private static final double HEADING_CORRECTION_OFFSET = -1.0;
+
+  // heading correction offset had been 0.0 for PineTree
+  // changed to -1.0 for first 6 matches of NECMP
+  // changed to 0.0 at lunch time on Friday
+  private static final double HEADING_CORRECTION_OFFSET = 0.0;
 
   private double m_desiredHeading;
   private double[] m_target_array;
@@ -143,8 +147,8 @@ public class Targeting extends Subsystem {
         // If we see at least 3 targets
         if (6 <= m_target_array.length) {
           // Use the second target from the Right
-          m_bestX = m_target_array[m_target_array.length - 3];
-          m_bestY = m_target_array[m_target_array.length - 2];
+          m_bestX = m_target_array[m_target_array.length - 4];
+          m_bestY = m_target_array[m_target_array.length - 3];
           // Set m_desiredHeading
           m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
           // If we are trying to drive too much down field drive strait at the cargo ship.

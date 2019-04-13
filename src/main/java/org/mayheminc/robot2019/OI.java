@@ -210,9 +210,12 @@ public class OI {
 		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign(TargetPosition.CENTER_MOST));
 
 		DRIVER_PAD_YELLOW_BUTTON.whenPressed(new AutoClimb() /* AutoClimb() */ );
+
 		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new TestForCancelCommandGroups() /* do
 		// nothing */ );
-		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait()     /* do nothing */ );
+		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait() /* do nothing */ );
+		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new
+		// LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
