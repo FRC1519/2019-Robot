@@ -1,5 +1,6 @@
 package org.mayheminc.robot2019.subsystems;
 
+import org.mayheminc.robot2019.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -40,7 +41,11 @@ public class Lifter extends Subsystem {
     private double m_targetSpeed;
     private double m_modifier = 0.0;
 
-    private Boolean m_activelyLifting = false;
+    private enum LifterMode {
+        OFF, MANUAL, SYNC_LIFT
+    };
+
+    private LifterMode m_mode = LifterMode.OFF; // start with Lifter OFF
 
     public Lifter() {
 
@@ -50,6 +55,9 @@ public class Lifter extends Subsystem {
 
         configMotorFollower(motorLeftB, motorLeftA, false);
         configMotorFollower(motorRightB, motorRightA, true);
+
+        // ensure the lifter is constructed in the OFF mode
+        m_mode = LifterMode.OFF;
 
         // Tuck();
     }
@@ -87,7 +95,22 @@ public class Lifter extends Subsystem {
             stop();
         }
 
-        if (this.m_activelyLifting) {
+        if (Robot.oi.getDriverStickY() != 0.0) {
+            setManual(Robot.oi.getDriverStickY());
+        }
+
+        switch (m_mode) {
+        case OFF:
+            SmartDashboard.putString("Lifter Mode", "OFF");
+            stop();
+            break;
+        case MANUAL:
+            SmartDashboard.putString("Lifter Mode", "MANUAL");
+            motorSet(m_targetSpeed);
+            break;
+        case SYNC_LIFT:
+            SmartDashboard.putString("Lifter Mode", "ACTIVELY_LIFTING");
+
             // Get the encoder postions
             int pos_r = motorRightA.getSelectedSensorPosition();
             int pos_l = motorLeftA.getSelectedSensorPosition();
@@ -126,15 +149,19 @@ public class Lifter extends Subsystem {
                 motorRightA.set(ControlMode.PercentOutput, m_targetSpeed * (1.0 + m_modifier));
                 motorLeftA.set(ControlMode.PercentOutput, m_targetSpeed * (1.0 - m_modifier));
             }
-
-        } else { // not actively lifting -- tell the lifter to stop
-            stop();
+            break;
         }
     }
 
-    public void set(int position) {
-        setTargetMotorSpeed(Lifter.LIFTING_POWER);
-        this.m_activelyLifting = true;
+    public void setManual(double manualPower) {
+        setTargetMotorSpeed(manualPower);
+        m_mode = LifterMode.MANUAL;
+        m_desiredPosition = 0;
+    }
+
+    public void setPositionWithPower(int position, double power) {
+        setTargetMotorSpeed(power);
+        m_mode = LifterMode.SYNC_LIFT;
         m_desiredPosition = position;
     }
 
@@ -144,13 +171,13 @@ public class Lifter extends Subsystem {
         if (!IsAtSetpoint()) {
             // Set parameters so that "update()" will climb
             setTargetMotorSpeed(Lifter.LIFTING_POWER);
-            this.m_activelyLifting = true;
+            m_mode = LifterMode.SYNC_LIFT;
         }
     }
 
     public void stop() {
         motorSet(Lifter.STOP_POWER);
-        this.m_activelyLifting = false;
+        m_mode = LifterMode.OFF;
         m_desiredPosition = motorLeftA.getSelectedSensorPosition();
     }
 
@@ -181,6 +208,7 @@ public class Lifter extends Subsystem {
         SmartDashboard.putNumber("Lifter Pos L", motorLeftA.getSelectedSensorPosition());
         SmartDashboard.putNumber("Lifter VBus R", motorRightA.getMotorOutputPercent());
         SmartDashboard.putNumber("Lifter VBus L", motorLeftA.getMotorOutputPercent());
+        SmartDashboard.putNumber("Lifter Stick", Robot.oi.getDriverStickY());
     }
 
 }

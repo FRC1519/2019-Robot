@@ -8,47 +8,50 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
+import org.mayheminc.robot2019.subsystems.CargoIntake;
+import org.mayheminc.robot2019.subsystems.LedPatternFactory;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class LifterToPosition extends Command {
-  int m_position;
+/**
+ * Set the CargoIntake to a power.
+ */
+public class LifterSetManual extends Command {
+  /**
+   * Add your docs here.
+   */
   double m_power;
 
-  public LifterToPosition(int position, double power) {
+  public LifterSetManual(double power) {
+    super();
+
     // Use requires() here to declare subsystem dependencies
     requires(Robot.lifter);
-    m_position = position;
     m_power = power;
   }
 
-  // Called just before this Command runs the first time
+  // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.lifter.setPositionWithPower(m_position, m_power);
+    Robot.lifter.setManual(m_power);
   }
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-  }
-
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.lifter.IsAtSetpoint();
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    // Robot.lifter.stop();
+    // don't need to do anything here
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.lifter.stop();
+    // don't need to do anything here }
   }
 }

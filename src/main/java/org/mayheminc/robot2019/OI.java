@@ -71,6 +71,8 @@ public class OI {
 	// DisabledOnlyJoystickButton(DRIVER_STICK, 10);
 	// private static final Button DRIVER_STICK_BUTTON_ELEVEN = new
 	// DisabledOnlyJoystickButton(DRIVER_STICK, 11);
+	public static final int DRIVER_STICK_X_AXIS = 0;
+	public static final int DRIVER_STICK_Y_AXIS = 1;
 
 	// operator pad and stick
 	public static final Joystick OPERATOR_PAD = new Joystick(RobotMap.OPERATOR_GAMEPAD);
@@ -204,7 +206,7 @@ public class OI {
 		// *******************************DRIVER
 		// PAD**************************************
 
-		DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0) /* do nothing */ );
+		// DRIVER_PAD_RED_BUTTON.whileHeld(new Wait(0) /* do nothing */ );
 		DRIVER_PAD_BLUE_BUTTON.whileHeld(new AutoAlign(TargetPosition.CENTER_MOST));
 
 		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign(TargetPosition.CENTER_MOST));
@@ -213,9 +215,10 @@ public class OI {
 
 		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new TestForCancelCommandGroups() /* do
 		// nothing */ );
-		DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait() /* do nothing */ );
-		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new
-		// LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
+		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait() /* do nothing */ );
+		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new AutoClimbL2() /* AutoClimbL2() */ );
+		DRIVER_PAD_RED_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
+		DRIVER_PAD_GREEN_BUTTON.whileHeld(new AutoClimbL2());
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
@@ -354,6 +357,16 @@ public class OI {
 	public double getOperatorLeftX() {
 		double value = OPERATOR_PAD.getRawAxis(OPERATOR_PAD_LEFT_X_AXIS);
 		return applyLinearizedDeadZone(value, ARM_DEAD_ZONE_PERCENT);
+	}
+
+	public double getDriverStickY() {
+		double value = -DRIVER_STICK.getRawAxis(DRIVER_STICK_Y_AXIS); // NOTE: Don't overlook the negation!
+		return applyLinearizedDeadZone(value, 0.15);
+	}
+
+	public double getDriverStickX() {
+		double value = DRIVER_STICK.getRawAxis(DRIVER_STICK_X_AXIS);
+		return applyLinearizedDeadZone(value, 0.15);
 	}
 
 	public boolean quickTurn() {
