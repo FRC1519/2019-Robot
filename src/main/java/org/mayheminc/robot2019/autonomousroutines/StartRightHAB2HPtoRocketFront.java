@@ -19,5 +19,8 @@ public class StartRightHAB2HPtoRocketFront extends CommandGroup {
 
     // Call the shared HAB2HPtoRocketFront routine, specifying our starting side
     addSequential(new HAB2HPtoRocketFront(Autonomous.StartOn.RIGHT));
+
+    // now run the routine to get a hatch panel from the loading station
+    addSequential(new RocketFrontToLoadingStationFast(Autonomous.StartOn.RIGHT));
   }
 }
