@@ -28,6 +28,7 @@ public class Drive extends Subsystem {
 	private PIDHeadingError m_HeadingError;
 	private PIDHeadingCorrection m_HeadingCorrection;
 	private boolean m_HeadingPidPreventWindup = false;
+	private static final int LOOPS_GYRO_DELAY = 10;
 
 	// Talons
 	private final MayhemTalonSRX leftFrontTalon = new MayhemTalonSRX(RobotMap.LEFT_FRONT_TALON);
@@ -55,7 +56,7 @@ public class Drive extends Subsystem {
 	private double m_maxWheelSpeed = 1.0; // set to 1.0 as default for "open loop" percentVBus drive
 	private double m_voltageRampRate = 48.0;
 
-	private double m_initialWheelDistance;
+	private double m_initialWheelDistance = 0.0;
 	private int m_iterationsSinceRotationCommanded = 0;
 	private int m_iterationsSinceMovementCommanded = 0;
 
@@ -87,10 +88,10 @@ public class Drive extends Subsystem {
 		// create a PID Controller that reads the heading error and outputs the heading
 		// correction.
 		m_HeadingError = new PIDHeadingError();
+		m_HeadingError.m_Error = 0.0;
 		m_HeadingCorrection = new PIDHeadingCorrection();
-		m_HeadingPid = new PIDController(HEADING_PID_P_FOR_HIGH_GEAR, 0.000, 0.04, m_HeadingError, m_HeadingCorrection); // P
-																															// was
-																															// 0.015
+		m_HeadingPid = new PIDController(HEADING_PID_P_FOR_HIGH_GEAR, 0.000, 0.04, m_HeadingError, m_HeadingCorrection,
+				0.020 /* period in seconds */);
 		m_HeadingPid.setInputRange(-180.0f, 180.0f);
 		m_HeadingPid.setContinuous(true); // treats the input range as "continous" with wrap-around
 		m_HeadingPid.setOutputRange(-.50, .50); // set the maximum power to correct twist
@@ -144,8 +145,6 @@ public class Drive extends Subsystem {
 
 		// restart the PID controller loop
 		resetAndEnableHeadingPID();
-		// m_HeadingPid.reset();
-		// m_HeadingPid.enable();
 	}
 
 	public void initDefaultCommand() {
@@ -214,7 +213,7 @@ public class Drive extends Subsystem {
 
 	public void setOpenLoopMode() {
 		m_closedLoopMode = false;
-		// reconfigure the "master" drive talons now that we're in closed loop mode
+		// reconfigure the "master" drive talons now that we're in open loop mode
 		configureCanTalon(leftFrontTalon);
 		configureCanTalon(rightFrontTalon);
 	}
@@ -329,13 +328,6 @@ public class Drive extends Subsystem {
 		setMotorPower(0, 0);
 	}
 
-	public void recalibrateHeadingGyro() {
-		// headingGyro.free();
-		// headingGyro = new AnalogGyro(RobotMap.HEADING_GYRO);
-		// Navx.free();
-		// Navx = new AHRS(SPI.Port.kMXP);
-	}
-
 	private void setMotorPower(double leftPower, double rightPower) {
 		if (rightPower > 1.0) {
 			rightPower = 1.0;
@@ -410,16 +402,12 @@ public class Drive extends Subsystem {
 		autoAlign = true;
 		// reset the PID controller loop for steering now that we are auto-aligning
 		resetAndEnableHeadingPID();
-		// m_HeadingPid.reset();
-		// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 		Robot.lights.set(LedPatternFactory.autoAlignTrying);
 	}
 
 	public void setAutoAlignFalse() {
 		autoAlign = false;
 		resetAndEnableHeadingPID();
-		// m_HeadingPid.reset();
-		// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 		Robot.lights.set(LedPatternFactory.autoAlignGotIt);
 	}
 
@@ -429,7 +417,6 @@ public class Drive extends Subsystem {
 		double adjustedSteeringX = rawSteeringX * throttle;
 		final double QUICK_TURN_GAIN = 0.75; // culver drive used 1.5
 		final double STD_TURN_GAIN = 1.5; // the driver wants the non-quick turn turning a little more responsive.
-		final int LOOPS_GYRO_DELAY = 10;
 
 		int throttleSign;
 		if (throttle >= 0.0) {
@@ -439,64 +426,48 @@ public class Drive extends Subsystem {
 		}
 		if (autoAlign) {
 			// DriverStation.reportWarning("Auto align was called in drive base", false);
-			// adjustedSteeringX = 0;
 
-			// double visionRotation = Robot.targeting.amountToTurn();
+			// Use the targeting code to get the desired heading
 			m_desiredHeading = Robot.targeting.desiredHeading();
-			rawSteeringX = 0.0;
 
-			// RD - read the maintain heading to adjust the steering of the robot.
+			// Use the heading PID to provide the rotation input
 			rotation = maintainHeading();
 
-			// final double VISION_MULTIPLIER = 2.0;
-			// rotation = visionRotation * VISION_MULTIPLIER;
-
-			// throttle = 0.2;
-
-			// double bus2_distance = SmartDashboard.getNumber("2", -1);
-			// double bus3_distance = SmartDashboard.getNumber("3", -1);
-			// // They might be backwards
-			// double angle_offset = Math.tanh(bus2_distance - bus3_distance);
-			// double av_distance = Math.abs(bus2_distance - bus3_distance);
-
-			// double x_raw = SmartDashboard.getNumber("targetX", -1);
-			// double offSetOfX = Math.abs(x_raw - TARGET_ALIGNED);
 		} else {
 			// not using camera targeting right now
-			if (rawSteeringX == 0.0) {
+
+			// check for if steering input is essentially zero
+			if ((-0.01 < rawSteeringX) && (rawSteeringX < 0.01)) {
 				// no turn being commanded, drive straight or stay still
 				m_iterationsSinceRotationCommanded++;
-				if (throttle == 0.0) {
+				if ((-0.01 < throttle) && (throttle < 0.01)) {
 					// no motion commanded, stay still
 					m_iterationsSinceMovementCommanded++;
 					rotation = 0.0;
 					m_desiredHeading = getHeading(); // whenever motionless, set desired heading to current heading
 					// reset the PID controller loop now that we have a new desired heading
 					resetAndEnableHeadingPID();
-					// m_HeadingPid.reset();
-					// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 				} else {
 					// driving straight
 					if ((m_iterationsSinceRotationCommanded == LOOPS_GYRO_DELAY)
 							|| (m_iterationsSinceMovementCommanded >= LOOPS_GYRO_DELAY)) {
-						// DriverStation.reportError("drive 1", false);
-						// exactly five iterations with no commanded turn,
+						// exactly LOOPS_GYRO_DELAY iterations with no commanded turn,
+						// or haven't had movement commanded for longer than LOOPS_GYRO_DELAY,
+						// so we want to take steps to preserve our current heading hereafter
+
 						// get current heading as desired heading
 						m_desiredHeading = getHeading();
 
 						// reset the PID controller loop now that we have a new desired heading
 						resetAndEnableHeadingPID();
-						// m_HeadingPid.reset();
-						// m_HeadingPid.enable(); // need to re-enable PID controller after a reset()
 						rotation = 0.0;
 					} else if (m_iterationsSinceRotationCommanded < LOOPS_GYRO_DELAY) {
-						// DriverStation.reportError("drive 2", false);
-						// just start driving straight without special heading maintenance
+						// not long enough since we were last turning,
+						// just drive straight without special heading maintenance
 						rotation = 0.0;
 					} else if (m_iterationsSinceRotationCommanded > LOOPS_GYRO_DELAY) {
-						// DriverStation.reportError("drive 3", false);
-						// after more then five iterations since commanded turn, maintain the target
-						// heading
+						// after more then LOOPS_GYRO_DELAY iterations since commanded turn,
+						// maintain the target heading
 						rotation = maintainHeading();
 					}
 					m_iterationsSinceMovementCommanded = 0;
@@ -547,12 +518,9 @@ public class Drive extends Subsystem {
 	 * @return
 	 */
 	private double maintainHeading() {
-		// TODO: two lines immediately below appear to be "overwritten" by fourth line
-		// below
-		// double headingError = calculateHeadingError(m_desiredHeading);
-		// m_HeadingError.m_Error = headingError;
 		double headingCorrection = 0.0;
 
+		// below line is essential to let the Heading PID know the current heading error
 		m_HeadingError.m_Error = m_desiredHeading - getHeading();
 
 		if (m_useHeadingCorrection) {
@@ -561,12 +529,12 @@ public class Drive extends Subsystem {
 			headingCorrection = 0.0;
 		}
 
+		// check for major heading changes and take action to prevent
+		// integral windup if there is a major heading error
 		if (Math.abs(m_HeadingError.m_Error) > 10.0) {
 			if (!m_HeadingPidPreventWindup) {
 				m_HeadingPid.setI(0.0);
 				resetAndEnableHeadingPID();
-				// m_HeadingPid.reset(); // clear the wind-up.
-				// m_HeadingPid.enable(); // the reset turns it off. Turn it on.
 				m_HeadingPidPreventWindup = true;
 			}
 		} else {
@@ -577,24 +545,6 @@ public class Drive extends Subsystem {
 		return headingCorrection;
 	}
 
-	/**
-	 * Drive forward and use the compass to correct any twisting
-	 * 
-	 * @param targetPower
-	 */
-	public void driveStraightForward(double targetPower) {
-		double leftPower = 0.0;
-		double rightPower = 0.0;
-		double headingCorrection = maintainHeading();
-
-		rightPower = targetPower - headingCorrection;
-		leftPower = targetPower + headingCorrection;
-
-		SmartDashboard.putNumber("LeftPower :", leftPower);
-		SmartDashboard.putNumber("RightPower :", rightPower);
-		setMotorPower(leftPower, rightPower);
-	}
-
 	public void rotate(double RotateX) {
 		m_desiredHeading += RotateX;
 		if (m_desiredHeading > 180) {
@@ -603,7 +553,7 @@ public class Drive extends Subsystem {
 		if (m_desiredHeading < -180) {
 			m_desiredHeading += 360;
 		}
-		m_iterationsSinceRotationCommanded = 50; // hack so speedracerdrive maintains heading
+		m_iterationsSinceRotationCommanded = LOOPS_GYRO_DELAY + 1; // hack so speedracerdrive maintains heading
 		m_iterationsSinceMovementCommanded = 0;
 	}
 
@@ -662,52 +612,7 @@ public class Drive extends Subsystem {
 		// SmartDashboard.putNumber("Current Speed", currentSpeed);
 	}
 
-	// ********************************AUTO TARGET*********************************
-
-	public void autoTarget(double argPower) {
-		// final double DEGREES_PER_PIXEL = (56.5 / 320.0); // Axis 206 - 56.5 degree
-		// FOV, 320 pixels
-		// double correction = Robot.targeting.getCubeCenterOffset() *
-		// DEGREES_PER_PIXEL;
-		// double headingForImage = Robot.targeting.getRobotHeading();
-		// double targetHeading = (headingForImage + correction);
-		//
-		// SmartDashboard.putNumber("Auto Aim: Target Heading", targetHeading);
-		// SmartDashboard.putNumber("Auto Aim: Image Header", headingForImage);
-		// SmartDashboard.putNumber("Auto Aim: Target Correction", correction);
-
-		// if we can see a target, update the PID Controller with the desired heading
-		// if (Robot.targeting.isCubeVisible()) {
-		// m_desiredHeading = targetHeading;
-		// }
-
-		// ask the PIDController for the adjustment needed to go to the desired heading
-		// double adjustment = maintainHeading();
-		// double leftPower = argPower + adjustment;
-		// double rightPower = argPower - adjustment;
-		//
-		// if (argPower > 0) {
-		// // constrain leftPower and rightPower to be positive
-		// if (leftPower <= 0) { leftPower = 0; }
-		// if (rightPower <= 0) { rightPower = 0; }
-		// }
-		// if (argPower < 0) {
-		// // constrain leftPower and rightPower to be negative
-		// if (leftPower >= 0) { leftPower = 0; }
-		// if (rightPower >= 0) { rightPower = 0; }
-		// }
-		// positiveSimpleDrive(leftPower, rightPower);
-		// SmartDashboard.putNumber("Auto Aim: Drive Adjustment", adjustment);
-	}
-
-	public static final int AIM_REQUIRED_LOOPS_ON_TARGET_TELEOP = 9; // was 6 on first day of UNH; 9 on second day
-	public static final int AIM_REQUIRED_LOOPS_ON_TARGET_AUTONOMOUS = 18; // was 6 on first day of UNH; 9 on second day
-
-	public void resetLoopsOnTarget() {
-	}
-
-	// final double CAMERA_LAG = 0.200;
-	final double CAMERA_LAG = 0.2;
+	private static final double CAMERA_LAG = 0.200;
 
 	public void updateHistory() {
 		double now = Timer.getFPGATimestamp();
@@ -742,13 +647,11 @@ public class Drive extends Subsystem {
 	// NOTE the difference between rotateToHeading(...) and goToHeading(...)
 	public void setDesiredHeading(double desiredHeading) {
 		m_desiredHeading = desiredHeading;
-		m_iterationsSinceRotationCommanded = 50; // RJD: I think this should be the constnat.
+		m_iterationsSinceRotationCommanded = LOOPS_GYRO_DELAY + 1;
 		m_iterationsSinceMovementCommanded = 0;
 
 		// reset the heading control loop for the new heading
 		resetAndEnableHeadingPID();
-		// m_HeadingPid.reset();
-		// m_HeadingPid.enable();
 	}
 
 }
