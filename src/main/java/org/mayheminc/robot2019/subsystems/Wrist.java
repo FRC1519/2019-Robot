@@ -32,7 +32,7 @@ public class Wrist extends Subsystem {
     public static final double CARGO_ROCKET_MID_ANGLE = 44.0; // was 50 before NECMP
     public static final double CARGO_ROCKET_LOW_ANGLE = 44.0; // was 50 before NECMP
     public static final double CARGO_CARGO_SHIP_ANGLE = -7.0;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -20.0;
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -20.0; // was -20.0 on comp robot at NECMP
     // public static final double CARGO_LOADING_STATION_ANGLE = 25.0;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 95.0;
