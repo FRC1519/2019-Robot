@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.networktables.*;
 
+import java.io.File;
+import java.util.Date;
+
 import org.mayheminc.robot2019.commands.RunAutonomous;
 import org.mayheminc.robot2019.subsystems.*;
 import org.mayheminc.util.SchedulerManager;
@@ -140,6 +143,14 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		Autonomous.updateSmartDashboard();
 
 		// SchedulerManager.constructInstance();
+		try {
+			Date d = new Date(new File(getClass().getClassLoader()
+					.getResourceAsStream(getClass().getCanonicalName().replace('.', '/') + ".class").toString())
+							.lastModified());
+			SmartDashboard.putString("Build Time", d.toString());
+		} catch (Exception ex) {
+			SmartDashboard.putString("Build Time", ex.toString());
+		}
 	}
 
 	/**
@@ -155,7 +166,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// run the scheduler on every main loop so that commands execute
 		Scheduler.getInstance().run();
 
-		//SchedulerManager.getInstance().updateTelemetry();
+		// SchedulerManager.getInstance().updateTelemetry();
 	}
 
 	/**
