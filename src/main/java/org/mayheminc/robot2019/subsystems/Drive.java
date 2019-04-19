@@ -547,8 +547,10 @@ public class Drive extends Subsystem {
 	 * @return
 	 */
 	private double maintainHeading() {
-		double headingError = calculateHeadingError(m_desiredHeading);
-		m_HeadingError.m_Error = headingError;
+		// TODO: two lines immediately below appear to be "overwritten" by fourth line
+		// below
+		// double headingError = calculateHeadingError(m_desiredHeading);
+		// m_HeadingError.m_Error = headingError;
 		double headingCorrection = 0.0;
 
 		m_HeadingError.m_Error = m_desiredHeading - getHeading();
@@ -741,6 +743,7 @@ public class Drive extends Subsystem {
 	public void setDesiredHeading(double desiredHeading) {
 		m_desiredHeading = desiredHeading;
 		m_iterationsSinceRotationCommanded = 50; // RJD: I think this should be the constnat.
+		m_iterationsSinceMovementCommanded = 0;
 
 		// reset the heading control loop for the new heading
 		resetAndEnableHeadingPID();

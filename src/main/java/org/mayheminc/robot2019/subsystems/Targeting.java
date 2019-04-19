@@ -21,19 +21,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Targeting extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private double Y_WHEN_TARGET_AT_WALL = 0.65; // Worked fine and 0.70
+
+  // COMPETITION ROBOT NEEDS THE ONE BELOW!
+  // private double Y_WHEN_TARGET_AT_WALL = 0.65; // Worked fine and 0.70
+
+  // PRACTICE ROBOT NEEDS THE ONE BELOW!
+  private double Y_WHEN_TARGET_AT_WALL = 0.75; // Worked fine and 0.70
+
+  private static final double SPEED_EQ_M = -4.115;
+  private static final double SPEED_EQ_B = 2.244;
 
   // Below valls are for centered arm
-  // private double CENTER_EQ_M = -0.1925;
-  // private double CENTER_EQ_B = 0.5719;
+  // private static final double CENTER_EQ_M = -0.1925;
+  // private static final double CENTER_EQ_B = 0.5719;
 
   // Below values are for arm off 2 inches to left on the practice robot
-  // private double CENTER_EQ_M = -0.2964;
-  // private double CENTER_EQ_B = 0.5871;
+  private static final double CENTER_EQ_M_HP = -0.2964;
+  private static final double CENTER_EQ_B_HP = 0.5871;
+  private static final double CENTER_EQ_M_CARGO = -0.2964;
+  private static final double CENTER_EQ_B_CARGO = 0.5871;
 
   // Below values are for competition robot based upon PineTree data
-  private double CENTER_EQ_M = -0.2762;
-  private double CENTER_EQ_B = 0.5563;
+  // private static final double CENTER_EQ_M = -0.2762;
+  // private static final double CENTER_EQ_B = 0.5563;
 
   // After computing a desired heading, add a "fudge" offset to correct
   // empirically measured error. Found to be approx -1 degree (to shift aim 1" to
@@ -56,7 +66,13 @@ public class Targeting extends Subsystem {
     LEFT_MOST, CENTER_MOST, RIGHT_MOST, CENTER_OF_RIGHT_CARGO_SHIP, CENTER_OF_LEFT_CARGO_SHIP
   };
 
+  public enum TargetHeight {
+    CARGO, HATCH
+  };
+
   private TargetPosition m_mode = TargetPosition.CENTER_MOST;
+  private TargetHeight m_TargetHeightMode = TargetHeight.CARGO;
+  // private TargetPosition m_targetHeightMode = TargetHeight.HATCH;
 
   public void update() {
 
@@ -97,7 +113,7 @@ public class Targeting extends Subsystem {
         m_bestX = m_target_array[0]; // get the x-value
         m_bestY = m_target_array[1]; // get the y-value
         // Set m_desiredHeading
-        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
         break;
       }
       case CENTER_MOST: {
@@ -116,7 +132,7 @@ public class Targeting extends Subsystem {
         m_bestX = m_target_array[m_target_array.length - 2];
         m_bestY = m_target_array[m_target_array.length - 1];
         // Set m_desiredHeading
-        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
         break;
       }
       case CENTER_OF_RIGHT_CARGO_SHIP: {
@@ -126,7 +142,7 @@ public class Targeting extends Subsystem {
           m_bestX = m_target_array[2];
           m_bestY = m_target_array[3];
           // Set m_desiredHeading
-          m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+          m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
           // If we are trying to drive too much down field drive straight at the cargo
           // ship.
           // We don't want to go into the opposing side in auto!
@@ -150,7 +166,7 @@ public class Targeting extends Subsystem {
           m_bestX = m_target_array[m_target_array.length - 4];
           m_bestY = m_target_array[m_target_array.length - 3];
           // Set m_desiredHeading
-          m_desiredHeading = findDesiredHeading(m_bestX, m_bestY);
+          m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
           // If we are trying to drive too much down field drive strait at the cargo ship.
           // We don't want to go into the opposing side in auto!
           // if (m_desiredHeading > 60) {
@@ -193,17 +209,19 @@ public class Targeting extends Subsystem {
     if (m_bestY < 0.1) {
       // can't see the target, set speed to something real slow
       speed = 0.2;
-    } else if (m_bestY > 0.6) {
-      // less than approx 18" from target
-      speed = 0.3;
-    } else if (0.45 <= m_bestY && m_bestY <= 0.60) {
-      // approx 18" to 48" from target
-      speed = 0.5;
     } else {
-      // 0.1 < m_bestY < 0.45
-      // more than 48" from target
-      speed = 0.9;
+
+      // use the equation to determine the speed from m_bestY
+      speed = (SPEED_EQ_M * m_bestY) + SPEED_EQ_B;
+
+      // enforce min speed of 0.30 and max speed of 0.90
+      if (speed < 0.30) {
+        speed = 0.30;
+      } else if (speed > 0.90) {
+        speed = 0.90;
+      }
     }
+
     return speed;
   }
 
@@ -219,14 +237,18 @@ public class Targeting extends Subsystem {
     m_mode = modeToSet;
   }
 
-  public double findDesiredHeading(double X, double Y) {
+  public double findDesiredHeading(double X, double Y, TargetHeight target) {
     // Calulate angle error based on an X,Y
     double trueAngleError;
     double TrueCenter;
     double XError;
     double desiredHeading;
     // calculate the true center as a function of the height
-    TrueCenter = (CENTER_EQ_M * Y) + CENTER_EQ_B;
+    if (target == TargetHeight.CARGO) {
+      TrueCenter = (CENTER_EQ_M_CARGO * Y) + CENTER_EQ_B_CARGO;
+    } else {
+      TrueCenter = (CENTER_EQ_M_HP * Y) + CENTER_EQ_B_HP;
+    }
     // compute the "x error" based upon the trueCenter
     XError = X - TrueCenter;
     // Find the angle error
@@ -237,6 +259,10 @@ public class Targeting extends Subsystem {
     SmartDashboard.putNumber("True Angle Error", trueAngleError);
     SmartDashboard.putNumber("Vision Desired Heading", desiredHeading);
     return desiredHeading;
+  }
+
+  public void setTargetHeight(TargetHeight target) {
+    m_TargetHeightMode = target;
   }
 
   private double[] findTheCenterMostTarget() {
@@ -268,7 +294,7 @@ public class Targeting extends Subsystem {
         // the target nearest to the "dynamic center"
 
         // calculate the true center as a function of the height
-        tempTrueCenter = (CENTER_EQ_M * tempY) + CENTER_EQ_B;
+        tempTrueCenter = (CENTER_EQ_M_HP * tempY) + CENTER_EQ_B_HP;
 
         // compute the "x error" based upon the trueCenter
         tempXError = tempX - tempTrueCenter;
@@ -282,7 +308,7 @@ public class Targeting extends Subsystem {
       i++;
     }
     // Find the Desired heading baised on the x, y
-    desiredHeading = findDesiredHeading(bestX, bestY);
+    desiredHeading = findDesiredHeading(bestX, bestY, m_TargetHeightMode);
     // Create the array to return
     double[] returnArray = { desiredHeading, bestX, bestY };
     return returnArray;

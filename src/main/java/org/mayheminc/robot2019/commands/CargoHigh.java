@@ -10,6 +10,7 @@ package org.mayheminc.robot2019.commands;
 import org.mayheminc.robot2019.subsystems.Shoulder;
 import org.mayheminc.robot2019.subsystems.TargetingLights;
 import org.mayheminc.robot2019.subsystems.Wrist;
+import org.mayheminc.robot2019.subsystems.Targeting.TargetHeight;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

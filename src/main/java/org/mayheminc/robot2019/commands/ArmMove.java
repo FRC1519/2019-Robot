@@ -2,6 +2,7 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.subsystems.Wrist;
+import org.mayheminc.robot2019.subsystems.Targeting.TargetHeight;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -37,6 +38,11 @@ public class ArmMove extends Command {
 	 */
 	public ArmMove(double targetShoulderAngle, double targetWristAngle) {
 		this(targetShoulderAngle, targetWristAngle, DEFAULT_TIMEOUT);
+	}
+
+	public ArmMove(double targetShoulderAngle, double targetWristAngle, TargetHeight target) {
+		this(targetShoulderAngle, targetWristAngle, DEFAULT_TIMEOUT);
+		Robot.targeting.setTargetHeight(target);
 	}
 
 	/**
