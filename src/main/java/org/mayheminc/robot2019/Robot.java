@@ -138,8 +138,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// instantiate the command used for the autonomous period
 		autonomousCommand = new RunAutonomous();
-		DriverStation.reportWarning("Constructed auto command.\n", false);
-		SmartDashboard.putString("Auto Prog", "Done.");
+		// DriverStation.reportWarning("Constructed auto command.\n", false);
+		// SmartDashboard.putString("Auto Prog", "Done.");
 		Autonomous.updateSmartDashboard();
 
 		// SchedulerManager.constructInstance();
@@ -265,8 +265,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		autonomousStartTime = System.currentTimeMillis();
 		printAutoElapsedTime = true;
 
-		DriverStation.reportError(
-				"AutonomousTimeRemaining from autonomousInit = " + Robot.autonomousTimeRemaining() + "\n", false);
+		// DriverStation.reportError(
+		// 		"AutonomousTimeRemaining from autonomousInit = " + Robot.autonomousTimeRemaining() + "\n", false);
 
 		targetingLights.set(true);
 	}
@@ -329,7 +329,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// turn on the compressor (may have been off in autonomous)
 		compressor.start();
 
-		DriverStation.reportError("Entering Teleop.\n", false);
+		// DriverStation.reportError("Entering Teleop.\n", false);
 
 		shifter.setGear(Shifter.HIGH_GEAR);
 
