@@ -10,6 +10,7 @@ package org.mayheminc.robot2019.autonomousroutines;
 import org.mayheminc.robot2019.commands.AutoAlignUntilAtWall;
 import org.mayheminc.robot2019.commands.DriveSetShifter;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
+import org.mayheminc.robot2019.commands.HatchPanelLoadingStation;
 import org.mayheminc.robot2019.commands.HatchPanelSet;
 import org.mayheminc.robot2019.commands.PrintAutonomousTimeRemaining;
 import org.mayheminc.robot2019.commands.Wait;
@@ -33,6 +34,9 @@ public class ShipSideToLoadingStationFast extends CommandGroup {
 
     // angle below had been 180.0 on practice robot before NECMP (in low gear)
     addSequential(new DriveStraightOnHeading(-0.4, 36, Autonomous.chooseAngle(startSide, 157.0)));
+
+    // put arm and HP intake into the loading station position
+    addParallel(new HatchPanelLoadingStation());
 
     // drive forwards towards the loading station at high speed in low gear to
     // enable sharp turn
