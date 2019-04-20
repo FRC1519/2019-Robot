@@ -36,12 +36,13 @@ public class AutoClimbL2 extends CommandGroup {
         // * 2 - Drive forward a few inches to have lifter pressed against L2 wall
         addSequential(new DriveStraightForTime(0.50, 0.75)); // drive for only a half second
 
+        // gently hold the robot against the L2 platform so it doesn't roll back off
         addParallel(new DriveStraightForTime(0.10, 1.0)); // drive for only a half second
         // * 3 - Retract lifter fully into robot
         // we don't really have a command for this, let's just raise the lifter gently
         // and hold it there
-        addSequential(new LifterSetManual(-0.25)); // raise the lifter at 10%
-        addSequential(new Wait(1.0)); // give the lifter half a second to get there
+        addSequential(new LifterSetManual(-0.25)); // raise the lifter at -25%
+        addSequential(new Wait(1.0)); // give the lifter a second to get there
 
         // * 4 - Drive a little further forward
         addSequential(new DriveStraightForTime(0.50, 1.0)); // drive for only a half second

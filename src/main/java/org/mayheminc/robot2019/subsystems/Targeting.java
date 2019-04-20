@@ -26,7 +26,16 @@ public class Targeting extends Subsystem {
   // private double Y_WHEN_TARGET_AT_WALL = 0.65; // Worked fine and 0.70
 
   // PRACTICE ROBOT NEEDS THE ONE BELOW!
-  private double Y_WHEN_TARGET_AT_WALL = 0.75; // Worked fine and 0.70
+  // private double m_YWhenTargetAtWall= 0.75; // Worked fine and 0.70
+
+  // Y when hatch panel is at wall when the arm is low
+  private static final double Y_AT_WALL_SAFETY_MARGIN = 0.05;
+
+  private static final double Y_WHEN_HATCH_LOW_AT_WALL = 0.70 + Y_AT_WALL_SAFETY_MARGIN;
+  // Y when hatch panel is at wall when the arm is high
+  private static final double Y_WHEN_HATCH_MID_AT_WALL = 0.50 + Y_AT_WALL_SAFETY_MARGIN;
+  // Y when hatch panel is at wall when the arm is high
+  private static final double Y_WHEN_HATCH_HIGH_AT_WALL = 0.60 + Y_AT_WALL_SAFETY_MARGIN;
 
   private static final double SPEED_EQ_M = -4.115;
   private static final double SPEED_EQ_B = 2.244;
@@ -38,8 +47,8 @@ public class Targeting extends Subsystem {
   // Below values are for arm off 2 inches to left on the practice robot
   private static final double CENTER_EQ_M_HP = -0.2964;
   private static final double CENTER_EQ_B_HP = 0.5871;
-  private static final double CENTER_EQ_M_CARGO = -0.2964;
-  private static final double CENTER_EQ_B_CARGO = 0.5871;
+  private static final double CENTER_EQ_M_CARGO = -0.6102;
+  private static final double CENTER_EQ_B_CARGO = 0.6334;
 
   // Below values are for competition robot based upon PineTree data
   // private static final double CENTER_EQ_M = -0.2762;
@@ -71,8 +80,8 @@ public class Targeting extends Subsystem {
   };
 
   private TargetPosition m_mode = TargetPosition.CENTER_MOST;
-  private TargetHeight m_TargetHeightMode = TargetHeight.CARGO;
-  // private TargetPosition m_targetHeightMode = TargetHeight.HATCH;
+  // Mode for target height
+  private TargetHeight m_TargetHeightMode = TargetHeight.HATCH;
 
   public void update() {
 
@@ -107,89 +116,133 @@ public class Targeting extends Subsystem {
 
       // Handle each of them separately;
       // we need the results in "bestXError" and "bestY"
-      switch (m_mode) {
-      case LEFT_MOST: {
-        // Case A: (we want to use the left-most target)
-        m_bestX = m_target_array[0]; // get the x-value
-        m_bestY = m_target_array[1]; // get the y-value
-        // Set m_desiredHeading
-        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
-        break;
-      }
-      case CENTER_MOST: {
-        // Case B:
-        // Find the centermost target
-        centerMostTargetArray = findTheCenterMostTarget();
-        m_desiredHeading = centerMostTargetArray[0];
-        m_bestX = centerMostTargetArray[1];
-        m_bestY = centerMostTargetArray[2];
-        break;
-      }
-      case RIGHT_MOST: {
-        // Case C
 
-        // use "length trick" to find the last pair of points
-        m_bestX = m_target_array[m_target_array.length - 2];
-        m_bestY = m_target_array[m_target_array.length - 1];
-        // Set m_desiredHeading
-        m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
-        break;
-      }
-      case CENTER_OF_RIGHT_CARGO_SHIP: {
-        // If we see at least 3 targets
-        if (6 <= m_target_array.length) {
-          // Use the second target from the left
-          m_bestX = m_target_array[2];
-          m_bestY = m_target_array[3];
+      if (m_TargetHeightMode == TargetHeight.HATCH) {
+        switch (m_mode) {
+        case LEFT_MOST: {
+          SmartDashboard.putString("Targeting Mode", "LEFT_MOST");
+          // Case A: (we want to use the left-most target)
+          m_bestX = m_target_array[0]; // get the x-value
+          m_bestY = m_target_array[1]; // get the y-value
           // Set m_desiredHeading
           m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
-          // If we are trying to drive too much down field drive straight at the cargo
-          // ship.
-          // We don't want to go into the opposing side in auto!
-          // if (m_desiredHeading > -60) {
-          // m_desiredHeading = -90;
-          // }
-
-        } else {
+          break;
+        }
+        case CENTER_MOST: {
+          SmartDashboard.putString("Targeting Mode", "CENTER_MOST");
+          // Case B:
           // Find the centermost target
-          centerMostTargetArray = findTheCenterMostTarget();
+          centerMostTargetArray = findTheCenterMostTarget(m_TargetHeightMode);
           m_desiredHeading = centerMostTargetArray[0];
           m_bestX = centerMostTargetArray[1];
           m_bestY = centerMostTargetArray[2];
+          break;
         }
-        break;
-      }
-      case CENTER_OF_LEFT_CARGO_SHIP: {
-        // If we see at least 3 targets
-        if (6 <= m_target_array.length) {
-          // Use the second target from the Right
-          m_bestX = m_target_array[m_target_array.length - 4];
-          m_bestY = m_target_array[m_target_array.length - 3];
+        case RIGHT_MOST: {
+          SmartDashboard.putString("Targeting Mode", "RIGHT_MOST");
+
+          // Case C
+
+          // use "length trick" to find the last pair of points
+          m_bestX = m_target_array[m_target_array.length - 2];
+          m_bestY = m_target_array[m_target_array.length - 1];
           // Set m_desiredHeading
           m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
-          // If we are trying to drive too much down field drive strait at the cargo ship.
-          // We don't want to go into the opposing side in auto!
-          // if (m_desiredHeading > 60) {
-          // m_desiredHeading = 90;
-          // }
-
-        } else {
-          // Find the centermost target
-          centerMostTargetArray = findTheCenterMostTarget();
-          m_desiredHeading = centerMostTargetArray[0];
-          m_bestX = centerMostTargetArray[1];
-          m_bestY = centerMostTargetArray[2];
+          break;
         }
-        break;
-      }
-      default: {
-        // If something goes bad set varables to default values
-        DriverStation.reportError("Invalid TargetPosition in Targeting.update(): " + m_mode + "\n", false);
-        m_bestY = 0.0;
-        m_bestX = 0.0;
-        m_desiredHeading = Robot.drive.getHeadingForCapturedImage();
-        break;
-      }
+        case CENTER_OF_RIGHT_CARGO_SHIP: {
+          SmartDashboard.putString("Targeting Mode", "CENTER_OF_RIGHT_SHIP");
+
+          // If we see at least 3 targets
+          if (6 <= m_target_array.length) {
+            // Use the second target from the left
+            m_bestX = m_target_array[2];
+            m_bestY = m_target_array[3];
+            // Set m_desiredHeading
+            m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
+            // If we are trying to drive too much down field drive straight at the cargo
+            // ship.
+            // We don't want to go into the opposing side in auto!
+            // if (m_desiredHeading > -60) {
+            // m_desiredHeading = -90;
+            // }
+
+          } else {
+            // Find the centermost target
+            centerMostTargetArray = findTheCenterMostTarget(m_TargetHeightMode);
+            m_desiredHeading = centerMostTargetArray[0];
+            m_bestX = centerMostTargetArray[1];
+            m_bestY = centerMostTargetArray[2];
+          }
+          break;
+        }
+        case CENTER_OF_LEFT_CARGO_SHIP: {
+          SmartDashboard.putString("Targeting Mode", "CENTER_OF_LEFT_SHIP");
+
+          // If we see at least 3 targets
+          if (6 <= m_target_array.length) {
+            // Use the second target from the Right
+            m_bestX = m_target_array[m_target_array.length - 4];
+            m_bestY = m_target_array[m_target_array.length - 3];
+            // Set m_desiredHeading
+            m_desiredHeading = findDesiredHeading(m_bestX, m_bestY, m_TargetHeightMode);
+            // If we are trying to drive too much down field drive strait at the cargo ship.
+            // We don't want to go into the opposing side in auto!
+            // if (m_desiredHeading > 60) {
+            // m_desiredHeading = 90;
+            // }
+
+          } else {
+            // Find the centermost target
+            centerMostTargetArray = findTheCenterMostTarget(m_TargetHeightMode);
+            m_desiredHeading = centerMostTargetArray[0];
+            m_bestX = centerMostTargetArray[1];
+            m_bestY = centerMostTargetArray[2];
+          }
+          break;
+        }
+        default: {
+          // If something goes bad set varables to default values
+          DriverStation.reportError("Invalid TargetPosition in Targeting.update(): " + m_mode + "\n", false);
+          m_bestY = 0.0;
+          m_bestX = 0.0;
+          m_desiredHeading = Robot.drive.getHeadingForCapturedImage();
+          break;
+        }
+        }
+      } else {
+        // must be looking for a cargo target, which is the "highest" target
+        SmartDashboard.putString("Targeting Mode", "HIGHEST");
+
+        int i = 0;
+        double tempX = 0.0;
+        double tempY = 0.0;
+        double bestX = 1.0;
+        double bestY = 1.0;
+
+        for (double a : m_target_array) {
+          // check for invalid data
+          if (a < 0.0 || a > 1.0) {
+            // this should never happen. Print an error if it does.
+            DriverStation.reportError("Invalid Data in target array (" + a + ") \n", false);
+          } else if ((i % 2) == 0) { // true for data elements 0, 2, 4, etc.
+            // this is the x value
+            tempX = a;
+            // if y
+          } else { // this is data element 1, 3, 5, etc.
+            tempY = a;
+
+            // now that we have an x, y pair, determine if this is
+            // the highest target (higest target has smallest y value)
+
+            if (tempY < bestY) {
+              bestX = tempX;
+              bestY = tempY;
+            }
+          }
+          i++;
+        }
+        m_desiredHeading = findDesiredHeading(bestX, bestY, m_TargetHeightMode);
       }
     }
 
@@ -225,10 +278,19 @@ public class Targeting extends Subsystem {
     return speed;
   }
 
-  public boolean atWall() {
+  public boolean atWall(Autonomous.RocketHeight desiredHeight) {
     // we are at the wall when the target is lower in the field of view (bigger Y)
     // than the "at the wall" threshold
-    return (m_bestY >= Y_WHEN_TARGET_AT_WALL);
+    switch (desiredHeight) {
+    case HIGH:
+      return (m_bestY >= Y_WHEN_HATCH_HIGH_AT_WALL);
+    case MID:
+      return (m_bestY >= Y_WHEN_HATCH_MID_AT_WALL);
+    case LOW:
+      return (m_bestY >= Y_WHEN_HATCH_LOW_AT_WALL);
+    default:
+      return (m_bestY >= Y_WHEN_HATCH_LOW_AT_WALL);
+    }
   }
 
   public void setMode(TargetPosition modeToSet) {
@@ -265,7 +327,7 @@ public class Targeting extends Subsystem {
     m_TargetHeightMode = target;
   }
 
-  private double[] findTheCenterMostTarget() {
+  private double[] findTheCenterMostTarget(TargetHeight target) {
     double bestXError = 1.0;
     double tempTrueCenter = 0.0;
     int i = 0;
@@ -294,7 +356,11 @@ public class Targeting extends Subsystem {
         // the target nearest to the "dynamic center"
 
         // calculate the true center as a function of the height
-        tempTrueCenter = (CENTER_EQ_M_HP * tempY) + CENTER_EQ_B_HP;
+        if (target == TargetHeight.CARGO) {
+          tempTrueCenter = (CENTER_EQ_M_CARGO * tempY) + CENTER_EQ_B_CARGO;
+        } else {
+          tempTrueCenter = (CENTER_EQ_M_HP * tempY) + CENTER_EQ_B_HP;
+        }
 
         // compute the "x error" based upon the trueCenter
         tempXError = tempX - tempTrueCenter;

@@ -11,13 +11,18 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import org.mayheminc.robot2019.subsystems.Autonomous;
 
-public class StartLeftHAB2HPtoRocketFront extends CommandGroup {
+public class StartLeftHAB2HPtoRocketLowTwice extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public StartLeftHAB2HPtoRocketFront() {
-
+  public StartLeftHAB2HPtoRocketLowTwice() {
     // Call the shared HAB2HPtoRocketFront routine, specifying our starting side
-    addSequential(new HAB2HPtoRocketFront(Autonomous.StartOn.LEFT));
+    addSequential(new HAB2HPtoRocketFront(Autonomous.StartOn.LEFT, Autonomous.RocketHeight.LOW));
+
+    // now run the routine to get a hatch panel from the loading station
+    addSequential(new RocketFrontToLoadingStationFast(Autonomous.StartOn.LEFT));
+
+    // now run the routine to get a hatch panel from the loading station
+    addSequential(new LoadingStationToRocketBack(Autonomous.StartOn.LEFT, Autonomous.RocketHeight.LOW));
   }
 }

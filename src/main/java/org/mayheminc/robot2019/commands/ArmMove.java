@@ -16,6 +16,7 @@ public class ArmMove extends Command {
 	double m_targetShoulderAngle;
 	double m_targetWristAngle;
 	double m_targetWristInternalAngle;
+	TargetHeight m_target;
 
 	double m_deltaShoulderAngle;
 	double m_deltaWristInternalAngle;
@@ -35,14 +36,10 @@ public class ArmMove extends Command {
 	 *                            from "world" perspective
 	 * @param targetWristAngle    Target angle for wrist position in degrees, from
 	 *                            "world" perspective
+	 * @param targetHeight        Height of desired target (either CARGO or HATCH)
 	 */
-	public ArmMove(double targetShoulderAngle, double targetWristAngle) {
-		this(targetShoulderAngle, targetWristAngle, DEFAULT_TIMEOUT);
-	}
-
-	public ArmMove(double targetShoulderAngle, double targetWristAngle, TargetHeight target) {
-		this(targetShoulderAngle, targetWristAngle, DEFAULT_TIMEOUT);
-		Robot.targeting.setTargetHeight(target);
+	public ArmMove(double targetShoulderAngle, double targetWristAngle, TargetHeight targetHeight) {
+		this(targetShoulderAngle, targetWristAngle, DEFAULT_TIMEOUT, targetHeight);
 	}
 
 	/**
@@ -56,11 +53,12 @@ public class ArmMove extends Command {
 	 *                            "world" perspective
 	 * @param timeLimit           Time limit for the command, in seconds
 	 */
-	public ArmMove(double targetShoulderAngle, double targetWristAngle, double timeLimit) {
+	public ArmMove(double targetShoulderAngle, double targetWristAngle, double timeLimit, TargetHeight target) {
 		m_timeout = timeLimit;
 		m_targetShoulderAngle = targetShoulderAngle;
 		m_targetWristAngle = targetWristAngle;
 		m_targetWristInternalAngle = Wrist.computeInternalAngle(m_targetShoulderAngle, m_targetWristAngle);
+		m_target = target;
 	}
 
 	// Called just before this Command runs the first time
@@ -82,6 +80,9 @@ public class ArmMove extends Command {
 		// prepare the timeout
 		m_timer.reset();
 		m_timer.start();
+
+		// set the targeting height
+		Robot.targeting.setTargetHeight(m_target);
 
 		// Basic approach: at initialization, decide the strategy.
 		// There are three basic strategies from which to choose:

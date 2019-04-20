@@ -9,6 +9,7 @@ package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.Targeting;
 import org.mayheminc.robot2019.subsystems.TargetingLights;
 import org.mayheminc.robot2019.subsystems.Wrist;
 
@@ -37,6 +38,7 @@ public class CargoFloor extends CommandGroup {
     // since we are using cargo, we shouldn't need the targeting lights for a while
     addParallel(new TargetingLightsSet(TargetingLights.LIGHTS_OFF));
 
-    addSequential(new ArmMove(Shoulder.CARGO_FLOOR_PICKUP_ANGLE, Wrist.CARGO_FLOOR_PICKUP_ANGLE));
+    addSequential(
+        new ArmMove(Shoulder.CARGO_FLOOR_PICKUP_ANGLE, Wrist.CARGO_FLOOR_PICKUP_ANGLE, Targeting.TargetHeight.CARGO));
   }
 }

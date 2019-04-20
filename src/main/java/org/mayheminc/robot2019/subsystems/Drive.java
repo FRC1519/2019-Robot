@@ -79,10 +79,9 @@ public class Drive extends Subsystem {
 			 */
 			Navx = new AHRS(SPI.Port.kMXP);
 			Navx.reset();
-			System.out.println("NAVX LOADED.");
 		} catch (RuntimeException ex) {
 			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-			System.out.println("Error oading navx.");
+			System.out.println("Error loading navx.");
 		}
 
 		// create a PID Controller that reads the heading error and outputs the heading

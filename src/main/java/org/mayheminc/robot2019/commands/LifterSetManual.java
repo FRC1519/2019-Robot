@@ -8,10 +8,8 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
-import org.mayheminc.robot2019.subsystems.CargoIntake;
 import org.mayheminc.robot2019.subsystems.LedPatternFactory;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**

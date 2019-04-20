@@ -19,22 +19,29 @@ public class Autonomous extends Subsystem {
 
 			/* 0 */ new StayStill(), // do nothing
 			/* 1 */ new StraightOffHAB2(), // drive straight off HAB2 platform and stop
-			/* 2 */ new StartLeftHAB2HPtoRocketFront(), // drive off level two with HP for Rocket Front
-			/* 3 */ new StartLeftHAB2HPtoShipSide(), // drive off level two, with HP for Left Side of Ship
-			/* 4 */ new StartLeftHAB2HPtoShipSideBackwards(), // BACK off level two, with HP for Left Side of Ship
-			/* 5 */ new StartLeftHAB2HPtoShipFront(), // drive off level two, with HP for Front of Ship
-			/* 6 */ new StartRightHAB2HPtoShipFront(), // drive off level two, with HP for Front of Ship
-			/* 7 */ new StartRightHAB2HPtoShipSideBackwards(), // BACK off level two, with HP for Right Side of Ship
-			/* 8 */ new StartRightHAB2HPtoShipSide(), // drive off level two, with HP for Right Side of Ship
-			/* 9 */ new StartRightHAB2HPtoRocketFront(), // drive off level two with HP for Rocket Front
-			/* 10 */ new TestAutoAlign() // This is just to test auto align.
-	};
+			/* 2 */ new StartLeftHAB2HPtoRocketHighTwice(), // drive off level two with HP for Rocket High
+			/* 3 */ new StartLeftHAB2HPtoRocketLowTwice(), // drive off level two with HP for Rocket Low
+			/* 4 */ new StartLeftHAB2HPtoRocketAndShip(), // drive off level two with HP for Rocket and Ship
+			/* 5 */ new StartLeftHAB2HPtoShipSide(), // drive off level two, with HP for Left Side of Ship
+			/* 6 */ new StartLeftHAB2HPtoShipSideBackwards(), // BACK off level two, with HP for Left Side of Ship
+			/* 7 */ new StartLeftHAB2HPtoShipFront(), // drive off level two, with HP for Front of Ship
+			/* 8 */ new StartRightHAB2HPtoShipFront(), // drive off level two, with HP for Front of Ship
+			/* 9 */ new StartRightHAB2HPtoShipSideBackwards(), // BACK off level two, with HP for Right Side of Ship
+			/* 10 */ new StartRightHAB2HPtoShipSide(), // drive off level two, with HP for Right Side of Ship
+			/* 11 */ new StartRightHAB2HPtoRocketAndShip(), // drive off level two with HP for Rocket and Ship
+			/* 12 */ new StartRightHAB2HPtoRocketLowTwice(), // drive off level two with HP for Rocket Low
+			/* 13 */ new StartRightHAB2HPtoRocketHighTwice(), // drive off level two with HP for Rocket High
+			/* 14 */ new TestAutoAlignForDistance() };
 
 	private static int programNumber = 0; // 0 = Do nothing
 	private static int delay = 0;
 
 	public enum StartOn {
 		RIGHT, LEFT
+	};
+
+	public enum RocketHeight {
+		HIGH, MID, LOW
 	};
 
 	/**

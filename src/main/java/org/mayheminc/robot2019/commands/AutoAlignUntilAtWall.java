@@ -1,6 +1,7 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
+import org.mayheminc.robot2019.subsystems.Autonomous;
 import org.mayheminc.robot2019.subsystems.Targeting;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -14,6 +15,7 @@ public class AutoAlignUntilAtWall extends Command {
 	double m_targetPower;
 	double m_startTime;
 	double m_maxTime;
+	Autonomous.RocketHeight m_desiredHeight;
 	Targeting.TargetPosition m_whichTarget = Targeting.TargetPosition.CENTER_MOST;
 
 	/**
@@ -24,11 +26,22 @@ public class AutoAlignUntilAtWall extends Command {
 	 * @param maxTime     Maximum time (in seconds) for alignment.
 	 * @param target      Which target (Left, Center, or Right) to use to align
 	 */
+
 	public AutoAlignUntilAtWall(double targetPower, double maxTime, Targeting.TargetPosition whichTarget) {
 		requires(Robot.drive);
 		m_maxTime = maxTime;
 		m_targetPower = targetPower;
 		m_whichTarget = whichTarget;
+		m_desiredHeight = Autonomous.RocketHeight.LOW;
+	}
+
+	public AutoAlignUntilAtWall(double targetPower, double maxTime, Targeting.TargetPosition whichTarget,
+			Autonomous.RocketHeight desiredHeight) {
+		requires(Robot.drive);
+		m_maxTime = maxTime;
+		m_targetPower = targetPower;
+		m_whichTarget = whichTarget;
+		m_desiredHeight = desiredHeight;
 	}
 
 	// Called just before this Command runs the first time
@@ -51,7 +64,7 @@ public class AutoAlignUntilAtWall extends Command {
 	protected boolean isFinished() {
 		double elapsedTime = Timer.getFPGATimestamp() - m_startTime;
 		elapsedTime = Math.abs(elapsedTime);
-		return (elapsedTime >= m_maxTime) || Robot.targeting.atWall();
+		return (elapsedTime >= m_maxTime) || Robot.targeting.atWall(m_desiredHeight);
 	}
 
 	// Called once after isFinished returns true

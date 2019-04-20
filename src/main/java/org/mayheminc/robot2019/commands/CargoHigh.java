@@ -8,6 +8,7 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.Targeting;
 import org.mayheminc.robot2019.subsystems.TargetingLights;
 import org.mayheminc.robot2019.subsystems.Wrist;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetHeight;
@@ -39,6 +40,7 @@ public class CargoHigh extends CommandGroup {
     // since we are using cargo, we shouldn't need the targeting lights for a while
     addParallel(new TargetingLightsSet(TargetingLights.LIGHTS_OFF));
 
-    addSequential(new ArmMove(Shoulder.CARGO_ROCKET_HIGH_ANGLE, Wrist.CARGO_ROCKET_HIGH_ANGLE));
+    addSequential(
+        new ArmMove(Shoulder.CARGO_ROCKET_HIGH_ANGLE, Wrist.CARGO_ROCKET_HIGH_ANGLE, Targeting.TargetHeight.CARGO));
   }
 }

@@ -95,9 +95,10 @@ public class Lifter extends Subsystem {
             stop();
         }
 
-        if (Robot.oi.getDriverStickY() != 0.0) {
-            setManual(Robot.oi.getDriverStickY());
-        }
+        // provide for manual control of lifter for debugging.
+        // if (Robot.oi.getDriverStickY() != 0.0) {
+        // setManual(Robot.oi.getDriverStickY());
+        // }
 
         switch (m_mode) {
         case OFF:
