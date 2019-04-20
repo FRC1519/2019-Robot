@@ -3,6 +3,8 @@ package org.mayheminc.robot2019.subsystems;
 import org.mayheminc.robot2019.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -26,7 +28,7 @@ public class Lifter extends Subsystem {
     private static final int EXTRA_FOR_RAISED_POS = 150000;
     public static final int RAISED_AFTER_LIFTED = LIFTED_POS + EXTRA_FOR_RAISED_POS;
 
-    private static final int IN_POSITION_SLOP = 100;
+    private static final int IN_POSITION_SLOP = 20000;
     private static final int MAX_MOTOR_OFFSET = 200000;
 
     private static final double K_FACTOR = 1.0 / MAX_MOTOR_OFFSET;
@@ -38,11 +40,12 @@ public class Lifter extends Subsystem {
     private final MayhemTalonSRX motorRightB = new MayhemTalonSRX(RobotMap.LIFTER_RIGHT_B_TALON);
 
     private int m_desiredPosition;
+    private int m_direction;
     private double m_targetSpeed;
     private double m_modifier = 0.0;
 
     private enum LifterMode {
-        OFF, MANUAL, SYNC_LIFT
+        OFF, MANUAL, SYNC_LIFT, MOTION_MAGIC_POSITION
     };
 
     private LifterMode m_mode = LifterMode.OFF; // start with Lifter OFF
@@ -74,10 +77,39 @@ public class Lifter extends Subsystem {
     private void configMotor(MayhemTalonSRX motor, boolean inverted) {
         motor.setNeutralMode(NeutralMode.Coast);
         motor.configNominalOutputVoltage(+0.0f, -0.0f);
-        motor.configPeakOutputVoltage(+12.0, -12.0);
+        motor.configPeakOutputVoltage(+12.0 * .7, -12.0 * .7); // set peak output voltage to 70%
         motor.configClosedloopRamp(0.1);
         motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
         motor.setInverted(inverted);
+
+        motor.configForwardSoftLimitEnable(false);
+        motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
+        motor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled);
+
+        // initial calcs for computing kP...
+        // If we want 70% power 200000 ticks from target (this is about 20% from a full
+        // lift),
+        // kP = (0.70 * 1023) / 200000 = ~.004
+        motor.config_kP(0, 0.01, 0); // based upon Robert's initial calcs, above
+
+        // typical value of about 1/100 of kP for starting tuning
+        motor.config_kI(0, 0.0, 0);
+
+        // typical value of about 10x to 100x of kP for starting tuning
+        motor.config_kD(0, 0.0, 0);
+
+        // practically always set kF to 0 for position control
+        // for things like gravity compensation, use the "arbitrary feed forward" that
+        // can be specified with the "4-parameter" TalonSRX.set() method
+        motor.config_kF(0, 0.0, 0);
+
+        // The total lift takes about 1Million ticks.
+        // The cruise should be about 80% of the travel or 800k ticks
+        // The lift should take about 3 seconds.
+        // the velocity is 800k ticks / 30 (100ms) = 26666 ticks per 100ms
+        motor.configMotionCruiseVelocity(26666);
+        // acceleration of 2x velocity allows cruise to be attained in 1/2 second
+        motor.configMotionAcceleration(26666 * 2);
     }
 
     public void zero() {
@@ -151,6 +183,10 @@ public class Lifter extends Subsystem {
                 motorLeftA.set(ControlMode.PercentOutput, m_targetSpeed * (1.0 - m_modifier));
             }
             break;
+        case MOTION_MAGIC_POSITION:
+            motorRightA.set(ControlMode.Position, m_desiredPosition);
+            motorLeftA.set(ControlMode.Position, m_desiredPosition);// MotionMagic
+            break;
         }
     }
 
@@ -158,18 +194,42 @@ public class Lifter extends Subsystem {
         setTargetMotorSpeed(manualPower);
         m_mode = LifterMode.MANUAL;
         m_desiredPosition = 0;
+        m_direction = 0;
     }
 
     public void setPositionWithPower(int position, double power) {
         setTargetMotorSpeed(power);
         m_mode = LifterMode.SYNC_LIFT;
         m_desiredPosition = position;
+
+        setDirectionFlag();
+    }
+
+    public void setPosition(int position) {
+        m_mode = LifterMode.MOTION_MAGIC_POSITION;
+        m_desiredPosition = position;
+        setTargetMotorSpeed(0.2);
+
+        setDirectionFlag();
+    }
+
+    private void setDirectionFlag() {
+        int pos_r = motorRightA.getSelectedSensorPosition();
+        int pos_l = motorLeftA.getSelectedSensorPosition();
+        int posAvg = (pos_r + pos_l) / 2;
+
+        // if the desired position is above the current position, the direction is +1,
+        // otherwise -1
+        m_direction = (m_desiredPosition > posAvg) ? 1 : -1;
     }
 
     public void Lift(int desiredPosition) {
         // Received a command to lift. If we're already "lifted" don't do anything!
         m_desiredPosition = desiredPosition;
-        if (!IsAtSetpoint()) {
+
+        setDirectionFlag();
+
+        if (!isAtSetpoint()) {
             // Set parameters so that "update()" will climb
             setTargetMotorSpeed(Lifter.LIFTING_POWER);
             m_mode = LifterMode.SYNC_LIFT;
@@ -180,6 +240,7 @@ public class Lifter extends Subsystem {
         motorSet(Lifter.STOP_POWER);
         m_mode = LifterMode.OFF;
         m_desiredPosition = motorLeftA.getSelectedSensorPosition();
+        m_direction = 0;
     }
 
     private void setTargetMotorSpeed(double value) {
@@ -192,12 +253,18 @@ public class Lifter extends Subsystem {
         motorRightA.set(ControlMode.PercentOutput, value);
     }
 
-    public boolean IsAtSetpoint() {
-        // TODO: Need to fix this to handle cases where we "jump" past the desired
-        // position too far.
-        // KBS implemented a temporary "hack" that only works in the upward direction.
-        // return Math.abs(motorLeft.getPosition() - m_pos) < Lifter.IN_POSITION_SLOP;
-        return motorLeftA.getPosition() - m_desiredPosition > -Lifter.IN_POSITION_SLOP;
+    public boolean isAtSetpoint() {
+        // Look for when we have reached the setpoint; need to consider direction of the
+        // most recent movement to allow "overshoot" to still result in a "true" retval.
+        switch (m_direction) {
+        case 0:
+        default:
+            return true;
+        case 1:
+            return motorLeftA.getPosition() - m_desiredPosition > -Lifter.IN_POSITION_SLOP;
+        case -1:
+            return motorLeftA.getPosition() - m_desiredPosition < Lifter.IN_POSITION_SLOP;
+        }
     }
 
     public void initDefaultCommand() {

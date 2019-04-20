@@ -42,7 +42,6 @@ public class RocketFrontToLoadingStationFast extends CommandGroup {
     // grab the hatch panel
     addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_EXPANDED));
 
-    // TODO: shorten wait below (maybe just 0.0 seconds)?
     addSequential(new Wait(0.2));
     addParallel(new PrintAutonomousTimeRemaining("Grabbed Hatch Panel"));
 

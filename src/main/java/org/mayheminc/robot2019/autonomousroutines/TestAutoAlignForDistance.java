@@ -8,17 +8,7 @@
 package org.mayheminc.robot2019.autonomousroutines;
 
 import org.mayheminc.robot2019.commands.AutoAlignForDistance;
-import org.mayheminc.robot2019.commands.AutoAlignForTime;
-import org.mayheminc.robot2019.commands.AutoAlignUntilAtWall;
-import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
-import org.mayheminc.robot2019.commands.DriveSetShifter;
-import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
-import org.mayheminc.robot2019.commands.HatchPanelLow;
-import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.commands.AutoAlignForDistance.DistanceUnits;
-import org.mayheminc.robot2019.subsystems.Autonomous;
-import org.mayheminc.robot2019.subsystems.CargoIntake;
-import org.mayheminc.robot2019.subsystems.Shifter;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;

@@ -28,7 +28,7 @@ public class SchedulerManager // implements ITelemetryProvider
 {
 
    /* Our classes logger */
-   @SuppressWarnings("unused")
+   // @SuppressWarnings("unused")
    // private static final Logger logger =
    // RioLogger.getLogger(SchedulerManager.class.getName());
 

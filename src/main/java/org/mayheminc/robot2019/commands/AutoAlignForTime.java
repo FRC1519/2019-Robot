@@ -24,7 +24,6 @@ public class AutoAlignForTime extends Command {
 	 * @param target      Which target (Left, Center, or Right) to use to align
 	 */
 
-	// TODO: add a "target" parameter as in "AutoAlignUntilAtWall.java"
 	public AutoAlignForTime(double targetPower, double maxTime, Targeting.TargetPosition whichTarget) {
 		requires(Robot.drive);
 		m_targetPower = targetPower;

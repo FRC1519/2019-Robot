@@ -18,7 +18,7 @@ import java.util.Date;
 
 import org.mayheminc.robot2019.commands.RunAutonomous;
 import org.mayheminc.robot2019.subsystems.*;
-import org.mayheminc.util.SchedulerManager;
+// import org.mayheminc.util.SchedulerManager;
 import org.mayheminc.util.Utils;
 import org.mayheminc.util.EventServer.*;
 
@@ -246,15 +246,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// waiting for the teleopInit to be called at the start of teleop.
 		// compressor.stop();
 
-		// TODO: examine section below for "Zero" updates needed in 2019.
-		// "Zero" the robot subsystems which have position encoders in this section.
-		// Overall strategy for zeroing subsystems is as follows:
-		// Every time autonomous starts:
-		// "Zero" the heading gyro using the drive subsystem
-		// "Zero" the elevator, presuming it is down due to gravity
-		// "Zero" the turret, presuming it is pointing straight forward
-		// "Zero" the arm/pivot, which will initiate finding zero by using hard stop
-
 		// start the autonomous period without a human driver
 		m_humanDriverInAuto = false;
 
@@ -266,7 +257,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		printAutoElapsedTime = true;
 
 		// DriverStation.reportError(
-		// 		"AutonomousTimeRemaining from autonomousInit = " + Robot.autonomousTimeRemaining() + "\n", false);
+		// "AutonomousTimeRemaining from autonomousInit = " +
+		// Robot.autonomousTimeRemaining() + "\n", false);
 
 		targetingLights.set(true);
 	}

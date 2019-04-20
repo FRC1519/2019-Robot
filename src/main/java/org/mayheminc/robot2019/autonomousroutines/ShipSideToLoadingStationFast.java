@@ -52,9 +52,6 @@ public class ShipSideToLoadingStationFast extends CommandGroup {
     // straighten out for the last few feet to line up with the loading station
     addSequential(new DriveStraightOnHeading(0.9, 60 /* was 180 */, Autonomous.chooseAngle(startSide, 180.0)));
 
-    // TODO: consider modifying AutoAlign to use range to determine speed of drive,
-    // or at least the deceleration
-
     // Use "AutoAlign" at half speed for the last couple seconds to get to the hatch
     addSequential(new AutoAlignUntilAtWall(0.6, 3.0, Targeting.TargetPosition.CENTER_MOST)); // was 0.6, 1.7 seconds
 
@@ -65,7 +62,6 @@ public class ShipSideToLoadingStationFast extends CommandGroup {
     // grab the hatch panel
     addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_EXPANDED));
 
-    // TODO: shorten wait below (maybe just 0.0 seconds)?
     addSequential(new Wait(0.2));
     addParallel(new PrintAutonomousTimeRemaining("Grabbed Hatch Panel"));
 
