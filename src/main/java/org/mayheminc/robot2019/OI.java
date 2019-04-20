@@ -269,7 +269,7 @@ public class OI {
 		OPERATOR_PAD_D_PAD_UP.whenPressed(new HatchPanelHigh());
 
 		// OPERATOR_PAD_BUTTON_NINE.whileHeld(new LifterLift(Lifter.LIFTED_POS));
-		OPERATOR_PAD_BUTTON_NINE.whileHeld(new WristReZeroLive());
+		OPERATOR_PAD_BUTTON_NINE.whenPressed(new WristReZeroLive());
 		OPERATOR_PAD_BUTTON_TEN.whenPressed(new CargoShip());
 
 		OPERATOR_PAD_BUTTON_ELEVEN.whenPressed(new Wait(0));

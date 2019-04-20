@@ -9,9 +9,9 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.subsystems.LedPatternFactory;
-import org.mayheminc.robot2019.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WristReZeroLive extends Command {
   public int m_currentPosition;
@@ -20,7 +20,7 @@ public class WristReZeroLive extends Command {
 
   public WristReZeroLive() {
     // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.wrist);
   }
 
   // Called just before this Command runs the first time
@@ -36,12 +36,13 @@ public class WristReZeroLive extends Command {
   protected void execute() {
 
     m_currentPosition = Robot.wrist.getCurrentPosition();
-    if (Math.abs(m_lastPosition - m_currentPosition) < 2) {
+    if (Math.abs(m_lastPosition - m_currentPosition) < 10) {
       m_loopsThatWeHaveBeenStoped++;
     } else {
       m_loopsThatWeHaveBeenStoped = 0;
     }
     m_lastPosition = m_currentPosition;
+    SmartDashboard.putNumber("m_loopsThatWeHaveBeenStoped", m_loopsThatWeHaveBeenStoped);
   }
 
   // Make this return true when this Command no longer needs to run execute()

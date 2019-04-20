@@ -60,7 +60,7 @@ public class LoadingStationToRocketBack extends CommandGroup {
     addSequential(new AutoAlignForTime(0.15, 0.7,
         ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST)));
 
-    addSequential(new AutoAlignUntilAtWall(0.15, 1.8,
+    addSequential(new AutoAlignUntilAtWall(0.15, 2.3,
         ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST), desiredHeight));
 
     // release the hatch panel
