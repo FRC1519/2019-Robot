@@ -160,7 +160,7 @@ public class Wrist extends Subsystem {
         return positionToInternalDegrees(m_currentPosition); // position converted to degrees
     }
 
-    private int getCurrentPosition() {
+    public int getCurrentPosition() {
         return (int) m_currentPosition;
     }
 
