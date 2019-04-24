@@ -37,7 +37,7 @@ public class LoadingStationToRocketBack extends CommandGroup {
     } else {
       addParallel(new HatchPanelLow());
     }
-    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
 
     // Head for the back side of the rocket, by taking a long diagonal backwards
     // path until

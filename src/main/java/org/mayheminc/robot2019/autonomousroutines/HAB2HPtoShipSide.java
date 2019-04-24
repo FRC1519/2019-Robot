@@ -46,7 +46,7 @@ public class HAB2HPtoShipSide extends CommandGroup {
 
     // Get the arm into postion while heading downfield alongside the cargo ship
     addParallel(new HatchPanelLow());
-    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
 
     // below distance was 150.0 before Pine Tree; was 174.0 for first practice match
     // changed to 180 inches after first practice match; changed to 183 inches after

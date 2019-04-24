@@ -45,7 +45,7 @@ public class HAB2HPtoShipFront extends CommandGroup {
     addParallel(new HatchPanelLow());
     addSequential(new DriveStraightOnHeading(0.7, 48, Autonomous.chooseAngle(startSide, 0.0)));
 
-    addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
 
     addSequential(new AutoAlignUntilAtWall(0.5, 1, TargetPosition.CENTER_MOST));
 

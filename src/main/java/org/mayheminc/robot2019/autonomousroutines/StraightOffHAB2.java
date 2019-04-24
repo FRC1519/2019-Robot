@@ -34,7 +34,7 @@ public class StraightOffHAB2 extends CommandGroup {
     // Drive a foot further to ensure we're clear of HAB Level 1
     addSequential(new DriveStraightOnHeading(0.7, 12, 0)); // Drive one more foot at a heading of zero degrees
 
-    addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+    addSequential(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
     // stop now to let the driver's take over!
 
     addSequential(new DriveSetShifter(Shifter.HIGH_GEAR));

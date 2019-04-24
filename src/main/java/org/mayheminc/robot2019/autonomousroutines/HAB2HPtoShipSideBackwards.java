@@ -52,7 +52,7 @@ public class HAB2HPtoShipSideBackwards extends CommandGroup {
 
                 // Get the arm into position while heading downfield alongside the cargo ship
                 addParallel(new HatchPanelLow());
-                addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+                addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
 
                 // go back into low gear for the sharper turns and auto alignment
                 addParallel(new DriveSetShifter(Shifter.HIGH_GEAR)); // had previously been LOW_GEAR

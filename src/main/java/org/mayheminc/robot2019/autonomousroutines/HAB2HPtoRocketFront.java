@@ -49,7 +49,7 @@ public class HAB2HPtoRocketFront extends CommandGroup {
     } else {
       addParallel(new HatchPanelLow());
     }
-    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
 
     // should now turn on auto-targeting and put the HP on the rocket
     // Use "AutoAlign" to drive to the hatch; first for time, then until at wall

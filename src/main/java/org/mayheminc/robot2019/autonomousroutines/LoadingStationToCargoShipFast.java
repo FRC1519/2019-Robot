@@ -33,7 +33,7 @@ public class LoadingStationToCargoShipFast extends CommandGroup {
 
     // Get the arm into position while heading downfield alongside the cargo ship
     addParallel(new HatchPanelLow());
-    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 0.5));
+    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
 
     // Head for the cargo ship, by taking a long diagonal backwards path until
     // beyond the rocket guessing at 15 feet of driving distance.
