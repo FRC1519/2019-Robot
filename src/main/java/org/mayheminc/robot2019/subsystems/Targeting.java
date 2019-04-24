@@ -40,19 +40,23 @@ public class Targeting extends Subsystem {
   private static final double SPEED_EQ_M = -4.115;
   private static final double SPEED_EQ_B = 2.244;
 
-  // Below valls are for centered arm
+  // Below values are for centered arm
   // private static final double CENTER_EQ_M = -0.1925;
   // private static final double CENTER_EQ_B = 0.5719;
 
   // Below values are for arm off 2 inches to left on the practice robot
-  private static final double CENTER_EQ_M_HP = -0.2964;
-  private static final double CENTER_EQ_B_HP = 0.5871;
-  private static final double CENTER_EQ_M_CARGO = -0.6102;
-  private static final double CENTER_EQ_B_CARGO = 0.6334;
+  // private static final double CENTER_EQ_M_HP = -0.2964;
+  // private static final double CENTER_EQ_B_HP = 0.5871;
+  // private static final double CENTER_EQ_M_CARGO = -0.6102;
+  // private static final double CENTER_EQ_B_CARGO = 0.6334;
 
   // Below values are for competition robot based upon PineTree data
-  // private static final double CENTER_EQ_M = -0.2762;
-  // private static final double CENTER_EQ_B = 0.5563;
+  private static final double CENTER_EQ_M_HP = -0.2762;
+  private static final double CENTER_EQ_B_HP = 0.5563;
+
+  // below values are guesses for competition robot; same as on practice robot
+  private static final double CENTER_EQ_M_CARGO = -0.6102;
+  private static final double CENTER_EQ_B_CARGO = 0.6334;
 
   // After computing a desired heading, add a "fudge" offset to correct
   // empirically measured error. Found to be approx -1 degree (to shift aim 1" to
