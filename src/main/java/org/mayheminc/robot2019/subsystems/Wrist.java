@@ -28,18 +28,18 @@ public class Wrist extends Subsystem {
     // in general, the wrist angle positions are relative to the ground
     public static final double HORIZONTAL_ANGLE = 0.0;
 
-    public static final double CARGO_ROCKET_HIGH_ANGLE = 49.0; // was 55 before NECMP
-    public static final double CARGO_ROCKET_MID_ANGLE = 44.0; // was 50 before NECMP
-    public static final double CARGO_ROCKET_LOW_ANGLE = 44.0; // was 50 before NECMP
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 55.0; // was 55 before NECMP
+    public static final double CARGO_ROCKET_MID_ANGLE = 50.0; // was 50 before NECMP
+    public static final double CARGO_ROCKET_LOW_ANGLE = 50.0; // was 50 before NECMP
     public static final double CARGO_CARGO_SHIP_ANGLE = -7.0;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -20.0; // was -20.0 on comp robot at NECMP
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -35.0; // was -20.0 on comp robot at NECMP
     // public static final double CARGO_LOADING_STATION_ANGLE = 25.0;
 
     public static final double HP_ROCKET_HIGH_ANGLE = 95.0;
     public static final double HP_ROCKET_MID_ANGLE = 95.0;
-    public static final double HP_ROCKET_LOW_ANGLE = 95.0;
+    public static final double HP_ROCKET_LOW_ANGLE = 95.0; // was 95.0
     public static final double HP_FLOOR_PICKUP_ANGLE = 0.0;
-    public static final double HP_LOADING_STATION_ANGLE = 87.0;
+    public static final double HP_LOADING_STATION_ANGLE = 95.0; // was 95.0
 
     private static final double ANGLE_TOLERANCE = 10.0;
 
@@ -99,8 +99,14 @@ public class Wrist extends Subsystem {
 
     public void zero() {
         // zero the position.
-        m_motor.setSelectedSensorPosition(ZERO_POS);
-        setInternalPosition(ZERO_POS);
+        zeroWithOffset(0);
+    }
+
+    public void zeroWithOffset(int offset) {
+        // zero the position.
+        // TODO: NOTE: Offset is not in degrees, but is in sensor counts!
+        m_motor.setSelectedSensorPosition(ZERO_POS + offset);
+        setInternalPosition(ZERO_POS + offset);
 
         // TODO: should zeroing instead relax the wrist motor?
         m_mode = WristMode.DRIVER;

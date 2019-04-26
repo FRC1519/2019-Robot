@@ -60,7 +60,10 @@ public class WristReZeroLive extends Command {
   @Override
   protected void end() {
     // Zero the arm
-    Robot.wrist.zero();
+
+    // "zero" from a live wrist zero ends up being 10 degrees too high
+    // (Note 10 degreess is about 100 ticks)
+    Robot.wrist.zeroWithOffset(120);
     // Stop moving the wrist
     Robot.wrist.setPercentOutput(0.0);
     Robot.lights.set(LedPatternFactory.wristReZeroLive);

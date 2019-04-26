@@ -10,6 +10,7 @@ package org.mayheminc.robot2019.subsystems;
 import org.mayheminc.robot2019.Robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import sun.net.www.content.text.plain;
@@ -31,7 +32,7 @@ public class Targeting extends Subsystem {
   // Y when hatch panel is at wall when the arm is low
   private static final double Y_AT_WALL_SAFETY_MARGIN = 0.05;
 
-  private static final double Y_WHEN_HATCH_LOW_AT_WALL = 0.70 + Y_AT_WALL_SAFETY_MARGIN;
+  private static final double Y_WHEN_HATCH_LOW_AT_WALL = 0.75 + Y_AT_WALL_SAFETY_MARGIN;
   // Y when hatch panel is at wall when the arm is high
   private static final double Y_WHEN_HATCH_MID_AT_WALL = 0.50 + Y_AT_WALL_SAFETY_MARGIN;
   // Y when hatch panel is at wall when the arm is high
@@ -66,10 +67,12 @@ public class Targeting extends Subsystem {
   // heading correction offset had been 0.0 for PineTree
   // changed to -1.0 for first 6 matches of NECMP
   // changed to 0.0 at lunch time on Friday
-  private static final double HEADING_CORRECTION_OFFSET = 0.0;
+  private static final double HEADING_CORRECTION_OFFSET = -2.0;
 
   private double m_desiredHeading;
   private double[] m_target_array;
+  private int m_priorFrameCount;
+  private double m_priorFrameTime;
   private double[] ARRAY_OF_NEG_ONE = { -1.0 };
   private final static double FOV_CAMERA_IN_DEGREES = 78.0;
   private double m_bestY = 0.0;
@@ -88,6 +91,25 @@ public class Targeting extends Subsystem {
   private TargetHeight m_TargetHeightMode = TargetHeight.HATCH;
 
   public void update() {
+    // perform periodic update functions for the targeting capability
+    int latestFrameCount = (int) SmartDashboard.getNumber("frame_count", -1.0 /* default to -1 */);
+    if (latestFrameCount < 0) {
+      // an invalid number for latestFrameCount, display warning light
+      SmartDashboard.putBoolean("visionOK", false);
+    } else if (latestFrameCount == m_priorFrameCount) {
+      // have not received a new frame. If more than 1 second has elapsed since
+      // prior new frame, display a warning light on the SmartDashboard
+      if (Timer.getFPGATimestamp() > m_priorFrameTime + 1.0) {
+        SmartDashboard.putBoolean("visionOK", false);
+      }
+    } else {
+      // have received a new frame, save the time and update m_priorFrameCount
+      m_priorFrameTime = Timer.getFPGATimestamp();
+      m_priorFrameCount = latestFrameCount;
+      SmartDashboard.putBoolean("visionOK", false);
+    }
+
+    //
 
     double[] centerMostTargetArray;
     // Update all of the targeting information, as follows:

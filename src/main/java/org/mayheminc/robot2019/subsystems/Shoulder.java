@@ -33,19 +33,22 @@ public class Shoulder extends Subsystem {
 
     public static final double HORIZONTAL_ANGLE = 0.0;
 
-    public static final double CARGO_ROCKET_HIGH_ANGLE = 65.0;
-    public static final double CARGO_ROCKET_MID_ANGLE = 14.0;
-    public static final double CARGO_ROCKET_LOW_ANGLE = -30.0;
-    public static final double CARGO_CARGO_SHIP_ANGLE = 18.0;
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -38.0; // was -38 during NECMP practice matches; was -36 at
-                                                                 // end of NECMP
+    public static final double CARGO_ROCKET_HIGH_ANGLE = 72.0; // was 65.0
+    public static final double CARGO_ROCKET_MID_ANGLE = 18.0; // was 14.0
+    public static final double CARGO_ROCKET_LOW_ANGLE = -27.0; // was -30
+    public static final double CARGO_CARGO_SHIP_ANGLE = 22.0; // was 18
+
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -26.0; /// was -32.0 before CMP
+    // / was -38 during NECMP practice matches; was -36 at
+    // end of NECMP
+
     public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
 
-    public static final double HP_ROCKET_HIGH_ANGLE = 42.0;
-    public static final double HP_ROCKET_MID_ANGLE = -2.0; // was -4.0 at Pine Tree; higher for NECMP vision
-    public static final double HP_ROCKET_LOW_ANGLE = -62.0;
-    public static final double HP_FLOOR_PICKUP_ANGLE = -35.0;
-    public static final double HP_LOADING_STATION_ANGLE = -64.0;
+    public static final double HP_ROCKET_HIGH_ANGLE = 46.0; // was 42.0
+    public static final double HP_ROCKET_MID_ANGLE = -0.0; // was -1.0 at NECMP
+    public static final double HP_ROCKET_LOW_ANGLE = -58.0; // was -62.0
+    public static final double HP_FLOOR_PICKUP_ANGLE = -3.0;
+    public static final double HP_LOADING_STATION_ANGLE = -60.0; // was -64.0
 
     private static final double ANGLE_TOLERANCE = 3.0; // hoping for one degree!!! (very optimistic, about 0.5 inches)
     private static final double BRAKE_RELEASE_TIME_SEC = 0.0; // seems like no delay needed

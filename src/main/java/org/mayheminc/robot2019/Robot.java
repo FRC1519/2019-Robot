@@ -285,11 +285,16 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// If the driver's joystick has either joystick deflected, and the autonomous
 		// program is still trying to drive the robot, end the autonomous program
 		// and switch control to the human driver.
-		if ((oi.driveThrottle() != 0.0) || (oi.steeringX() != 0) && !m_humanDriverInAuto) {
+		if (((oi.driveThrottle() >= 0.10) || (oi.driveThrottle() <= -0.10) || (oi.steeringX() >= 0.10)
+				|| (oi.steeringX() <= -0.10)) && !m_humanDriverInAuto) {
 			// ensure the autonomous command is canceled
+
+			DriverStation.reportError("Trying to abort auto Program.", false);
+
 			if (autonomousCommand != null) {
 				Scheduler.getInstance().removeAll();
-				// autonomousCommand.cancel();
+				autonomousCommand.cancel();
+				DriverStation.reportError("Canceled Auto Program.", false);
 			}
 			// switch to control by a human driver
 			m_humanDriverInAuto = true;

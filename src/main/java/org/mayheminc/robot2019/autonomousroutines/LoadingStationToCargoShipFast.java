@@ -38,7 +38,8 @@ public class LoadingStationToCargoShipFast extends CommandGroup {
     // Head for the cargo ship, by taking a long diagonal backwards path until
     // beyond the rocket guessing at 15 feet of driving distance.
     // angle was 170.0 before NECMP
-    addSequential(new DriveStraightOnHeading(-0.8, 256, Autonomous.chooseAngle(startSide, 167.0)));
+    // was 256 before CMP; now 252
+    addSequential(new DriveStraightOnHeading(-0.8, 252, Autonomous.chooseAngle(startSide, 167.0)));
 
     // was 84.0 inches for "normal batteries"
     addSequential(new DriveStraightOnHeading(-0.8, 78 - 12, Autonomous.chooseAngle(startSide, 180.0)));

@@ -611,7 +611,7 @@ public class Drive extends Subsystem {
 		// SmartDashboard.putNumber("Current Speed", currentSpeed);
 	}
 
-	private static final double CAMERA_LAG = 0.200;
+	private static final double CAMERA_LAG = 0.150; // was .200; changing to .150 at CMP
 
 	public void updateHistory() {
 		double now = Timer.getFPGATimestamp();

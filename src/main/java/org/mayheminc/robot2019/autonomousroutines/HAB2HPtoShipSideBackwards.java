@@ -48,7 +48,8 @@ public class HAB2HPtoShipSideBackwards extends CommandGroup {
                 // distance was 294 inches and 205 degrees at practice field when working
                 // well before final speedup.
                 // last trials at practice field before NECMP were 264 and 200.0
-                addSequential(new DriveStraightOnHeading(-0.8, 288, Autonomous.chooseAngle(startSide, 200.0)));
+                // was 288 before CMP
+                addSequential(new DriveStraightOnHeading(-0.8, 284, Autonomous.chooseAngle(startSide, 200.0)));
 
                 // Get the arm into position while heading downfield alongside the cargo ship
                 addParallel(new HatchPanelLow());
