@@ -41,7 +41,7 @@ public class HAB2HPtoRocketFront extends CommandGroup {
     addSequential(new ZeroGyro(Autonomous.chooseAngle(startSide, 30.0)));
 
     // Drive off the hab level 2
-    addSequential(new DriveStraightOnHeading(0.7, 60, Autonomous.chooseAngle(startSide, 30.0))); // was 72.0
+    addSequential(new DriveStraightOnHeading(0.7, 30, Autonomous.chooseAngle(startSide, 30.0))); // was 72.0
 
     // Get the arm into postion while heading for the rocket
     if (desiredHeight == Autonomous.RocketHeight.HIGH) {
@@ -50,6 +50,8 @@ public class HAB2HPtoRocketFront extends CommandGroup {
       addParallel(new HatchPanelLow());
     }
     addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
+
+    addSequential(new DriveStraightOnHeading(0.7, 30, Autonomous.chooseAngle(startSide, 30.0))); // was 72.0
 
     // should now turn on auto-targeting and put the HP on the rocket
     // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
@@ -63,6 +65,9 @@ public class HAB2HPtoRocketFront extends CommandGroup {
     addSequential(new Wait(0.3));
     addParallel(new PrintAutonomousTimeRemaining("Placed HP #1"));
 
-    // at this point, have placed Hatch Panel on the front of the rocket.
+    // at this point, have placed Hatch Panel on the front of the rocket, back away
+    // a tiny bit.
+    addSequential(new DriveStraightOnHeading(-0.7, 8, Autonomous.chooseAngle(startSide, 30.0))); // was 72.0
+
   }
 }

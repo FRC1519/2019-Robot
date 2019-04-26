@@ -217,6 +217,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		wrist.setDesiredAngle(wrist.getAngleInDegrees());
 		wrist.relaxMotors();
 
+		// show vision targeting status
+		targeting.update();
+
 		// show the default lights.
 		lights.update();
 	}

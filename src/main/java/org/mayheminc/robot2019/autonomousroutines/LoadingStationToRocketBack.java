@@ -47,14 +47,15 @@ public class LoadingStationToRocketBack extends CommandGroup {
 
     // drive straight backwards downfield as far as we dare without crossing
     // centerline
-    addSequential(new DriveStraightOnHeading(-0.8, 84, Autonomous.chooseAngle(startSide, 180.0)));
+    addSequential(new DriveStraightOnHeading(-0.8, 90, Autonomous.chooseAngle(startSide, 180.0)));
     addSequential(new DriveStraightOnHeading(-0.8, 84, Autonomous.chooseAngle(startSide, 195.0)));
 
     // Turn towards the back of the rocket; 150 degrees is perfect "in theory",
     // but we need to aim to overshoot the target angle a bit to get there quickly.
     addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 140.0)));
 
-    addSequential(new DriveStraightOnHeading(0.2, 8, Autonomous.chooseAngle(startSide, 150.0)));
+    // below was 0.20 percentVbus
+    addSequential(new DriveStraightOnHeading(0.15, 8, Autonomous.chooseAngle(startSide, 150.0)));
 
     // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
     addSequential(new AutoAlignForTime(0.15, 0.7,
@@ -65,10 +66,10 @@ public class LoadingStationToRocketBack extends CommandGroup {
 
     // release the hatch panel
     addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
-    addSequential(new Wait(0.3));
+    addSequential(new Wait(0.5));
     addSequential(new PrintAutonomousTimeRemaining("Placed HP #2"));
 
-    // drive straight backwards for about a foot to get free of hatch on rocket
+    // drive straight backwards for about half a foot to get free of hatch on rocket
     addSequential(new DriveStraightOnHeading(-0.8, 6, Autonomous.chooseAngle(startSide, 150.0)));
   }
 }

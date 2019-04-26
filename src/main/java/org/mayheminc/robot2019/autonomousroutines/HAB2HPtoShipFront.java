@@ -14,10 +14,13 @@ import org.mayheminc.robot2019.commands.CargoIntakeSetForTime;
 import org.mayheminc.robot2019.commands.DriveSetShifter;
 import org.mayheminc.robot2019.commands.DriveStraightOnHeading;
 import org.mayheminc.robot2019.commands.HatchPanelLow;
+import org.mayheminc.robot2019.commands.HatchPanelSet;
+import org.mayheminc.robot2019.commands.PrintAutonomousTimeRemaining;
 import org.mayheminc.robot2019.commands.Wait;
 import org.mayheminc.robot2019.commands.ZeroGyro;
 import org.mayheminc.robot2019.subsystems.Autonomous;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
+import org.mayheminc.robot2019.subsystems.HatchPanelPickUp;
 import org.mayheminc.robot2019.subsystems.Shifter;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
@@ -28,26 +31,31 @@ public class HAB2HPtoShipFront extends CommandGroup {
   public HAB2HPtoShipFront(Autonomous.StartOn startSide) {
 
     // Zero the Gyro at the start of autonomous
-    addParallel(new DriveSetShifter(Shifter.LOW_GEAR));
+    addParallel(new DriveSetShifter(Shifter.HIGH_GEAR));
     addSequential(new ZeroGyro(0.0));
 
     // Drive off the hab level 2 and wait a second to stop bouncing around
-    addSequential(new DriveStraightOnHeading(0.9, 96, Autonomous.chooseAngle(startSide, 0.0))); // Drive 60 inches at a
+    addSequential(new DriveStraightOnHeading(0.7, 96, Autonomous.chooseAngle(startSide, 0.0))); // Drive 60 inches at a
                                                                                                 // heading of zero
                                                                                                 // degrees
     addSequential(new Wait(1.0));
 
     // Head for the cargo ship
-    addSequential(new DriveStraightOnHeading(0.7, 42, Autonomous.chooseAngle(startSide, 270.0))); // Drive three more
+    addSequential(new DriveStraightOnHeading(0.5, 42, Autonomous.chooseAngle(startSide, 270.0))); // Drive three more
                                                                                                   // feet turning left.
 
     // Get the arm into postion while lining to put the hatch panel on the ship.
     addParallel(new HatchPanelLow());
-    addSequential(new DriveStraightOnHeading(0.7, 48, Autonomous.chooseAngle(startSide, 0.0)));
+    addSequential(new DriveStraightOnHeading(0.5, 48, Autonomous.chooseAngle(startSide, 0.0)));
 
     addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
 
-    addSequential(new AutoAlignUntilAtWall(0.5, 1, TargetPosition.CENTER_MOST));
+    addSequential(new AutoAlignUntilAtWall(0.35, 2.0, TargetPosition.CENTER_MOST));
+
+    // release the hatch panel
+    addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
+    addSequential(new Wait(0.3));
+    addParallel(new PrintAutonomousTimeRemaining("Placed HP #1"));
 
     // stop now to let the driver's take over!
     addSequential(new DriveSetShifter(Shifter.HIGH_GEAR));

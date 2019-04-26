@@ -29,7 +29,7 @@ public class RocketFrontToLoadingStationFast extends CommandGroup {
     addSequential(new DriveStraightOnHeading(-0.5, 12, Autonomous.chooseAngle(startSide, 38.0)));
 
     // drive backwards and turn to face towards the loading station
-    addSequential(new DriveStraightOnHeading(-0.4, 42, Autonomous.chooseAngle(startSide, 180.0)));
+    addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 180.0)));
 
     // put arm and HP intake into the loading station position
     addParallel(new HatchPanelLoadingStation());

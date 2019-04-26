@@ -7,6 +7,8 @@
 
 package org.mayheminc.robot2019.commands;
 
+import org.mayheminc.robot2019.subsystems.Shoulder;
+import org.mayheminc.robot2019.subsystems.Targeting;
 import org.mayheminc.robot2019.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -32,7 +34,10 @@ public class Stow extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new WristSetInternalAngle(Wrist.STARTING_POSITION_DEGREES));
-    addSequential(new ShoulderSetAngle(-78.0));
+
+    addSequential(new ArmMove(Shoulder.STARTING_POSITION_DEGREES,
+        (Wrist.STARTING_POSITION_DEGREES + Shoulder.STARTING_POSITION_DEGREES), Targeting.TargetHeight.HATCH));
+    // addSequential(new WristSetInternalAngle(Wrist.STARTING_POSITION_DEGREES));
+    // addSequential(new ShoulderSetAngle(-78.0));
   }
 }

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class WristReZeroLive extends Command {
   public int m_currentPosition;
   public int m_lastPosition;
-  public int m_loopsThatWeHaveBeenStoped = 0;
+  public int m_loopsThatWeHaveBeenStopped = 0;
 
   public WristReZeroLive() {
     // Use requires() here to declare subsystem dependencies
@@ -28,7 +28,7 @@ public class WristReZeroLive extends Command {
   protected void initialize() {
     Robot.wrist.setPercentOutput(0.5);
     m_lastPosition = Robot.wrist.getCurrentPosition();
-    m_loopsThatWeHaveBeenStoped = 0;
+    m_loopsThatWeHaveBeenStopped = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -37,12 +37,12 @@ public class WristReZeroLive extends Command {
 
     m_currentPosition = Robot.wrist.getCurrentPosition();
     if (Math.abs(m_lastPosition - m_currentPosition) < 10) {
-      m_loopsThatWeHaveBeenStoped++;
+      m_loopsThatWeHaveBeenStopped++;
     } else {
-      m_loopsThatWeHaveBeenStoped = 0;
+      m_loopsThatWeHaveBeenStopped = 0;
     }
     m_lastPosition = m_currentPosition;
-    SmartDashboard.putNumber("m_loopsThatWeHaveBeenStoped", m_loopsThatWeHaveBeenStoped);
+    SmartDashboard.putNumber("m_loopsThatWeHaveBeenStopped", m_loopsThatWeHaveBeenStopped);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -53,7 +53,7 @@ public class WristReZeroLive extends Command {
 
     // TODO: Should really instead look for when the encoder hasn't turned for 10
     // cycles. Maybe Robot.wrist.isEncoderStalled() would be a good method to use?
-    return (m_loopsThatWeHaveBeenStoped >= 10);
+    return (m_loopsThatWeHaveBeenStopped >= 10);
   }
 
   // Called once after isFinished returns true
@@ -61,9 +61,9 @@ public class WristReZeroLive extends Command {
   protected void end() {
     // Zero the arm
 
-    // "zero" from a live wrist zero ends up being 10 degrees too high
+    // "zero" from a live wrist zero ends up being ~10 degrees too high
     // (Note 10 degreess is about 100 ticks)
-    Robot.wrist.zeroWithOffset(120);
+    Robot.wrist.zeroWithOffset(80); // was 120 at start of Friday at CMP; may have overcorrected with this
     // Stop moving the wrist
     Robot.wrist.setPercentOutput(0.0);
     Robot.lights.set(LedPatternFactory.wristReZeroLive);

@@ -19,7 +19,7 @@ public class Shoulder extends Subsystem {
 
     public static final int ZERO_POS = 0;
     public static final int STARTING_POS = ZERO_POS; // the same as "zero_pos" - lowered all the way into the robot
-    private static final double STARTING_POSITION_DEGREES = -78.0; // the starting position (approx) in degrees
+    public static final double STARTING_POSITION_DEGREES = -78.0; // the starting position (approx) in degrees
     private static final double ENCODER_CPR = 4096.0;
     private static final double OVERALL_REDUCTION = 325.0 * 48.0 / 12.0; // gearbox reduction multiplied by sprocket
                                                                          // reduction
