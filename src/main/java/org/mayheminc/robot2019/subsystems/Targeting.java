@@ -90,19 +90,21 @@ public class Targeting extends Subsystem {
   // Mode for target height
   private TargetHeight m_TargetHeightMode = TargetHeight.HATCH;
 
+  // TODO: make an updateSmartDashboard() method in Targeting for optimization
+  // TODO: clean up the content in Targeting.update() -- just too long!
   public void update() {
     // perform periodic update functions for the targeting capability
     int latestFrameCount = (int) SmartDashboard.getNumber("frameCount", -1.0 /* default to -1 */);
     if (latestFrameCount < 0) {
       // an invalid number for latestFrameCount, display warning light
       SmartDashboard.putBoolean("visionOK", false);
-      SmartDashboard.putString("visionOkDebug", "value: -1");
+      SmartDashboard.putString("visionOkDebug", "No Data");
     } else if (latestFrameCount == m_priorFrameCount) {
       // have not received a new frame. If more than 1 second has elapsed since
       // prior new frame, display a warning light on the SmartDashboard
       if (Timer.getFPGATimestamp() > m_priorFrameTime + 1.0) {
         SmartDashboard.putBoolean("visionOK", false);
-        SmartDashboard.putString("visionOkDebug", "stale data");
+        SmartDashboard.putString("visionOkDebug", "Stale Data");
       } else {
         // else, have an old frame, but it's not too old yet, so do nothing
       }
@@ -111,9 +113,8 @@ public class Targeting extends Subsystem {
       m_priorFrameTime = Timer.getFPGATimestamp();
       m_priorFrameCount = latestFrameCount;
       SmartDashboard.putBoolean("visionOK", true);
+      SmartDashboard.putString("visionOkDebug", "Good Data");
     }
-
-    //
 
     double[] centerMostTargetArray;
     // Update all of the targeting information, as follows:
