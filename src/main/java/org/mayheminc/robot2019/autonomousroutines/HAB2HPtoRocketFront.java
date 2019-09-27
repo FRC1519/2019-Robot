@@ -55,9 +55,9 @@ public class HAB2HPtoRocketFront extends CommandGroup {
 
     // should now turn on auto-targeting and put the HP on the rocket
     // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
-    addSequential(new AutoAlignForTime(0.35, 0.7,
+    addSequential(new AutoAlignForTime(0.40, 0.7,
         (startSide == StartOn.RIGHT) ? TargetPosition.RIGHT_MOST : TargetPosition.LEFT_MOST));
-    addSequential(new AutoAlignUntilAtWall(0.30, 2.5,
+    addSequential(new AutoAlignUntilAtWall(0.35, 2.5,
         (startSide == StartOn.RIGHT) ? TargetPosition.RIGHT_MOST : TargetPosition.LEFT_MOST, desiredHeight));
 
     // release the hatch panel

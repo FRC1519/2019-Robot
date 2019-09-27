@@ -54,14 +54,14 @@ public class LoadingStationToRocketBack extends CommandGroup {
     // but we need to aim to overshoot the target angle a bit to get there quickly.
     addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 140.0)));
 
-    // below was 0.20 percentVbus
-    addSequential(new DriveStraightOnHeading(0.15, 8, Autonomous.chooseAngle(startSide, 150.0)));
+    // below was 0.20 percentVbus at CMP; 0.15 at Merrimack
+    addSequential(new DriveStraightOnHeading(0.30, 8, Autonomous.chooseAngle(startSide, 150.0)));
 
     // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
-    addSequential(new AutoAlignForTime(0.15, 0.7,
+    addSequential(new AutoAlignForTime(0.25, 0.7,
         ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST)));
 
-    addSequential(new AutoAlignUntilAtWall(0.15, 2.3,
+    addSequential(new AutoAlignUntilAtWall(0.25, 2.3,
         ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST), desiredHeight));
 
     // release the hatch panel

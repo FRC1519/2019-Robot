@@ -181,8 +181,10 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 			printAutoElapsedTime = false;
 		}
 
-		// kill any previously existing commands
-		Scheduler.getInstance().removeAll();
+		// if not in a real match, kill any previously existing commands
+		if (!DriverStation.getInstance().isFMSAttached()) {
+			Scheduler.getInstance().removeAll();
+		}
 
 		// // print the blackbox.
 		// blackbox.print();
@@ -191,6 +193,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		// blackbox.reset();
 
 		targetingLights.set(false);
+
 	}
 
 	public void disabledPeriodic() {
@@ -208,14 +211,17 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// Scheduler.getInstance().run(); called in periodic().
 
-		// for safety reasons, keep resetting the shoulder and wrist setpoints to the
-		// current position, so that when we leave "disabled" no shoulder or wrist
-		// motion is commanded
-		shoulder.setDesiredAngle(shoulder.getAngleInDegrees());
-		shoulder.relaxMotors();
+		if (!DriverStation.getInstance().isFMSAttached()) {
+			// for safety reasons, keep resetting the shoulder and wrist setpoints to the
+			// current position, so that when we leave "disabled" no shoulder or wrist
+			// motion is commanded
 
-		wrist.setDesiredAngle(wrist.getAngleInDegrees());
-		wrist.relaxMotors();
+			shoulder.setDesiredAngle(shoulder.getAngleInDegrees());
+			shoulder.relaxMotors();
+
+			wrist.setDesiredAngle(wrist.getAngleInDegrees());
+			wrist.relaxMotors();
+		}
 
 		// show vision targeting status
 		targeting.update();
@@ -331,7 +337,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// DriverStation.reportError("Entering Teleop.\n", false);
 
-		shifter.setGear(Shifter.HIGH_GEAR);
+		shifter.setGear(Shifter.HIGH_GEAR); // was HIGH_GEAR; changed for BAE Demo to LOW_GEAR
 
 		targetingLights.set(true);
 	}

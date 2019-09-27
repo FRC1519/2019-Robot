@@ -37,7 +37,7 @@ public class RocketFrontToLoadingStationFast extends CommandGroup {
     addSequential(new DriveStraightOnHeading(0.8, 36, Autonomous.chooseAngle(startSide, 180.0)));
 
     // // Use "AutoAlign" for the last couple seconds to get to the hatch
-    addSequential(new AutoAlignUntilAtWall(0.4, 3.0, Targeting.TargetPosition.CENTER_MOST));
+    addSequential(new AutoAlignUntilAtWall(0.45, 3.0, Targeting.TargetPosition.CENTER_MOST));
 
     // grab the hatch panel
     addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_EXPANDED));

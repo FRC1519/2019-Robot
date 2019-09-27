@@ -38,9 +38,8 @@ public class Shoulder extends Subsystem {
     public static final double CARGO_ROCKET_LOW_ANGLE = -27.0; // was -30
     public static final double CARGO_CARGO_SHIP_ANGLE = 22.0; // was 18
 
-    public static final double CARGO_FLOOR_PICKUP_ANGLE = -26.0; /// was -32.0 before CMP
-    // / was -38 during NECMP practice matches; was -36 at
-    // end of NECMP
+    public static final double CARGO_FLOOR_PICKUP_ANGLE = -27.0; /// was -26.0 at CMP; was -32.0 before CMP
+    // was -38 during NECMP practice matches; was -36 at end of NECMP
 
     public static final double CARGO_LOADING_STATION_ANGLE = -10.0;
 
