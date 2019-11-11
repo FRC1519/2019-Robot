@@ -67,7 +67,7 @@ public class Targeting extends Subsystem {
   // heading correction offset had been 0.0 for PineTree
   // changed to -1.0 for first 6 matches of NECMP
   // changed to 0.0 at lunch time on Friday
-  private static final double HEADING_CORRECTION_OFFSET = -0.0; // was -2.0 at CMP
+  private static final double HEADING_CORRECTION_OFFSET = 2.0; // was -2.0 at CMP
 
   private double m_desiredHeading;
   private double[] m_target_array;

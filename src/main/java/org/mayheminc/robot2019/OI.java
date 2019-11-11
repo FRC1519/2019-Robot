@@ -186,6 +186,11 @@ public class OI {
 	private static final JoystickPOVButton OPERATOR_PAD_D_PAD_UP = new JoystickPOVButton(OPERATOR_PAD, 0);
 	private static final JoystickPOVButton OPERATOR_PAD_D_PAD_DOWN = new JoystickPOVButton(OPERATOR_PAD, 180);
 
+	private static final Button CLIMB_L3_BUTTON_PAIR = new AndJoystickButton(DRIVER_PAD, GAMEPAD_F310_Y_BUTTON,
+			DRIVER_PAD, GAMEPAD_F310_LEFT_BUTTON); // Y=Yellow, plus left top trigger
+	private static final Button CLIMB_L2_BUTTON_PAIR = new AndJoystickButton(DRIVER_PAD, GAMEPAD_F310_A_BUTTON,
+			DRIVER_PAD, GAMEPAD_F310_LEFT_BUTTON); // A=Green, plus left top trigger
+
 	private static boolean USE_PID_TUNER = false;
 	public static PidTuner pidTuner = null;
 
@@ -210,21 +215,21 @@ public class OI {
 
 		DRIVER_PAD_RIGHT_STICK_BUTTON.whileHeld(new AutoAlign(TargetPosition.CENTER_MOST));
 
-		DRIVER_PAD_YELLOW_BUTTON.whenPressed(new AutoClimb() /* AutoClimb() */ );
-
-		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new TestForCancelCommandGroups() /* do
-		// nothing */ );
-		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new Wait() /* do nothing */ );
-		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new AutoClimbL2() /* AutoClimbL2() */ );
+		// DRIVER_PAD_YELLOW_BUTTON.whenPressed(new AutoClimb() /* AutoClimb() */ );
 		DRIVER_PAD_RED_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));
-		DRIVER_PAD_GREEN_BUTTON.whileHeld(new AutoClimbL2());
+		// DRIVER_PAD_GREEN_BUTTON.whileHeld(new AutoClimbL2());
+
+		// below are alternate climb commands requiring two buttons to be pressed/held
+		// to work as a safeguard
+		CLIMB_L3_BUTTON_PAIR.whenPressed( /* new Wait(0) */ new AutoClimb());
+		CLIMB_L2_BUTTON_PAIR.whileHeld( /* new Wait(0) */ new AutoClimbL2());
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
 
 		DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.whileHeld(new ShifterHoldGear(Shifter.LOW_GEAR)); // changed from
-																									// LOW_GEAR for BAE
-																									// Systems Demo
+																								// LOW_GEAR for BAE
+																								// Systems Demo
 
 		DRIVER_PAD_BACK_BUTTON.whenPressed(new Wait(0));
 		DRIVER_PAD_START_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));

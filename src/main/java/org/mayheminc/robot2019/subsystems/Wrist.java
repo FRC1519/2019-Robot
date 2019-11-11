@@ -35,11 +35,11 @@ public class Wrist extends Subsystem {
     public static final double CARGO_FLOOR_PICKUP_ANGLE = -35.0; // was -20.0 on comp robot at NECMP
     // public static final double CARGO_LOADING_STATION_ANGLE = 25.0;
 
-    public static final double HP_ROCKET_HIGH_ANGLE = 95.0;
-    public static final double HP_ROCKET_MID_ANGLE = 95.0;
-    public static final double HP_ROCKET_LOW_ANGLE = 95.0; // was 95.0
+    public static final double HP_ROCKET_HIGH_ANGLE = 100.0; // was 95.0, raise a bit to account for HP sag
+    public static final double HP_ROCKET_MID_ANGLE = 100.0; // was 95.0, raise a bit to account for HP sag
+    public static final double HP_ROCKET_LOW_ANGLE = 100.0; // was 95.0, raise a bit to account for HP sag
     public static final double HP_FLOOR_PICKUP_ANGLE = 0.0;
-    public static final double HP_LOADING_STATION_ANGLE = 95.0; // was 95.0
+    public static final double HP_LOADING_STATION_ANGLE = 95.0; // was 95.0 (keep at 95, since no HP in robot)
 
     private static final double ANGLE_TOLERANCE = 10.0;
 
