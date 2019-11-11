@@ -91,7 +91,6 @@ public class Wrist extends Subsystem {
         m_motor.configPeakOutputVoltage(+12.0, -12.0);
         m_motor.configClosedloopRamp(0.05); // limit neutral to full to 0.05 seconds
 
-        // TODO: Need to verify motion magic parameters for wrist below
         m_motor.configMotionCruiseVelocity(100); // measured velocity of ~100K at 85%; set cruise to that
         m_motor.configMotionAcceleration(250); // acceleration of 2x velocity allows cruise to be attained in 1/2 second
         m_motor.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -103,12 +102,10 @@ public class Wrist extends Subsystem {
     }
 
     public void zeroWithOffset(int offset) {
-        // zero the position.
-        // TODO: NOTE: Offset is not in degrees, but is in sensor counts!
+        // zero the position.  Note that offset is not in degrees, but is in sensor counts!
         m_motor.setSelectedSensorPosition(ZERO_POS + offset);
         setInternalPosition(ZERO_POS + offset);
 
-        // TODO: should zeroing instead relax the wrist motor?
         m_mode = WristMode.DRIVER;
     }
 
@@ -211,9 +208,6 @@ public class Wrist extends Subsystem {
     }
 
     public void updateSmartDashboard() {
-        // TODO: add a safety of some sort to check if "getCurrentPosition" isn't
-        // changing when the motor is moving (this would indicate a disconnected encoder
-        // cable)
         SmartDashboard.putNumber("Wrist Current Pos", getCurrentPosition());
         SmartDashboard.putNumber("Wrist Current Degrees", m_angleInDegrees);
         switch (m_mode) {

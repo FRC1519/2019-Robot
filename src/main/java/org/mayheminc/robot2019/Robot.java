@@ -48,7 +48,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static final PowerDistributionPanel pdp = new PowerDistributionPanel();
 
 	public static Targeting targeting = new Targeting();
-	public static BlackBox blackbox = new BlackBox();
 	public static Shifter shifter = new Shifter();
 	public static Shoulder shoulder = new Shoulder();
 	public static Wrist wrist = new Wrist();
@@ -165,8 +164,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// run the scheduler on every main loop so that commands execute
 		Scheduler.getInstance().run();
-
-		// SchedulerManager.getInstance().updateTelemetry();
 	}
 
 	/**
@@ -239,10 +236,6 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// ensure the hatch panel grabber is "holding" the hatch panel
 		hatchPanelPickUp.set(HatchPanelPickUp.GRABBER_EXPANDED);
-
-		// TODO: do we want autonomous in high gear instead this year?
-		// force low gear
-		// shifter.setGear(Shifter.LOW_GEAR);
 
 		lights.setDefault(LedPatternFactory.defaultAuto);
 
@@ -326,8 +319,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 	public void teleopInit() {
 
-		// before doing anything else in teleop, kill any existing commands
-		// TODO: consider if this is still desirable in 2019 with the "sandstorm" period
+		// before doing anything else in teleop, kill any remaining commands from autonomous
+		// Note: commented out in 2019 for "sandstorm" to allow autonomous programs to continue into teleop
 		// Scheduler.getInstance().removeAll();
 
 		lights.setDefault(LedPatternFactory.defaultTeleOp);

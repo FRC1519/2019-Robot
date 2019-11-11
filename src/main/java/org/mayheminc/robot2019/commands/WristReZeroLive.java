@@ -48,11 +48,7 @@ public class WristReZeroLive extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    // m_currentPosition = Robot.wrist.getCurrentPosition();
-    // If there is a high current level, exit
-
-    // TODO: Should really instead look for when the encoder hasn't turned for 10
-    // cycles. Maybe Robot.wrist.isEncoderStalled() would be a good method to use?
+    // Finished when the encoder hasn't turned for 10 cycles.
     return (m_loopsThatWeHaveBeenStopped >= 10);
   }
 
