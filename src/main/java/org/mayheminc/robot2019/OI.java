@@ -225,7 +225,7 @@ public class OI {
 		CLIMB_L2_BUTTON_PAIR.whileHeld( /* new Wait(0) */ new AutoClimbL2());
 
 		DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON.whenPressed(new Stow());
-		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new HatchPanelLoadingStation());
+		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new Wait() /* was HatchPanelLoadingStation() */);
 
 		DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.whileHeld(new ShifterHoldGear(Shifter.LOW_GEAR)); // changed from
 																								// LOW_GEAR for BAE
