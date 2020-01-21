@@ -9,7 +9,7 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * Add your docs here.
@@ -30,7 +30,7 @@ public class SystemZeroWithoutGyro extends InstantCommand {
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.lifter.zero();
     Robot.shoulder.zero();
     Robot.wrist.zero();

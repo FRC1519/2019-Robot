@@ -9,9 +9,9 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.subsystems.Wrist;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class ArmMoveWithShoulderFirst extends CommandGroup {
+public class ArmMoveWithShoulderFirst extends SequentialCommandGroup {
 
   /**
    * Move the shoulder first and then the wrist. The command is done when both the
@@ -23,7 +23,9 @@ public class ArmMoveWithShoulderFirst extends CommandGroup {
    *                            "world" perspective
    */
   public ArmMoveWithShoulderFirst(double targetShoulderAngle, double targetWristAngle) {
-    addSequential(new ShoulderSetAngle(targetShoulderAngle));
-    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle)));
+    addCommands(
+        // move the shoulder first and wrist after (in SequentialCommandGroup)
+        new ShoulderSetAngle(targetShoulderAngle),
+        new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle)));
   }
 }

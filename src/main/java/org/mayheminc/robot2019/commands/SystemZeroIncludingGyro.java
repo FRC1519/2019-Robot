@@ -9,7 +9,7 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * Add your docs here.
@@ -20,7 +20,6 @@ public class SystemZeroIncludingGyro extends InstantCommand {
    */
   public SystemZeroIncludingGyro() {
     super();
-    this.setRunWhenDisabled(true);
 
     // Use requires() here to declare subsystem dependencies
     // requires(Robot.shoulder);
@@ -28,10 +27,15 @@ public class SystemZeroIncludingGyro extends InstantCommand {
     // requires(Robot.wrist);
     // requires(Robot.drive);
   }
+  
+  @Override
+  public boolean runsWhenDisabled() {
+      return true;
+  }
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.drive.zeroHeadingGyro(0);
     Robot.lifter.zero();
     Robot.shoulder.zero();

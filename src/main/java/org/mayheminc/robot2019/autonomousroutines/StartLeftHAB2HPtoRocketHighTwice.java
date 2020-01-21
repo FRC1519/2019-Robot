@@ -7,22 +7,23 @@
 
 package org.mayheminc.robot2019.autonomousroutines;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import org.mayheminc.robot2019.subsystems.Autonomous;
 
-public class StartLeftHAB2HPtoRocketHighTwice extends CommandGroup {
+public class StartLeftHAB2HPtoRocketHighTwice extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
   public StartLeftHAB2HPtoRocketHighTwice() {
-    // Call the shared HAB2HPtoRocketFront routine, specifying our starting side
-    addSequential(new HAB2HPtoRocketFront(Autonomous.StartOn.LEFT, Autonomous.RocketHeight.HIGH));
+    addCommands(
+        // Call the shared HAB2HPtoRocketFront routine, specifying our starting side
+        new HAB2HPtoRocketFront(Autonomous.StartOn.LEFT, Autonomous.RocketHeight.HIGH),
 
-    // now run the routine to get a hatch panel from the loading station
-    addSequential(new RocketFrontToLoadingStationFast(Autonomous.StartOn.LEFT));
+        // now run the routine to get a hatch panel from the loading station
+        new RocketFrontToLoadingStationFast(Autonomous.StartOn.LEFT),
 
-    // now run the routine to get a hatch panel from the loading station
-    addSequential(new LoadingStationToRocketBack(Autonomous.StartOn.LEFT, Autonomous.RocketHeight.HIGH));
+        // now run the routine to get a hatch panel from the loading station
+        new LoadingStationToRocketBack(Autonomous.StartOn.LEFT, Autonomous.RocketHeight.HIGH));
   }
 }

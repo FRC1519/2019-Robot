@@ -11,12 +11,12 @@ import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.subsystems.CargoIntake;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Set the CargoIntake to a power.
  */
-public class CargoIntakeSetForTime extends Command {
+public class CargoIntakeSetForTime extends CommandBase {
   /**
    * Add your docs here.
    */
@@ -28,35 +28,28 @@ public class CargoIntakeSetForTime extends Command {
     super();
 
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.cargoIntake);
+    addRequirements(Robot.cargoIntake);
     m_power = power;
     m_desiredTime = timeInSeconds;
   }
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.cargoIntake.setPower(m_power);
     m_startTime = Timer.getFPGATimestamp();
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     double diff = Timer.getFPGATimestamp() - m_startTime;
     diff = Math.abs(diff);
     return (diff >= m_desiredTime);
   }
 
-  // Called once after isFinished returns true
+  // Called once after isFinished returns true or the command is interrupted
   @Override
-  protected void end() {
-    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
+  public void end(boolean interrupted) {
     Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
   }
 }

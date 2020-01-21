@@ -8,8 +8,8 @@ import org.mayheminc.util.JoystickAxisButton;
 import org.mayheminc.util.JoystickPOVButton;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class GamepadF310 extends Joystick{
 	//	Axis Definitions for the F310 gamepad

@@ -11,7 +11,7 @@ import org.mayheminc.robot2019.Robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import sun.net.www.content.text.plain;
 
@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Add your docs here.
  */
 
-public class Targeting extends Subsystem {
+public class Targeting extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -409,11 +409,5 @@ public class Targeting extends Subsystem {
     // Create the array to return
     double[] returnArray = { desiredHeading, bestX, bestY };
     return returnArray;
-  }
-
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
   }
 }

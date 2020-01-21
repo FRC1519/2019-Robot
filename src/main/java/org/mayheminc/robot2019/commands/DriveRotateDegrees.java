@@ -2,13 +2,13 @@ package org.mayheminc.robot2019.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.mayheminc.robot2019.Robot;
 
 /**
  *
  */
-public class DriveRotateDegrees extends Command {
+public class DriveRotateDegrees extends CommandBase {
     final static double DEFAULT_TIME_LIMIT_SEC = 2.0;
     final static double FINAL_HEADING_TOLERANCE = 10.0;
     double timeLimit = 0;
@@ -25,18 +25,21 @@ public class DriveRotateDegrees extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    @Override
+    public void initialize() {
         Robot.drive.rotate(degrees);
         // TODO: RJD: does this need a timer.reset()?
         timer.start();
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
+    @Override
+    public void execute() {
         Robot.drive.speedRacerDrive(0.05, 0.0, true);
     }
 
     // Make this return true when this Command no longer needs to run execute()
+    @Override
     public boolean isFinished() {
         double actual = Robot.drive.getHeading();
         double desired = Robot.drive.getDesiredHeading();
@@ -47,13 +50,8 @@ public class DriveRotateDegrees extends Command {
     }
 
     // Called once after isFinished returns true
-    protected void end() {
-        Robot.drive.speedRacerDrive(0.0, 0.0, false);
-    }
-
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
+    @Override
+    public void end(boolean interrupted) {
         Robot.drive.speedRacerDrive(0.0, 0.0, false);
     }
 }

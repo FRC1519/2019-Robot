@@ -3,19 +3,19 @@ package org.mayheminc.robot2019.subsystems;
 import com.kauailabs.navx.frc.*;
 import org.mayheminc.util.History;
 
-import edu.wpi.first.wpilibj.*;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.*;
 
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.RobotMap;
 import org.mayheminc.util.MayhemTalonSRX;
 import org.mayheminc.util.Utils;
 
-public class Drive extends Subsystem {
+public class Drive extends SubsystemBase {
 
 	History headingHistory = new History();
 
@@ -351,8 +351,6 @@ public class Drive extends Subsystem {
 		}
 	}
 
-	PowerDistributionPanel pdp = new PowerDistributionPanel();
-
 	/**
 	 * updateSdbPdp Update the Smart Dashboard with the Power Distribution Panel
 	 * currents.
@@ -364,10 +362,10 @@ public class Drive extends Subsystem {
 		double rb;
 		double fudgeFactor = 0.0;
 
-		lf = pdp.getCurrent(RobotMap.DRIVE_FRONT_LEFT_PDP) - fudgeFactor;
-		rf = pdp.getCurrent(RobotMap.DRIVE_FRONT_RIGHT_PDP) - fudgeFactor;
-		lb = pdp.getCurrent(RobotMap.DRIVE_BACK_LEFT_PDP) - fudgeFactor;
-		rb = pdp.getCurrent(RobotMap.DRIVE_BACK_RIGHT_PDP) - fudgeFactor;
+		lf = Robot.pdp.getCurrent(RobotMap.DRIVE_FRONT_LEFT_PDP) - fudgeFactor;
+		rf = Robot.pdp.getCurrent(RobotMap.DRIVE_FRONT_RIGHT_PDP) - fudgeFactor;
+		lb = Robot.pdp.getCurrent(RobotMap.DRIVE_BACK_LEFT_PDP) - fudgeFactor;
+		rb = Robot.pdp.getCurrent(RobotMap.DRIVE_BACK_RIGHT_PDP) - fudgeFactor;
 
 		SmartDashboard.putNumber("Left Front I", lf);
 		SmartDashboard.putNumber("Right Front I", rf);
@@ -414,7 +412,11 @@ public class Drive extends Subsystem {
 		double leftPower, rightPower;
 		double rotation = 0;
 		double adjustedSteeringX = rawSteeringX * throttle;
+
+		// for DEMO, REDUCE QUICK_TURN_GAIN from normal 0.75 to 0.38
+		// final double QUICK_TURN_GAIN = 0.38; // culver drive used 1.5
 		final double QUICK_TURN_GAIN = 0.75; // culver drive used 1.5
+
 		final double STD_TURN_GAIN = 1.5; // the driver wants the non-quick turn turning a little more responsive.
 
 		int throttleSign;

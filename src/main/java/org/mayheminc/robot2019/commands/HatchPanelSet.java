@@ -9,12 +9,12 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Add your docs here.
  */
-public class HatchPanelSet extends InstantCommand {
+public class HatchPanelSet extends CommandBase {
   /**
    * Add your docs here.
    */
@@ -23,13 +23,13 @@ public class HatchPanelSet extends InstantCommand {
   public HatchPanelSet(boolean b) {
     super();
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.hatchPanelPickUp);
+    addRequirements(Robot.hatchPanelPickUp);
     m_pos = b;
   }
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.hatchPanelPickUp.set(m_pos);
   }
 

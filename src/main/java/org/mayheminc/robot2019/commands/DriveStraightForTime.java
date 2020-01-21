@@ -2,12 +2,12 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  *
  */
-public class DriveStraightForTime extends Command {
+public class DriveStraightForTime extends CommandBase {
 	double m_desiredPercentVbus = 0.0;
 	double m_startTime = 0.0;
 	double m_desiredTime;
@@ -18,33 +18,33 @@ public class DriveStraightForTime extends Command {
 	 * @param arg_distance    Time is in seconds
 	 */
 	public DriveStraightForTime(double desiredPercentVbus, double timeInSeconds) {
-		requires(Robot.drive);
+		addRequirements(Robot.drive);
 		m_desiredTime = timeInSeconds;
 		m_desiredPercentVbus = desiredPercentVbus;
 	}
 
 	// Called just before this Command runs the first time
-	protected void initialize() {
+	@Override
+	public void initialize() {
 		m_startTime = Timer.getFPGATimestamp();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
+	@Override
+	public void execute() {
 		Robot.drive.speedRacerDrive(m_desiredPercentVbus, 0, false);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
+	@Override
+	public boolean isFinished() {
 		double elapsedTime = Timer.getFPGATimestamp() - m_startTime;
 		return (elapsedTime >= m_desiredTime);
 	}
 
 	// Called once after isFinished returns true
-	protected void end() {
-		Robot.drive.stop();
-	}
-
-	protected void interrupted() {
+	@Override
+	public void end(boolean interrupted) {
 		Robot.drive.stop();
 	}
 }

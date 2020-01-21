@@ -3,12 +3,12 @@ package org.mayheminc.robot2019.commands;
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.subsystems.Drive;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  *
  */
-public class DriveStraightOnHeading extends Command {
+public class DriveStraightOnHeading extends CommandBase {
 
 	double m_targetPower;
 	double m_desiredDisplacement;
@@ -38,19 +38,22 @@ public class DriveStraightOnHeading extends Command {
 	}
 
 	// Called just before this Command runs the first time
-	protected void initialize() {
+	@Override
+	public void initialize() {
 		Robot.drive.saveInitialWheelDistance();
 		Robot.drive.setDesiredHeading(m_desiredHeading);
 		// System.out.println("Starting Routine: Drive Straight On Heading");
 	}
 
 	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
+	@Override
+	public void execute() {
 		Robot.drive.speedRacerDrive(m_targetPower, 0, false);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
+	@Override
+	public boolean isFinished() {
 		int displacement = (int) Robot.drive.getWheelDistance();
 
 		displacement = Math.abs(displacement);
@@ -59,14 +62,9 @@ public class DriveStraightOnHeading extends Command {
 		return (displacement >= m_desiredDisplacement);
 	}
 
-	// Called once after isFinished returns true
-	protected void end() {
-		Robot.drive.stop();
-	}
-
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
-	protected void interrupted() {
+	// Called once after isFinished returns true or the command is interrupted
+	@Override
+	public void end(boolean interrupted) {
 		Robot.drive.stop();
 	}
 }

@@ -5,19 +5,19 @@
  */
 package org.mayheminc.robot2019.autonomousroutines;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.mayheminc.robot2019.commands.*;
 
 /**
  *
  * @author Team1519
  */
-public class StayStill extends CommandGroup {
+public class StayStill extends SequentialCommandGroup {
 
     public StayStill() {
 
         // Perform needed initialization
-        addSequential(new DriveZeroGyro());
+        addCommands(new DriveZeroGyro());
 
         // ALL DONE!
     }

@@ -7,13 +7,13 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.mayheminc.util.MayhemTalonSRX;
 import org.mayheminc.robot2019.RobotMap;
 
-public class Lifter extends Subsystem {
+public class Lifter extends SubsystemBase {
 
     // constants for power
     private static final double STOP_POWER = 0.0;

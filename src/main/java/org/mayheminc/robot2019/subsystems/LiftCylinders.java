@@ -3,12 +3,12 @@ package org.mayheminc.robot2019.subsystems;
 // import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.RobotMap;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class LiftCylinders extends Subsystem {
+public class LiftCylinders extends SubsystemBase {
 
     public static final boolean RETRACTED = false;
     public static final boolean EXTENDED = true;

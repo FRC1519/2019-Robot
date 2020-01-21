@@ -3,12 +3,12 @@ package org.mayheminc.robot2019.subsystems;
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.RobotMap;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class HatchPanelPickUp extends Subsystem {
+public class HatchPanelPickUp extends SubsystemBase {
 
     public static final boolean GRABBER_CONTRACTED = true;
     public static final boolean GRABBER_EXPANDED = false;

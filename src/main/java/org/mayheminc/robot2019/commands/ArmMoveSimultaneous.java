@@ -9,9 +9,9 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.subsystems.Wrist;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-public class ArmMoveSimultaneous extends CommandGroup {
+public class ArmMoveSimultaneous extends ParallelCommandGroup {
   /**
    * Move the shoulder and wrist at the same time. The command is done when both
    * the wrist and shoulder are done moving.
@@ -22,7 +22,9 @@ public class ArmMoveSimultaneous extends CommandGroup {
    *                            "world" perspective
    */
   public ArmMoveSimultaneous(double targetShoulderAngle, double targetWristAngle) {
-    addParallel(new ShoulderSetAngle(targetShoulderAngle));
-    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle)));
+    addCommands(
+        // move the shoulder and wrist simultaneously (in ParallelCommandGroup)
+        new ShoulderSetAngle(targetShoulderAngle),
+        new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle)));
   }
 }

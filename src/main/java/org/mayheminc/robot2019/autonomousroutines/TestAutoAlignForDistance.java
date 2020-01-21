@@ -11,15 +11,15 @@ import org.mayheminc.robot2019.commands.AutoAlignForDistance;
 import org.mayheminc.robot2019.commands.AutoAlignForDistance.DistanceUnits;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class TestAutoAlignForDistance extends CommandGroup {
+public class TestAutoAlignForDistance extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
   public TestAutoAlignForDistance() {
     // Test AutoAlignForDistance
-    addSequential(new AutoAlignForDistance(0.35, DistanceUnits.INCHES, 24.0, 2.5, TargetPosition.CENTER_MOST));
+    addCommands(new AutoAlignForDistance(0.35, DistanceUnits.INCHES, 24.0, 2.5, TargetPosition.CENTER_MOST));
 
   }
 }

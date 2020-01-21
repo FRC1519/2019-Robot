@@ -12,34 +12,19 @@ import org.mayheminc.robot2019.subsystems.Targeting;
 import org.mayheminc.robot2019.subsystems.TargetingLights;
 import org.mayheminc.robot2019.subsystems.Wrist;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-public class HatchPanelMid extends CommandGroup {
+public class HatchPanelMid extends ParallelCommandGroup {
   /**
    * Add your docs here.
    */
   public HatchPanelMid() {
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
+    addCommands(
+      // turn on the targeting lights while scoring a hatch panel
+      new TargetingLightsSet(TargetingLights.LIGHTS_ON), 
 
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
-
-    // since we are using hatch panels, turn the targeting lights on
-    addParallel(new TargetingLightsSet(TargetingLights.LIGHTS_ON));
-
-    addSequential(new ArmMove(Shoulder.HP_ROCKET_MID_ANGLE, Wrist.HP_ROCKET_MID_ANGLE, Targeting.TargetHeight.HATCH));
-
+      // move the arm to the position for hatch panel mid scoring
+      new ArmMove(Shoulder.HP_ROCKET_MID_ANGLE, Wrist.HP_ROCKET_MID_ANGLE, Targeting.TargetHeight.HATCH)
+      );
   }
 }

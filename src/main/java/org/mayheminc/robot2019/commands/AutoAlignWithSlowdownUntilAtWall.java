@@ -5,12 +5,12 @@ import org.mayheminc.robot2019.subsystems.Autonomous;
 import org.mayheminc.robot2019.subsystems.Targeting;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  *
  */
-public class AutoAlignWithSlowdownUntilAtWall extends Command {
+public class AutoAlignWithSlowdownUntilAtWall extends CommandBase {
 
 	double m_startTime;
 	double m_maxTime;
@@ -28,20 +28,15 @@ public class AutoAlignWithSlowdownUntilAtWall extends Command {
 
 	public AutoAlignWithSlowdownUntilAtWall(double maxTime, Targeting.TargetPosition whichTarget,
 			Autonomous.RocketHeight desiredHeight) {
-		requires(Robot.drive);
+		addRequirements(Robot.drive);
 		m_maxTime = maxTime;
 		m_whichTarget = whichTarget;
 		m_desiredHeight = desiredHeight;
 	}
 
-	public AutoAlignWithSlowdownUntilAtWall(double maxTime, Targeting.TargetPosition whichTarget) {
-		requires(Robot.drive);
-		m_maxTime = maxTime;
-		m_whichTarget = whichTarget;
-	}
-
 	// Called just before this Command runs the first time
-	protected void initialize() {
+	@Override
+	public void initialize() {
 		m_startTime = Timer.getFPGATimestamp();
 		// Set auto align to true so we auto align when speedRacerDrive is called
 		Robot.drive.setAutoAlignTrue();
@@ -51,27 +46,24 @@ public class AutoAlignWithSlowdownUntilAtWall extends Command {
 	}
 
 	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
+	@Override
+	public void execute() {
 		// Robot.drive.speedRacerDrive(m_targetPower, 0, false);
 		Robot.drive.speedRacerDrive(Robot.targeting.getRecommendedSpeed(), 0, false);
 
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
+	@Override
+	public boolean isFinished() {
 		double elapsedTime = Timer.getFPGATimestamp() - m_startTime;
 		elapsedTime = Math.abs(elapsedTime);
 		return (elapsedTime >= m_maxTime) || Robot.targeting.atWall(m_desiredHeight);
 	}
 
-	// Called once after isFinished returns true
-	protected void end() {
-		Robot.drive.stop();
-		Robot.drive.setAutoAlignFalse();
-		// Robot.targetingLights.set(false);
-	}
-
-	protected void interrupted() {
+	// Called once after isFinished returns true or when interrupted
+	@Override
+	public void end(boolean interrupted) {
 		Robot.drive.stop();
 		Robot.drive.setAutoAlignFalse();
 		// Robot.targetingLights.set(false);

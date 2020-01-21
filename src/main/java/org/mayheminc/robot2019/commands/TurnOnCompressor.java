@@ -2,7 +2,7 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  *
@@ -14,7 +14,8 @@ public class TurnOnCompressor extends InstantCommand {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    @Override
+    public void initialize() {
     	Robot.compressor.start();
     }
 }

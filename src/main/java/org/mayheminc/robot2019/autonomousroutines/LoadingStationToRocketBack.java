@@ -22,54 +22,63 @@ import org.mayheminc.robot2019.subsystems.HatchPanelPickUp;
 import org.mayheminc.robot2019.subsystems.Autonomous.StartOn;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-public class LoadingStationToRocketBack extends CommandGroup {
+public class LoadingStationToRocketBack extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
   public LoadingStationToRocketBack(Autonomous.StartOn startSide, Autonomous.RocketHeight desiredHeight) {
 
-    // Get the arm into position while heading downfield alongside the cargo ship
-    // Get the arm into postion while heading for the rocket
-    if (desiredHeight == Autonomous.RocketHeight.HIGH) {
-      addParallel(new HatchPanelHigh());
-    } else {
-      addParallel(new HatchPanelLow());
-    }
-    addParallel(new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5));
+    addCommands(
+        // Next, simultaneously do three things:
+        // A - free the wrist from the "secured" location on the velcro wrist retainer
+        // (in case it got accidentally stuck)
+        // B - move the arm into position for scoring
+        // C - drive to the back side of the rocket
+        new ParallelCommandGroup(
+            // A - turn on the cargo intake to free the wrist from the velcro wrist retainer
+            new CargoIntakeSetForTime(CargoIntake.OUTTAKE_HARD_POWER, 1.5),
 
-    // Head for the back side of the rocket, by taking a long diagonal backwards
-    // path until
-    // beyond the rocket guessing at 22 feet of driving distance.
-    // angle was 170.0 before NECMP
-    addSequential(new DriveStraightOnHeading(-0.8, 204, Autonomous.chooseAngle(startSide, 167.0)));
+            // B - Move the arm to the desired position
+            ((desiredHeight == Autonomous.RocketHeight.HIGH) ? new HatchPanelHigh() : new HatchPanelLow()),
 
-    // drive straight backwards downfield as far as we dare without crossing
-    // centerline
-    addSequential(new DriveStraightOnHeading(-0.8, 90, Autonomous.chooseAngle(startSide, 180.0)));
-    addSequential(new DriveStraightOnHeading(-0.8, 84, Autonomous.chooseAngle(startSide, 195.0)));
+            // C - drive to the back side of the rocket
+            new SequentialCommandGroup(
+                // Head for the back side of the rocket, by taking a long diagonal backwards
+                // path until
+                // beyond the rocket guessing at 22 feet of driving distance.
+                // angle was 170.0 before NECMP
+                new DriveStraightOnHeading(-0.8, 204, Autonomous.chooseAngle(startSide, 167.0)),
 
-    // Turn towards the back of the rocket; 150 degrees is perfect "in theory",
-    // but we need to aim to overshoot the target angle a bit to get there quickly.
-    addSequential(new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 140.0)));
+                // drive straight backwards downfield as far as we dare without crossing
+                // centerline
+                new DriveStraightOnHeading(-0.8, 90, Autonomous.chooseAngle(startSide, 180.0)),
+                new DriveStraightOnHeading(-0.8, 84, Autonomous.chooseAngle(startSide, 195.0))) // endSCG
+        ), // end PCG
 
-    // below was 0.20 percentVbus at CMP; 0.15 at Merrimack
-    addSequential(new DriveStraightOnHeading(0.30, 8, Autonomous.chooseAngle(startSide, 150.0)));
+        // Turn towards the back of the rocket; 150 degrees is perfect "in theory",
+        // but we need to aim to overshoot the target angle a bit to get there quickly.
+        new DriveStraightOnHeading(-0.4, 48, Autonomous.chooseAngle(startSide, 140.0)),
 
-    // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
-    addSequential(new AutoAlignForTime(0.25, 0.7,
-        ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST)));
+        // below was 0.20 percentVbus at CMP; 0.15 at Merrimack
+        new DriveStraightOnHeading(0.30, 8, Autonomous.chooseAngle(startSide, 150.0)),
 
-    addSequential(new AutoAlignUntilAtWall(0.25, 2.3,
-        ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST), desiredHeight));
+        // Use "AutoAlign" to drive to the hatch; first for time, then until at wall
+        new AutoAlignForTime(0.25, 0.7,
+            ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST)),
 
-    // release the hatch panel
-    addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED));
-    addSequential(new Wait(0.5));
-    addSequential(new PrintAutonomousTimeRemaining("Placed HP #2"));
+        new AutoAlignUntilAtWall(0.25, 2.3,
+            ((startSide == StartOn.RIGHT) ? TargetPosition.LEFT_MOST : TargetPosition.RIGHT_MOST), desiredHeight),
 
-    // drive straight backwards for about half a foot to get free of hatch on rocket
-    addSequential(new DriveStraightOnHeading(-0.8, 6, Autonomous.chooseAngle(startSide, 150.0)));
+        // release the hatch panel
+        new HatchPanelSet(HatchPanelPickUp.GRABBER_CONTRACTED), // place it!
+        new Wait(0.5),
+
+        new PrintAutonomousTimeRemaining("Placed HP #2"),
+
+        // drive straight backwards for about half a foot to get free of hatch on rocket
+        new DriveStraightOnHeading(-0.8, 6, Autonomous.chooseAngle(startSide, 150.0)));
   }
 }

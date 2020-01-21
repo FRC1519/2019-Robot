@@ -9,9 +9,10 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.subsystems.Wrist;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class ArmMoveWithShoulderHeadStart extends CommandGroup {
+public class ArmMoveWithShoulderHeadStart extends ParallelCommandGroup {
 
   /**
    * Move the shoulder and the wrist simultaneously, but with giving the shoulder
@@ -26,9 +27,14 @@ public class ArmMoveWithShoulderHeadStart extends CommandGroup {
    *                            seconds.
    */
   public ArmMoveWithShoulderHeadStart(double targetShoulderAngle, double targetWristAngle, double headStartInSecs) {
-    addParallel(new ShoulderSetAngle(targetShoulderAngle));
+    addCommands(
+        // move the shoulder first with a hard start before the wrist
+        // (in ParallelCommandGroup)
+        new ShoulderSetAngle(targetShoulderAngle),
 
-    addSequential(new Wait(headStartInSecs));
-    addSequential(new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle)));
+        // move the wrist simultaneously with the shoulder, but after a delay
+        new SequentialCommandGroup( //
+            new Wait(headStartInSecs),
+            new WristSetInternalAngle(Wrist.computeInternalAngle(targetShoulderAngle, targetWristAngle))));
   }
 }

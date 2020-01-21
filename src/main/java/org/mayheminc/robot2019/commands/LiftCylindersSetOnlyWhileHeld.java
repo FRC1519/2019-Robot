@@ -7,13 +7,13 @@
 
 package org.mayheminc.robot2019.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.mayheminc.robot2019.Robot;
 
 /**
  * Add your docs here.
  */
-public class LiftCylindersSetOnlyWhileHeld extends Command {
+public class LiftCylindersSetOnlyWhileHeld extends CommandBase {
   /**
    * Add your docs here.
    */
@@ -22,33 +22,25 @@ public class LiftCylindersSetOnlyWhileHeld extends Command {
   public LiftCylindersSetOnlyWhileHeld(boolean b) {
     super();
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.liftCylinders);
+    addRequirements(Robot.liftCylinders);
     m_pos = b;
   }
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.liftCylinders.set(m_pos);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
+  // Called once after isFinished returns true or the command is interrupted
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     Robot.liftCylinders.set(!m_pos);
   }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    Robot.liftCylinders.set(!m_pos);
-  }
-
 }

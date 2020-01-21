@@ -5,12 +5,13 @@ import org.mayheminc.robot2019.subsystems.Wrist;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetHeight;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  *
  */
-public class ArmMove extends Command {
+public class ArmMove extends CommandBase {
 	double m_startingShoulderAngle;
 	double m_startingWristInternalAngle;
 	double m_targetShoulderAngle;
@@ -62,7 +63,8 @@ public class ArmMove extends Command {
 	}
 
 	// Called just before this Command runs the first time
-	protected void initialize() {
+	@Override
+	public void initialize() {
 		// if there is an old command from a prior invocation still hanging around,
 		// let's make sure it has been cancelled
 		if (m_subCommand != null) {
@@ -135,41 +137,46 @@ public class ArmMove extends Command {
 		}
 
 		if (m_subCommand != null) {
-			m_subCommand.start();
+			m_subCommand.schedule();
 		}
 	}
 
 	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
+	@Override
+	public void execute() {
 		// Nothing needs to happen in "execute" -- arm movement is actually controlled
 		// by subsidiary commands
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
-		// Return when all of the subsidiary commands that were created have completed
+	@Override
+	public boolean isFinished() {
+		// Return when the subsidiary command that was created has completed
 
 		// TODO: Timeout feature not actually implemented yet!!!
-		return m_subCommand.isCompleted();
+
+		// NOTE: below boolean used to be m_subCommand.isCompleted() with old command
+		// framework
+		// must be finished if the subcommand is no longer scheduled
+		return (!m_subCommand.isScheduled());
 	}
 
 	// Called once after isFinished returns true
-	protected void end() {
-		// Note - when the ArmMove command isFinished, the subsidiary command will have
-		// completed, leaving the arm in a "position control" status to go to the
-		// current position, whatever that was.
-		m_subCommand = null;
-	}
+	@Override
+	public void end(boolean interrupted) {
+		if (interrupted) {
+			// cancel any ongoing subcommand
+			m_subCommand.cancel();
+			m_subCommand = null;
 
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
-	protected void interrupted() {
-		// cancel any ongoing subcommand
-		m_subCommand.cancel();
-		m_subCommand = null;
-
-		// Have the arm and shoulder hold their current positions
-		Robot.shoulder.setDesiredAngle(Robot.shoulder.getAngleInDegrees());
-		Robot.wrist.setDesiredAngle(Robot.wrist.getAngleInDegrees());
+			// Have the arm and shoulder hold their current positions
+			Robot.shoulder.setDesiredAngle(Robot.shoulder.getAngleInDegrees());
+			Robot.wrist.setDesiredAngle(Robot.wrist.getAngleInDegrees());
+		} else {
+			// Note - when the ArmMove command isFinished, the subsidiary command will have
+			// completed, leaving the arm in a "position control" status to go to the
+			// current position, whatever that was.
+			m_subCommand = null;
+		}
 	}
 }

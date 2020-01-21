@@ -3,13 +3,13 @@ package org.mayheminc.robot2019.subsystems;
 import org.mayheminc.robot2019.RobotMap;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class Shifter extends Subsystem {
+public class Shifter extends SubsystemBase {
 	// Solenoid
 	Solenoid m_shifter;
 

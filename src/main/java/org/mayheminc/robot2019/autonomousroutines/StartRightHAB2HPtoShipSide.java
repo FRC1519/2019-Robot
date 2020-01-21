@@ -7,17 +7,17 @@
 
 package org.mayheminc.robot2019.autonomousroutines;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import org.mayheminc.robot2019.subsystems.Autonomous;
 
-public class StartRightHAB2HPtoShipSide extends CommandGroup {
+public class StartRightHAB2HPtoShipSide extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
   public StartRightHAB2HPtoShipSide() {
 
     // Call the shared HAB2HPtoShipSide routine, specifying our starting side
-    addSequential(new HAB2HPtoShipSide(Autonomous.StartOn.RIGHT));
+    addCommands(new HAB2HPtoShipSide(Autonomous.StartOn.RIGHT));
   }
 }

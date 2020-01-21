@@ -9,11 +9,11 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
-public class AutoAlign extends Command {
+public class AutoAlign extends CommandBase {
 
   /*
    * AutoAlign the robot, presuming that the robot is being driven forwards and
@@ -29,7 +29,7 @@ public class AutoAlign extends Command {
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.drive.setAutoAlignTrue();
     Robot.targetingLights.set(true);
     Robot.targeting.setMode(m_whichTarget);
@@ -37,26 +37,19 @@ public class AutoAlign extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
+  // Called once after isFinished returns true or if the command is interrupted
   @Override
-  protected void end() {
-    Robot.drive.setAutoAlignFalse();
-    // Robot.targetingLights.set(false);
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
+  public void end(boolean interrupted) {
+    // behavior is the same whether isFinished or interrupted
     Robot.drive.setAutoAlignFalse();
     // Robot.targetingLights.set(false);
   }

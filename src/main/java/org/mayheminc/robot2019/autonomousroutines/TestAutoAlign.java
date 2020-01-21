@@ -10,9 +10,9 @@ package org.mayheminc.robot2019.autonomousroutines;
 import org.mayheminc.robot2019.commands.AutoAlignUntilAtWall;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class TestAutoAlign extends CommandGroup {
+public class TestAutoAlign extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
@@ -33,6 +33,6 @@ public class TestAutoAlign extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new AutoAlignUntilAtWall(0.3, 10, TargetPosition.RIGHT_MOST));
+    addCommands(new AutoAlignUntilAtWall(0.3, 10, TargetPosition.RIGHT_MOST));
   }
 }

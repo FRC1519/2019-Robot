@@ -3,43 +3,27 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  *
  * @author Team1519
  */
-public class SelectAutonomousProgram extends Command {
-    
+public class SelectAutonomousProgram extends InstantCommand {
+
     private int m_delta;
 
     public SelectAutonomousProgram(int delta) {
-        requires(Robot.autonomous);
-        setRunWhenDisabled(true);
         m_delta = delta;
     }
 
+    @Override
+    public boolean runsWhenDisabled() {
+        return (true);
+    }
+
     // Called just before this Command runs the first time
-    protected void initialize() {
-    	
-    }
-
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    }
-
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return true;
-    }
-
-    // Called once after isFinished returns true
-    protected void end() {
-    	Robot.autonomous.adjustProgramNumber(m_delta);
-    }
-
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
+    public void initialize() {
+        Robot.autonomous.adjustProgramNumber(m_delta);
     }
 }

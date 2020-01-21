@@ -2,7 +2,7 @@ package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  *
@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 // drives forward until the gyro detects a tilt
 
-public class DriveUntilTilt extends Command {
+public class DriveUntilTilt extends CommandBase {
 
     public static final double MAX_TILT = 2.0;
 
@@ -21,30 +21,28 @@ public class DriveUntilTilt extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    @Override
+    public void initialize() {
         // Robot.drive.positiveDriveStraight(0.25);
 
     }
 
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
+    @Override
+    public void execute() {
         Robot.drive.speedRacerDrive(0.25, 0, false);
 
     }
 
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
+    @Override
+    public boolean isFinished() {
         return (Robot.drive.getPitch() >= MAX_TILT);
     }
 
-    // Called once after isFinished returns true
-    protected void end() {
-        Robot.drive.stop();
-    }
-
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
+    // Called once after isFinished returns true or the command is interrupted
+    @Override
+    public void end(boolean interrupted) {
         Robot.drive.stop();
     }
 }

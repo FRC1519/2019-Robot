@@ -10,22 +10,22 @@ package org.mayheminc.robot2019.commands;
 import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.subsystems.LedPatternFactory;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class WristReZeroLive extends Command {
+public class WristReZeroLive extends CommandBase {
   public int m_currentPosition;
   public int m_lastPosition;
   public int m_loopsThatWeHaveBeenStopped = 0;
 
   public WristReZeroLive() {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.wrist);
+    addRequirements(Robot.wrist);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.wrist.setPercentOutput(0.5);
     m_lastPosition = Robot.wrist.getCurrentPosition();
     m_loopsThatWeHaveBeenStopped = 0;
@@ -33,7 +33,7 @@ public class WristReZeroLive extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
 
     m_currentPosition = Robot.wrist.getCurrentPosition();
     if (Math.abs(m_lastPosition - m_currentPosition) < 10) {
@@ -47,29 +47,29 @@ public class WristReZeroLive extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     // Finished when the encoder hasn't turned for 10 cycles.
     return (m_loopsThatWeHaveBeenStopped >= 10);
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
-    // Zero the arm
+  public void end(boolean interrupted) {
 
-    // "zero" from a live wrist zero ends up being ~10 degrees too high
-    // (Note 10 degreess is about 100 ticks)
-    Robot.wrist.zeroWithOffset(80); // was 120 at start of Friday at CMP; may have overcorrected with this
-    // Stop moving the wrist
+    // regardless of whether we are interrupted or not, stop moving the wrist!
     Robot.wrist.setPercentOutput(0.0);
-    Robot.lights.set(LedPatternFactory.wristReZeroLive);
-  }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    // Stop moving the wrist
-    Robot.wrist.setPercentOutput(0.0);
+    if (interrupted) {
+      // we may not be in the zero position; can't zero, so just stop the wrist motor
+    } else {
+      // should be in zero position, zero the wrist
+
+      // "zero" from a live wrist zero ends up being ~10 degrees too high
+      // (Note 10 degreess is about 100 ticks)
+      Robot.wrist.zeroWithOffset(80); // was 120 at start of Friday at CMP; may have overcorrected with this
+
+      // use the robot lights to indicate that re-zero succeeded
+      Robot.lights.set(LedPatternFactory.wristReZeroLive);
+    }
   }
 }

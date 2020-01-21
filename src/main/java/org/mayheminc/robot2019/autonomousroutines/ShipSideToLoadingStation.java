@@ -18,44 +18,52 @@ import org.mayheminc.robot2019.subsystems.HatchPanelPickUp;
 import org.mayheminc.robot2019.subsystems.Shifter;
 import org.mayheminc.robot2019.subsystems.Targeting;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-public class ShipSideToLoadingStation extends CommandGroup {
+public class ShipSideToLoadingStation extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
   public ShipSideToLoadingStation(Autonomous.StartOn startSide) {
 
-    // drive straight backwards for about a foot to get free of hatch on cargo ship
-    addSequential(new DriveStraightOnHeading(-0.4, 12, Autonomous.chooseAngle(startSide, 270.0)));
+    addCommands(
+        // drive straight backwards for about a foot to get free of hatch on cargo ship
+        new DriveStraightOnHeading(-0.4, 12, Autonomous.chooseAngle(startSide, 270.0)),
 
-    // drive backwards and turn to face towards the loading station
-    addSequential(new DriveStraightOnHeading(-0.5, 50, Autonomous.chooseAngle(startSide, 190.0)));
+        // drive backwards and turn to face towards the loading station
+        new DriveStraightOnHeading(-0.5, 50, Autonomous.chooseAngle(startSide, 190.0)),
 
-    // drive forwards towards the loading station at low speed to enable sharp turn
-    addSequential(new DriveStraightOnHeading(0.5, 20, Autonomous.chooseAngle(startSide, 160.0)));
+        // drive forwards towards the loading station at low speed to enable sharp turn
+        new DriveStraightOnHeading(0.5, 20, Autonomous.chooseAngle(startSide, 160.0)),
 
-    // drive to just in front of the loading station at higher speed
-    addParallel(new DriveSetShifter(Shifter.HIGH_GEAR));
-    addSequential(new DriveStraightOnHeading(0.5, 180, Autonomous.chooseAngle(startSide, 160.0)));
+        // drive to just in front of the loading station at higher speed
+        new ParallelCommandGroup(
+            // switch back to high gear
+            new DriveSetShifter(Shifter.HIGH_GEAR),
+            // drive to just in front of the loading station
+            new DriveStraightOnHeading(0.5, 180, Autonomous.chooseAngle(startSide, 160.0))), // end PCG
 
-    // straighten out for the last few feet to line up with the loading station
-    addSequential(new DriveStraightOnHeading(0.5, 24 /* was 180 */, Autonomous.chooseAngle(startSide, 180.0)));
+        // straighten out for the last few feet to line up with the loading station
+        new DriveStraightOnHeading(0.5, 24 /* was 180 */, Autonomous.chooseAngle(startSide, 180.0)),
 
-    // Note: the above leaves about 80 inches (distance had been 180) to go for
-    // "auto-align" to do its thing
+        // Note: the above leaves about 80 inches (distance had been 180) to go for
+        // "auto-align" to do its thing
 
-    // Use "AutoAlign" at half speed for the last couple seconds to get to the hatch
-    addSequential(new AutoAlignUntilAtWall(0.4, 5.0, Targeting.TargetPosition.CENTER_MOST)); // was 0.6, 1.7 seconds
+        // Use "AutoAlign" at half speed for the last couple seconds to get to the hatch
+        new AutoAlignUntilAtWall(0.4, 5.0, Targeting.TargetPosition.CENTER_MOST), // was 0.6, 1.7 seconds
 
-    // grab the hatch panel
-    addSequential(new HatchPanelSet(HatchPanelPickUp.GRABBER_EXPANDED));
-    addSequential(new Wait(0.5));
-    addParallel(new PrintAutonomousTimeRemaining("Grabbed Hatch Panel"));
+        // grab the hatch panel
+        new HatchPanelSet(HatchPanelPickUp.GRABBER_EXPANDED), new Wait(0.5),
 
-    // back up a little bit to pull the hatch panel from the wall
-    addSequential(new DriveStraightOnHeading(-0.8, 12, Autonomous.chooseAngle(startSide, 180.0)));
-    addSequential(new DriveSetShifter(Shifter.HIGH_GEAR));
+        // at this point, have grabbed a hatch panel from the loading station
+        new ParallelCommandGroup(
+            // in parallel, proclaim victory and go get a hatch panel
+            new PrintAutonomousTimeRemaining("Grabbed Hatch Panel"),
+            // back up a little bit to pull the hatch panel from the wall
+            new DriveStraightOnHeading(-0.8, 12, Autonomous.chooseAngle(startSide, 180.0))), // end ParallelCommandGroup
+
+        new DriveSetShifter(Shifter.HIGH_GEAR));
 
   }
 }

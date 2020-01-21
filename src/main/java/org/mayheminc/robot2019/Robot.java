@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.networktables.*;
@@ -18,26 +18,25 @@ import java.util.Date;
 
 import org.mayheminc.robot2019.commands.RunAutonomous;
 import org.mayheminc.robot2019.subsystems.*;
-// import org.mayheminc.util.SchedulerManager;
 import org.mayheminc.util.Utils;
 import org.mayheminc.util.EventServer.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
+ * functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
 public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForIterativeRobot
-	static NetworkTable table;
+	static NetworkTable m_networkTable;
 
 	public static final boolean DEBUG = true;
 	public static final boolean PRACTICE_BOT = false;
 
 	// create commands to be invoked for autonomous and teleop
-	private Command autonomousCommand;
-	private Runtime runtime = Runtime.getRuntime();
+	private Command m_autonomousCommand;
+	private Runtime m_runtime = Runtime.getRuntime();
 
 	// default to not using humanDriverInAuto
 	private boolean m_humanDriverInAuto = false;
@@ -46,17 +45,16 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static final Compressor compressor = new Compressor();
 	public static final Drive drive = new Drive();
 	public static final PowerDistributionPanel pdp = new PowerDistributionPanel();
-
-	public static Targeting targeting = new Targeting();
-	public static Shifter shifter = new Shifter();
-	public static Shoulder shoulder = new Shoulder();
-	public static Wrist wrist = new Wrist();
-	public static CargoIntake cargoIntake = new CargoIntake();
-	public static HatchPanelPickUp hatchPanelPickUp = new HatchPanelPickUp();
-	public static Lifter lifter = new Lifter();
-	public static LiftCylinders liftCylinders = new LiftCylinders();
-	public static LEDLights lights = new LEDLights();
-	public static TargetingLights targetingLights = new TargetingLights();
+	public static final Targeting targeting = new Targeting();
+	public static final Shifter shifter = new Shifter();
+	public static final Shoulder shoulder = new Shoulder();
+	public static final Wrist wrist = new Wrist();
+	public static final CargoIntake cargoIntake = new CargoIntake();
+	public static final HatchPanelPickUp hatchPanelPickUp = new HatchPanelPickUp();
+	public static final Lifter lifter = new Lifter();
+	public static final LiftCylinders liftCylinders = new LiftCylinders();
+	public static final LEDLights lights = new LEDLights();
+	public static final TargetingLights targetingLights = new TargetingLights();
 
 	// allocate the "virtual" subsystems; wait to construct these until robotInit()
 	public static Autonomous autonomous;
@@ -72,7 +70,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	public static final double BROWNOUT_VOLTAGE_LOWER_THRESHOLD = 10.0;
 	public static final double BROWNOUT_VOLTAGE_UPPER_THRESHOLD = 11.0;
 	public static final double BROWNOUT_REST_PERIOD = 3;
-	public static boolean brownoutMode = false;
+	public static final boolean brownoutMode = false;
 
 	public static final boolean UPDATE_AUTO_SETUP_FIELDS = true;
 	public static final boolean DONT_UPDATE_AUTO_SETUP_FIELDS = false;
@@ -85,9 +83,10 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
 	 */
+	@Override
 	public void robotInit() {
 
-		table = NetworkTableInstance.getDefault().getTable("datatable");
+		m_networkTable = NetworkTableInstance.getDefault().getTable("datatable");
 
 		System.out.println("robotInit");
 		SmartDashboard.putString("Auto Prog", "Initializing...");
@@ -136,7 +135,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		drive.init();
 
 		// instantiate the command used for the autonomous period
-		autonomousCommand = new RunAutonomous();
+		m_autonomousCommand = new RunAutonomous();
 		// DriverStation.reportWarning("Constructed auto command.\n", false);
 		// SmartDashboard.putString("Auto Prog", "Done.");
 		Autonomous.updateSmartDashboard();
@@ -157,19 +156,21 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	 * "modePeriodic". Need to at least define robotPeriodic() to avoid a warning
 	 * message at startup.
 	 */
+	@Override
 	public void robotPeriodic() {
 		// TODO: To avoid having essential calls overlooked in "modePeriodic()" calls,
 		// consider consolidating stuff here
 		// examples: updateSensors, updateSmartDashboard, etc.
 
 		// run the scheduler on every main loop so that commands execute
-		Scheduler.getInstance().run();
+		CommandScheduler.getInstance().run();
 	}
 
 	/**
 	 * This function is called when the disabled button is hit. You can use it to
 	 * reset subsystems before shutting down.
 	 */
+	@Override
 	public void disabledInit() {
 
 		if (printAutoElapsedTime) {
@@ -180,7 +181,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 		// if not in a real match, kill any previously existing commands
 		if (!DriverStation.getInstance().isFMSAttached()) {
-			Scheduler.getInstance().removeAll();
+			CommandScheduler.getInstance().cancelAll();
 		}
 
 		// // print the blackbox.
@@ -193,6 +194,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 	}
 
+	@Override
 	public void disabledPeriodic() {
 		// update all sensors in the robot
 		updateSensors();
@@ -227,6 +229,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		lights.update();
 	}
 
+	@Override
 	public void autonomousInit() {
 
 		/// establish starting robot state for autonomous on all subsystems that need it
@@ -252,8 +255,8 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		m_humanDriverInAuto = false;
 
 		// schedule the autonomous command (example)
-		if (autonomousCommand != null) {
-			autonomousCommand.start();
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.schedule();
 		}
 		autonomousStartTime = System.currentTimeMillis();
 		printAutoElapsedTime = true;
@@ -277,6 +280,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	/**
 	 * This function is called periodically during autonomous
 	 */
+	@Override
 	public void autonomousPeriodic() {
 
 		// update all sensors in the robot, including the targeting subsystem
@@ -293,9 +297,9 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 			DriverStation.reportError("Trying to abort auto Program.", false);
 
-			if (autonomousCommand != null) {
-				Scheduler.getInstance().removeAll();
-				autonomousCommand.cancel();
+			if (m_autonomousCommand != null) {
+				CommandScheduler.getInstance().cancelAll();
+				m_autonomousCommand.cancel();
 				DriverStation.reportError("Canceled Auto Program.", false);
 			}
 			// switch to control by a human driver
@@ -317,11 +321,22 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		targetingLights.update();
 	}
 
+	@Override
 	public void teleopInit() {
 
-		// before doing anything else in teleop, kill any remaining commands from autonomous
-		// Note: commented out in 2019 for "sandstorm" to allow autonomous programs to continue into teleop
+		// before doing anything else in teleop, kill any remaining commands from
+		// autonomous
+		// Note: commented out in 2019 for "sandstorm" to allow autonomous programs to
+		// continue into teleop
 		// Scheduler.getInstance().removeAll();
+
+		// This makes sure that the autonomous stops running when
+		// teleop starts running. If you want the autonomous to
+		// continue until interrupted by another command, remove
+		// this line or comment it out.
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.cancel();
+		}
 
 		lights.setDefault(LedPatternFactory.defaultTeleOp);
 
@@ -366,6 +381,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 		periodicTimer = timer;
 	}
 
+	@Override
 	public void teleopPeriodic() {
 		PrintPeriodicPeriod();
 
@@ -414,6 +430,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 	/**
 	 * This function is called periodically during test mode
 	 */
+	@Override
 	public void testPeriodic() {
 	}
 
@@ -463,7 +480,7 @@ public class Robot extends TimedRobot /* IterativeRobot */ { // FRCWaitsForItera
 
 	void updateSmartDashboard() {
 		// display free memory for the JVM
-		double freeMemoryInKB = runtime.freeMemory() / 1024;
+		double freeMemoryInKB = m_runtime.freeMemory() / 1024;
 		SmartDashboard.putNumber("Free Memory", freeMemoryInKB);
 	}
 }

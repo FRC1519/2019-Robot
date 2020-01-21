@@ -4,8 +4,8 @@
  */
 package org.mayheminc.robot2019.subsystems;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.mayheminc.robot2019.autonomousroutines.*;
 
@@ -13,7 +13,7 @@ import org.mayheminc.robot2019.autonomousroutines.*;
  *
  * @author Team1519
  */
-public class Autonomous extends Subsystem {
+public class Autonomous extends SubsystemBase {
 
 	private static Command autonomousPrograms[] = {
 

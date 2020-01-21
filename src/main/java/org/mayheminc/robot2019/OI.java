@@ -4,52 +4,21 @@ package org.mayheminc.robot2019;
 import org.mayheminc.util.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.mayheminc.robot2019.commands.*;
 import org.mayheminc.robot2019.subsystems.*;
 import org.mayheminc.robot2019.subsystems.Targeting.TargetPosition;
 
 /**
- * This class is the glue that binds the controls on the physical operator
- * interface to the commands and command groups that allow control of the robot.
+ * This class binds the controls on the physical operator interface to the
+ * commands and command groups that allow control of the robot.
  */
 public class OI {
 
-	//// CREATING BUTTONS
-	// One type of button is a joystick button which is any button on a joystick.
-	// You create one by telling it which joystick it's on and which button
-	// number it is.
-	// Joystick stick = new Joystick(port);
-	// Button button = new JoystickButton(stick, buttonNumber);
-
-	// There are a few additional built in buttons you can use. Additionally,
-	// by subclassing Button you can create custom triggers and bind those to
-	// commands the same as any other Button.
-
-	//// TRIGGERING COMMANDS WITH BUTTONS
-	// Once you have a button, it's trivial to bind it to a button in one of
-	// three ways:
-
-	// Start the command when the button is pressed and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenPressed(new ExampleCommand());
-
-	// Run the command while the button is being held down and interrupt it once
-	// the button is released.
-	// button.whileHeld(new ExampleCommand());
-
-	// Start the command when the button is released and let it run the command
-	// until it is finished as determined by it's isFinished method.
-	// button.whenReleased(new ExampleCommand());
-
 	// driver pad and stick
 	public static final Joystick DRIVER_PAD = new Joystick(RobotMap.DRIVER_GAMEPAD);
-	// public static final Button DRIVER_PAD_BUTTON_SEVEN = new
-	// JoystickButton(DRIVER_PAD, 7);
-	// public static final Button DRIVER_PAD_BUTTON_EIGHT = new
-	// JoystickButton(DRIVER_PAD, 8);
 	public static final Joystick DRIVER_STICK = new Joystick(RobotMap.DRIVER_JOYSTICK);
 
 	// driver stick buttons
@@ -73,7 +42,7 @@ public class OI {
 	public static final int DRIVER_STICK_X_AXIS = 0;
 	public static final int DRIVER_STICK_Y_AXIS = 1;
 
-	// operator pad and stick
+	// operator pad
 	public static final Joystick OPERATOR_PAD = new Joystick(RobotMap.OPERATOR_GAMEPAD);
 	private static final Button OPERATOR_PAD_BUTTON_ONE = new JoystickButton(OPERATOR_PAD, 1);
 	private static final Button OPERATOR_PAD_BUTTON_TWO = new JoystickButton(OPERATOR_PAD, 2);
@@ -85,18 +54,15 @@ public class OI {
 	private static final Button OPERATOR_PAD_BUTTON_EIGHT = new JoystickButton(OPERATOR_PAD, 8);
 	private static final Button OPERATOR_PAD_BUTTON_NINE = new JoystickButton(OPERATOR_PAD, 9);
 	private static final Button OPERATOR_PAD_BUTTON_TEN = new JoystickButton(OPERATOR_PAD, 10);
-	@SuppressWarnings("unused")
 	private static final Button OPERATOR_PAD_BUTTON_ELEVEN = new JoystickButton(OPERATOR_PAD, 11);
 	private static final Button OPERATOR_PAD_BUTTON_TWELVE = new JoystickButton(OPERATOR_PAD, 12);
-	@SuppressWarnings("unused")
-	private static final Button FORCE_FIRE_BUTTON = new AndJoystickButton(OPERATOR_PAD, 5, OPERATOR_PAD, 7);
 
 	public static final int OPERATOR_PAD_LEFT_X_AXIS = 0;
 	public static final int OPERATOR_PAD_LEFT_Y_AXIS = 1;
 	public static final int OPERATOR_PAD_RIGHT_X_AXIS = 2;
 	public static final int OPERATOR_PAD_RIGHT_Y_AXIS = 3;
 
-	// Operator Control Buttons
+	// Operator Control Buttons from joystick movements
 	@SuppressWarnings("unused")
 	private static final JoystickAxisButton OPERATOR_PAD_LEFT_Y_AXIS_UP = new JoystickAxisButton(OPERATOR_PAD,
 			OPERATOR_PAD_LEFT_Y_AXIS, JoystickAxisButton.NEGATIVE_ONLY);
@@ -139,12 +105,6 @@ public class OI {
 	public static final int GAMEPAD_F310_LEFT_STICK_BUTTON = 9;
 	public static final int GAMEPAD_F310_RIGHT_STICK_BUTTON = 10;
 
-	// Driver Control Modes
-	@SuppressWarnings("unused")
-	private static final Button TOGGLE_CLOSED_LOOP_MODE_BUTTON = new DisabledOnlyJoystickButton(DRIVER_PAD, 7);
-	@SuppressWarnings("unused")
-	private static final Button TOGGLE_FOD_BUTTON = new DisabledOnlyJoystickButton(DRIVER_PAD, 8);
-
 	// NOTE: DRIVER_PAD_RIGHT_UPPER_TRIGGER_BUTTON is "QUICKTURN" in Drive.java - DO
 	// NOT USE HERE!!!
 	private static final Button DRIVER_PAD_LEFT_UPPER_TRIGGER_BUTTON = new EnabledOnlyJoystickButton(DRIVER_PAD,
@@ -154,7 +114,6 @@ public class OI {
 	private static final JoystickAxisButton DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON = new JoystickAxisButton(DRIVER_PAD,
 			GAMEPAD_F310_RIGHT_TRIGGER, JoystickAxisButton.POSITIVE_ONLY);
 
-	@SuppressWarnings("unused")
 	private static final Button DRIVER_PAD_BACK_BUTTON = new JoystickButton(DRIVER_PAD, GAMEPAD_F310_BACK_BUTTON);
 	private static final Button DRIVER_PAD_START_BUTTON = new JoystickButton(DRIVER_PAD, GAMEPAD_F310_START_BUTTON);
 	private static final Button DRIVER_PAD_GREEN_BUTTON = new JoystickButton(DRIVER_PAD, 1); // Green "A" button
@@ -168,7 +127,6 @@ public class OI {
 	@SuppressWarnings("unused")
 	private static final Button DRIVER_PAD_LEFT_STICK_BUTTON = new JoystickButton(DRIVER_PAD,
 			GAMEPAD_F310_LEFT_STICK_BUTTON); // Left Stick Trigger
-	@SuppressWarnings("unused")
 	private static final Button DRIVER_PAD_RIGHT_STICK_BUTTON = new JoystickButton(DRIVER_PAD,
 			GAMEPAD_F310_RIGHT_STICK_BUTTON); // Right Stick Trigger
 
@@ -228,8 +186,8 @@ public class OI {
 		DRIVER_PAD_LEFT_LOWER_TRIGGER_BUTTON.whenPressed(new Wait() /* was HatchPanelLoadingStation() */);
 
 		DRIVER_PAD_RIGHT_LOWER_TRIGGER_BUTTON.whileHeld(new ShifterHoldGear(Shifter.LOW_GEAR)); // changed from
-																								// LOW_GEAR for BAE
-																								// Systems Demo
+																									// LOW_GEAR for BAE
+																									// Systems Demo
 
 		DRIVER_PAD_BACK_BUTTON.whenPressed(new Wait(0));
 		DRIVER_PAD_START_BUTTON.whileHeld(new LiftCylindersSetOnlyWhileHeld(LiftCylinders.EXTENDED));

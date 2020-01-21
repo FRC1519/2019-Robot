@@ -1,12 +1,12 @@
 package org.mayheminc.robot2019.commands;
 import org.mayheminc.robot2019.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  *
  */
-public class ShifterHoldGear extends Command {
+public class ShifterHoldGear extends CommandBase {
     boolean m_gear;
     
     public ShifterHoldGear(boolean gear) {
@@ -17,27 +17,20 @@ public class ShifterHoldGear extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {
+    @Override
+    public void initialize() {
         Robot.shifter.setGear(m_gear);
     }
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    }
-
     // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
+    @Override
+    public boolean isFinished() {
         return false;
     }
 
-    // Called once after isFinished returns true
-    protected void end() {
+    // Called once after isFinished returns true or the command is interrupted
+    @Override 
+    public void end(boolean interrupted) {
     	Robot.shifter.setGear(!m_gear);
-    }
-
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-        Robot.shifter.setGear(!m_gear);
     }
 }

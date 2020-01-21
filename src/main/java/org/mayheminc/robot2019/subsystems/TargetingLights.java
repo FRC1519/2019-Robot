@@ -11,12 +11,12 @@ import org.mayheminc.robot2019.RobotMap;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Add your docs here.
  */
-public class TargetingLights extends Subsystem {
+public class TargetingLights extends SubsystemBase {
 
     Solenoid lightPower = new Solenoid(RobotMap.TARGETING_LIGHTS_SOLENOID);
     double m_offStartTimer;
@@ -25,10 +25,6 @@ public class TargetingLights extends Subsystem {
     public static final boolean LIGHTS_OFF = false;
 
     private final double TARGET_LIGHTS_OFF_TIME = 2.0;
-
-    @Override
-    protected void initDefaultCommand() {
-    }
 
     public void set(boolean b) {
         lightPower.set(b);

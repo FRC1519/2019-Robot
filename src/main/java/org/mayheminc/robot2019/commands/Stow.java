@@ -11,33 +11,13 @@ import org.mayheminc.robot2019.subsystems.Shoulder;
 import org.mayheminc.robot2019.subsystems.Targeting;
 import org.mayheminc.robot2019.subsystems.Wrist;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Stow extends CommandGroup {
-  /**
-   * Add your docs here.
-   */
+public class Stow extends SequentialCommandGroup {
   public Stow() {
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
-
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
-
-    addSequential(new ArmMove(Shoulder.STARTING_POSITION_DEGREES,
+    // the stow command is just an ArmMove to the starting position for the arm
+    addCommands(
+      new ArmMove(Shoulder.STARTING_POSITION_DEGREES,
         (Wrist.STARTING_POSITION_DEGREES + Shoulder.STARTING_POSITION_DEGREES), Targeting.TargetHeight.HATCH));
-    // addSequential(new WristSetInternalAngle(Wrist.STARTING_POSITION_DEGREES));
-    // addSequential(new ShoulderSetAngle(-78.0));
   }
 }

@@ -1,6 +1,6 @@
 package org.mayheminc.robot2019.subsystems;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -10,7 +10,7 @@ import org.mayheminc.robot2019.Robot;
 import org.mayheminc.robot2019.RobotMap;
 import org.mayheminc.util.MayhemTalonSRX;
 
-public class CargoIntake extends Subsystem {
+public class CargoIntake extends SubsystemBase {
 
     public static final double INTAKE_HARD_POWER = 1.0;
     public static final double INTAKE_SOFT_PANEL = 0.6;

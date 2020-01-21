@@ -8,46 +8,39 @@
 package org.mayheminc.robot2019.commands;
 
 import org.mayheminc.robot2019.Robot;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Set the CargoIntake to a power.
  */
-public class LifterSetManual extends Command {
+public class LifterSetManual extends CommandBase {
   /**
    * Add your docs here.
    */
   double m_power;
 
   public LifterSetManual(double power) {
-    super();
+    // super();
 
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.lifter);
+    addRequirements(Robot.lifter);
     m_power = power;
   }
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.lifter.setManual(m_power);
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return true;
   }
 
-  // Called once after isFinished returns true
+  // Called once after isFinished returns true or the command is interrupted
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     // don't need to do anything here
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    // don't need to do anything here }
   }
 }

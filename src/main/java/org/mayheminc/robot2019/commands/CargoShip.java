@@ -12,35 +12,18 @@ import org.mayheminc.robot2019.subsystems.Targeting;
 import org.mayheminc.robot2019.subsystems.TargetingLights;
 import org.mayheminc.robot2019.subsystems.Wrist;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-public class CargoShip extends CommandGroup {
+public class CargoShip extends ParallelCommandGroup {
   /**
    * Add your docs here.
    */
   public CargoShip() {
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
+    addCommands(
+        // turn off the targeting lights while getting cargo
+        new TargetingLightsSet(TargetingLights.LIGHTS_OFF),
 
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
-
-    // since we are using cargo, we shouldn't need the targeting lights for a while
-    addParallel(new TargetingLightsSet(TargetingLights.LIGHTS_OFF));
-
-    // Cargo ship is at hatch height
-    addSequential(
+        // move the arm to the position to score cargo on the ship
         new ArmMove(Shoulder.CARGO_CARGO_SHIP_ANGLE, Wrist.CARGO_CARGO_SHIP_ANGLE, Targeting.TargetHeight.HATCH));
   }
 }

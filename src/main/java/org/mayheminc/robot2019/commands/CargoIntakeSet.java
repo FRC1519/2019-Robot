@@ -12,12 +12,12 @@ import org.mayheminc.robot2019.subsystems.CargoIntake;
 import org.mayheminc.robot2019.subsystems.LedPatternFactory;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Set the CargoIntake to a power.
  */
-public class CargoIntakeSet extends Command {
+public class CargoIntakeSet extends CommandBase {
   /**
    * Add your docs here.
    */
@@ -27,13 +27,13 @@ public class CargoIntakeSet extends Command {
     super();
 
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.cargoIntake);
+    addRequirements(Robot.cargoIntake);
     m_power = power;
   }
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     Robot.cargoIntake.setPower(m_power);
     DriverStation.reportError("CargoIntake Run", false);
 
@@ -41,20 +41,13 @@ public class CargoIntakeSet extends Command {
   }
 
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
+  // Called once after isFinished returns true or the command is interrupted
   @Override
-  protected void end() {
-    Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
+  public void end(boolean interrupted) {
     Robot.cargoIntake.setPower(CargoIntake.HOLD_POWER);
   }
 }

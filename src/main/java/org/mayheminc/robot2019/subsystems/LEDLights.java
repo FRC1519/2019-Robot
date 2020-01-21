@@ -2,12 +2,12 @@ package org.mayheminc.robot2019.subsystems;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.mayheminc.robot2019.RobotMap;
 
-public class LEDLights extends Subsystem {
+public class LEDLights extends SubsystemBase {
 
     public enum PatternID {
         RAINBOW_RAINBOW_PALETTE(-0.99, "Rainbow, Rainbow Palette"),

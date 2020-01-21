@@ -7,18 +7,18 @@
 
 package org.mayheminc.robot2019.autonomousroutines;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import org.mayheminc.robot2019.subsystems.Autonomous;
 
-public class StartLeftHAB2HPtoShipFront extends CommandGroup {
+public class StartLeftHAB2HPtoShipFront extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
   public StartLeftHAB2HPtoShipFront() {
 
     // Call the shared HAB2HPtoShipFront routine, specifying we are on the left side
-    addSequential(new HAB2HPtoShipFront(Autonomous.StartOn.LEFT));
+    addCommands(new HAB2HPtoShipFront(Autonomous.StartOn.LEFT));
 
   }
 }
